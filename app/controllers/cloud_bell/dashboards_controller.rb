@@ -5,6 +5,7 @@ module CloudBell
         before_action :set_dashboard, only: [:show]
 
         def default
+            NotificationsController.web_notification
         end
 
     end
