@@ -49,11 +49,11 @@ module CloudBell
         end
 
         def api_web_notification
-            WebNotificationJob.perform_now
+            CloudCourier::Bell::WebNotificationJob.perform_now
         end
 
         def self.web_notification
-            WebNotificationJob.perform_now
+            CloudCourier::Bell::WebNotificationJob.perform_now
         end
 
         private
