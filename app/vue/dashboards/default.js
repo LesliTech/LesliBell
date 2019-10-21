@@ -24,8 +24,3 @@ Building a better future, one line of code at a time.
 //  · 
 // ~·~        ~·~        ~·~        ~·~        ~·~        ~·~        ~·~        ~·~        ~·~
 */
-
-
-//  · Loading core framework and libraries
-// ~·~        ~·~        ~·~        ~·~        ~·~        ~·~        ~·~        ~·~        ~·~
-import 'LesliCloud/vue/apps/lesli.js'
