@@ -52,14 +52,6 @@ module CloudBell
             redirect_to notifications_url, notice: 'Notification was successfully destroyed.'
         end
 
-        def api_web_notification
-            CloudCourier::Bell::WebNotificationJob.perform_now
-        end
-
-        def self.web_notification
-            CloudCourier::Bell::WebNotificationJob.perform_now
-        end
-
         private
 
         # Use callbacks to share common setup or constraints between actions.
