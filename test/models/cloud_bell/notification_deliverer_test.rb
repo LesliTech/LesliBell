@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module CloudBell
-  class NotificationTypeTest < ActiveSupport::TestCase
+  class NotificationDelivererTest < ActiveSupport::TestCase
     # test "the truth" do
     #   assert true
     # end

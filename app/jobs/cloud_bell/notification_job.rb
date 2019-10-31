@@ -1,15 +1,15 @@
 module CloudBell
     class NotificationJob < ApplicationJob
         queue_as :default
-
-        def perform(*args)
+        def perform(user:, subject:, body:nil, href:nil, format:'info')
             Notification.new({
-                content: 'content',
-                href: 'href',
-                read: false,
-                cloud_bell_notification_types_id: 1,
-                users_id: 1,
-                cloud_bell_accounts_id: 1
+                subject: subject,
+                body: body,
+                href: href,
+                format: format,
+                users_id: user.id,
+                cloud_bell_notification_deliverer_id: 1,
+                cloud_bell_accounts_id: user.account.id
             }).save!
         end
     end

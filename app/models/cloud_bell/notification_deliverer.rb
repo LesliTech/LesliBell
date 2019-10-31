@@ -1,5 +1,5 @@
 module CloudBell
-    class NotificationType < ApplicationRecord
+    class NotificationDeliverer < ApplicationRecord
         has_many :notifications, class_name: 'Notification'
     end
 end
