@@ -1,0 +1,2 @@
+
+CloudBell::NotificationDeliverer.create()
