@@ -5,7 +5,7 @@ class CreateCloudBellNotifications < ActiveRecord::Migration[6.0]
             t.text   :body
             t.string :href
             t.string :format
-            t.boolean :read
+            t.boolean :read, default: false
             t.timestamps
         end
         add_reference :cloud_bell_notifications, :cloud_bell_notification_deliverer, foreign_key: true, index: { name: 'bell_notifications_deliverers'}

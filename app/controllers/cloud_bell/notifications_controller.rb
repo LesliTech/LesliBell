@@ -2,12 +2,12 @@ require_dependency "cloud_bell/application_controller"
 
 module CloudBell
     class NotificationsController < ApplicationController
-        before_action :set_notification, only: [:show, :edit, :update, :destroy]
+        before_action :set_notification, only: [:show, :edit, :update, :destroy, :api_read]
 
         # GET /notifications
         def index
             #@notifications = Notification.all.select(:id, :content, :href,:created_at)
-            @notifications = current_user.notifications
+            @notifications = current_user.notifications.where(read: false)
             respond_to do |format|
                 format.html
                 format.json { responseWithSuccessful(@notifications) }
@@ -51,6 +51,16 @@ module CloudBell
         def destroy
             @notification.destroy
             redirect_to notifications_url, notice: 'Notification was successfully destroyed.'
+        end
+
+        # PUT /api/notifications/1/read
+        def api_read
+            if @notification.user == current_user
+                @notification.update(read: true)
+                responseWithSuccessful
+            else
+                responseWithError('Unable to mark notification as read','This notification does not belong to the logged user')
+            end
         end
 
         private
