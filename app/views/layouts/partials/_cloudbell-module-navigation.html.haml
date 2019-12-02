@@ -1,9 +1,4 @@
-%nav.module-navigation.navbar.is-transparent
-    #header-module-navbar.navbar-menu
-        .navbar-start
-            = link_to "Notifications", root_path, class: "navbar-item"
-            = link_to "Messages", root_path, class: "navbar-item"
-            = link_to "Emails", root_path, class: "navbar-item"
-        
-        .navbar-end
-            = link_to "Send notification", root_path, class: "navbar-item"
+%component-layout-navigation
+    %template(v-slot:right)
+        = link_to "Dashboards", root_path, class: "navbar-item"
+        = link_to "Notifications", notifications_path, class: "navbar-item"

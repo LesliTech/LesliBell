@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 38);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -13659,41 +13659,7 @@ module.exports = __webpack_require__(32)
 
 
 /***/ }),
-/* 15 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var LesliCloud_vue_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(37);
-/*
-Lesli
-Copyright (c) 2019, Lesli Technologies, S. A.
-All the information provided by this website is protected by laws of Guatemala related 
-to industrial property, intellectual property, copyright and relative international laws. 
-Lesli Technologies, S. A. is the exclusive owner of all intellectual or industrial property
-rights of the code, texts, trade mark, design, pictures and any other information.
-Without the written permission of Lesli Technologies, S. A., any replication, modification,
-transmission, publication is strictly forbidden.
-For more information read the license file including with this software.
-LesliCloud - Your Smart Business Assistant
-Powered by https://www.lesli.tech
-Building a better future, one line of code at a time.
-@author   LesliTech <hello@lesli.tech>
-@license  Propietary - all rights reserved.
-@version  0.1.0-alpha
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-// · 
-*/
-// · Import main app
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
- // · Import apps and components
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-// · Cloud app
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-
-Object(LesliCloud_vue_app__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])("CloudCore", "[]", "/bell", []);
-
-/***/ }),
+/* 15 */,
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31151,6 +31117,182 @@ vue_default.a.component('component-layout-empty-data', empty_data); // · Vue ap
     if (true) browser_default.a.info("".concat(base_path, " ").concat(apps), module);
   });
 });
+
+/***/ }),
+/* 38 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+// EXTERNAL MODULE: ./app/vue/app.js + 92 modules
+var app = __webpack_require__(37);
+
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./engines/CloudBell/app/vue/notifications/apps/list.vue?vue&type=template&id=4622222a&
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", { staticClass: "section" }, [
+    _c("div", { staticClass: "card" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-body" }, [
+        _c("table", { staticClass: "table is-fullwidth" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.notifications, function(notification) {
+              return _c("tr", { key: notification.id }, [
+                _c("td", [_vm._v(_vm._s(notification.id))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(notification.subject))])
+              ])
+            }),
+            0
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h4", { staticClass: "card-header-title" }, [
+        _vm._v("\n                My notifications\n            ")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("id")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Subject")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+// CONCATENATED MODULE: ./engines/CloudBell/app/vue/notifications/apps/list.vue?vue&type=template&id=4622222a&
+
+// CONCATENATED MODULE: ./node_modules/babel-loader/lib??ref--3!./node_modules/vue-loader/lib??vue-loader-options!./engines/CloudBell/app/vue/notifications/apps/list.vue?vue&type=script&lang=js&
+/*
+Lesli
+Copyright (c) 2019, Lesli Technologies, S. A.
+All the information provided by this website is protected by laws of Guatemala related 
+to industrial property, intellectual property, copyright and relative international laws. 
+Lesli Technologies, S. A. is the exclusive owner of all intellectual or industrial property
+rights of the code, texts, trade mark, design, pictures and any other information.
+Without the written permission of Lesli Technologies, S. A., any replication, modification,
+transmission, publication is strictly forbidden.
+For more information read the license file including with this software.
+LesliCloud - Your Smart Business Assistant
+Powered by https://www.lesli.tech
+Building a better future, one line of code at a time.
+@author   LesliTech <hello@lesli.tech>
+@license  Propietary - all rights reserved.
+@version  0.1.0-alpha
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+// · 
+*/
+// · 
+/* harmony default export */ var listvue_type_script_lang_js_ = ({
+  data: function data() {
+    return {
+      notifications: [],
+      columns: [{
+        field: 'subject',
+        label: 'Subject'
+      }]
+    };
+  },
+  mounted: function mounted() {
+    this.getNotifications();
+  },
+  methods: {
+    getNotifications: function getNotifications() {
+      var _this = this;
+
+      this.notifications = [];
+      this.http.get('/bell/notifications.json').then(function (result) {
+        _this.notifications = result.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  }
+});
+// CONCATENATED MODULE: ./engines/CloudBell/app/vue/notifications/apps/list.vue?vue&type=script&lang=js&
+ /* harmony default export */ var apps_listvue_type_script_lang_js_ = (listvue_type_script_lang_js_); 
+// EXTERNAL MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
+var componentNormalizer = __webpack_require__(36);
+
+// CONCATENATED MODULE: ./engines/CloudBell/app/vue/notifications/apps/list.vue
+
+
+
+
+
+/* normalize component */
+
+var component = Object(componentNormalizer["a" /* default */])(
+  apps_listvue_type_script_lang_js_,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "engines/CloudBell/app/vue/notifications/apps/list.vue"
+/* harmony default export */ var list = (component.exports);
+// CONCATENATED MODULE: ./engines/CloudBell/app/vue/notifications/index.js
+/*
+Lesli
+Copyright (c) 2019, Lesli Technologies, S. A.
+All the information provided by this website is protected by laws of Guatemala related 
+to industrial property, intellectual property, copyright and relative international laws. 
+Lesli Technologies, S. A. is the exclusive owner of all intellectual or industrial property
+rights of the code, texts, trade mark, design, pictures and any other information.
+Without the written permission of Lesli Technologies, S. A., any replication, modification,
+transmission, publication is strictly forbidden.
+For more information read the license file including with this software.
+LesliCloud - Your Smart Business Assistant
+Powered by https://www.lesli.tech
+Building a better future, one line of code at a time.
+@author   LesliTech <hello@lesli.tech>
+@license  Propietary - all rights reserved.
+@version  0.1.0-alpha
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+// · 
+*/
+// · Import main app
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+ // · Import apps and components
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+
+ // · Cloud app
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+
+Object(app["a" /* default */])("CloudCore", "[list]", "/bell/notifications", [{
+  path: '/',
+  component: list
+}]);
 
 /***/ })
 /******/ ]);

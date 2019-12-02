@@ -6,11 +6,9 @@ module CloudBell
 
         # GET /notifications
         def index
-            #@notifications = Notification.all.select(:id, :content, :href,:created_at)
-            @notifications = current_user.notifications.where(read: false)
             respond_to do |format|
-                format.html
-                format.json { responseWithSuccessful(@notifications) }
+                format.html {  }
+                format.json { responseWithSuccessful(current_user.notifications.where(read: false)) }
             end
         end
 
