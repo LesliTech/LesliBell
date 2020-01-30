@@ -4,7 +4,7 @@
 	</a>
 </p>
 
-<h3 align="center">CloudBell - Smart notification system</h3>
+<h3 align="center">CloudBell - Smart notification system for LesliCloud</h3>
 
 <hr/>
 

@@ -5,7 +5,7 @@ module CloudBell
         before_action :set_dashboard, only: [:show]
 
         def default
-            Courier::Bell::Notifications.send(
+            Courier::Bell::Notifications.register(
                 user: current_user,
                 subject: 'New notification',
                 href: '/test'
