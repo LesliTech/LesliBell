@@ -4,7 +4,7 @@ class CreateCloudBellNotifications < ActiveRecord::Migration[6.0]
             t.string :subject
             t.text   :body
             t.string :href
-            t.string :format
+            t.string :category
             t.string :sender
             t.boolean :read, default: false
             t.timestamps

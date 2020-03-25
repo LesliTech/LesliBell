@@ -36,7 +36,12 @@ module CloudBell
             respond_to do |format|
                 format.html {  }
                 format.json do
-                    notifications = CloudBell::Notification.where(user: current_user, read: false)
+                    notifications = CloudBell::Notification
+                    .where(user: current_user, read: false)
+                    .map do |notification|
+                        notification[:created_at] = Courier::Core::Date.to_string(notification[:created_at])
+                        notification
+                    end
                     responseWithSuccessful(notifications)
                 end
             end
