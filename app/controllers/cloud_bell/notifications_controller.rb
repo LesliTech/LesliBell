@@ -29,7 +29,7 @@ require_dependency "cloud_bell/application_controller"
 
 module CloudBell
     class NotificationsController < ApplicationController
-        before_action :set_notification, only: [:show, :edit, :update, :destroy, :api_read]
+        before_action :set_notification, only: [:show, :edit, :update, :destroy, :read]
 
         # GET /notifications
         def index
@@ -38,9 +38,15 @@ module CloudBell
                 format.json do
                     notifications = CloudBell::Notification
                     .where(user: current_user, read: false)
+                    .order(created_at: :DESC)
                     .map do |notification|
-                        notification[:created_at] = Courier::Core::Date.to_string(notification[:created_at])
-                        notification
+                        {
+                            id: notification[:id],
+                            subject: notification[:subject],
+                            category: notification[:category],
+                            created_at: Courier::Core::Date.distance_to_words(notification[:created_at]),
+                            read: notification[:read],
+                        }
                     end
                     responseWithSuccessful(notifications)
                 end
@@ -87,13 +93,20 @@ module CloudBell
         end
 
         # PUT /api/notifications/1/read
-        def api_read
+        def read
             if @notification.user == current_user
                 @notification.update(read: true)
                 responseWithSuccessful
             else
                 responseWithError('Unable to mark notification as read','This notification does not belong to the logged user')
             end
+        end
+
+        def read_all
+            current_user.account.bell.notifications
+            .where(read: false, user:current_user)
+            .update_all(:read => true)
+            responseWithSuccessful()
         end
 
         private

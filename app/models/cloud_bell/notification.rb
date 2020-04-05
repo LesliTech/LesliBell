@@ -27,7 +27,7 @@ Building a better future, one line of code at a time.
 module CloudBell
     class Notification < ApplicationRecord
         belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
-        belongs_to :user, class_name: "User", foreign_key: "users_id"
+        belongs_to :user, class_name: "::User", foreign_key: "users_id"
 
         enum category: {
             link: "link",
