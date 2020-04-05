@@ -44,6 +44,7 @@ module CloudBell
                             id: notification[:id],
                             subject: notification[:subject],
                             category: notification[:category],
+                            url: notification[:url],
                             created_at: Courier::Core::Date.distance_to_words(notification[:created_at]),
                             read: notification[:read],
                         }

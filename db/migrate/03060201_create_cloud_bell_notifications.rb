@@ -3,7 +3,7 @@ class CreateCloudBellNotifications < ActiveRecord::Migration[6.0]
         create_table :cloud_bell_notifications do |t|
             t.string :subject
             t.text   :body
-            t.string :href
+            t.string :url
             t.string :category
             t.string :sender
             t.boolean :read, default: false
