@@ -5,7 +5,7 @@ CloudBell::Engine.routes.draw do
             put "read"
         end
         collection do
-            put "read_all"
+            put "read"
         end
     end
 end
