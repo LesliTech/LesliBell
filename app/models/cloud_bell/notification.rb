@@ -43,5 +43,12 @@ module CloudBell
             email: "email"
         }
 
+        def self.options
+            {
+                categories: categories.map { |key, value| {value: key, text: value} },
+                sender: senders.map { |key, value| {value: key, text: value} }
+            }
+        end
+
     end
 end
