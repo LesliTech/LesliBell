@@ -6,6 +6,7 @@ CloudBell::Engine.routes.draw do
         end
         collection do
             put "read"
+            get "options"
         end
     end
 end

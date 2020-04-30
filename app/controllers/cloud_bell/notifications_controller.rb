@@ -110,6 +110,10 @@ module CloudBell
             responseWithSuccessful()
         end
 
+        def options
+            return responseWithSuccessful(Notification.options)
+        end
+
         private
 
         # Use callbacks to share common setup or constraints between actions.
