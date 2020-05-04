@@ -5,7 +5,7 @@ CloudBell::Engine.routes.draw do
             put "read"
         end
         collection do
-            put "read"
+            put "read" => "notifications#read_all"
             get "options"
         end
     end
