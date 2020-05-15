@@ -38,8 +38,9 @@ module CloudBell
                 format.html {  }
                 format.json do
                     notifications = CloudBell::Notification
-                    .where(user: current_user, read: false)
+                    #.where(user: current_user, read: false)
                     .order(created_at: :DESC)
+                    .limit(50)
                     .map do |notification|
                         {
                             id: notification[:id],
