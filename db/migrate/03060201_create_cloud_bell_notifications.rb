@@ -7,6 +7,10 @@ class CreateCloudBellNotifications < ActiveRecord::Migration[6.0]
             t.string :category
             t.string :sender
             t.boolean :read, default: false
+
+            # acts_as_paranoid
+            t.datetime :deleted_at, index: true
+            
             t.timestamps
         end
         add_reference :cloud_bell_notifications, :users, foreign_key: true
