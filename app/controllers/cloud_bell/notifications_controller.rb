@@ -41,7 +41,7 @@ module CloudBell
                         if defined?(DeutscheLeibrenten)
                             notifications = current_user.account.focus.tasks
                             .joins(:status)
-                            .where(user: current_user)
+                            .where(user_main: current_user)
                             .where("cloud_focus_workflow_statuses.initial = ?", true)
                             .count
 
