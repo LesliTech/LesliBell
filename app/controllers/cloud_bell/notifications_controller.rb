@@ -40,11 +40,11 @@ module CloudBell
                     if params[:view_type] == "count"
                         if defined?(DeutscheLeibrenten)
                             notifications = current_user.account.focus.tasks
-                            .joins(:status)
+                            .joins(:status, :detail)
                             .where(user_main: current_user)
                             .where("cloud_focus_workflow_statuses.initial = ?", true)
+                            .where("cloud_focus_task_details.deadline <= ?", LC::Date.now.end_of_day)
                             .count
-
                         else 
                             notifications = current_user.account.bell.notifications
                             .where(user: current_user, read: false)
