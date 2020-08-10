@@ -36,39 +36,7 @@ module CloudBell
         def index
             respond_to do |format|
                 format.html {  }
-                format.json do
-                    if params[:view_type] == "count"
-                        if defined?(DeutscheLeibrenten)
-                            notifications = current_user.account.focus.tasks
-                            .joins(:status, :detail)
-                            .where(user_main: current_user)
-                            .where("cloud_focus_workflow_statuses.initial = ?", true)
-                            .where("cloud_focus_task_details.deadline <= ?", LC::Date.now.end_of_day)
-                            .count
-                        else 
-                            notifications = current_user.account.bell.notifications
-                            .where(user: current_user, read: false)
-                            .count
-                        end
-                    else
-                        notifications = CloudBell::Notification
-                        .where(user: current_user, read: false)
-                        .order(created_at: :DESC)
-                        .limit(50)
-                        .map do |notification|
-                            {
-                                id: notification[:id],
-                                subject: notification[:subject],
-                                category: notification[:category],
-                                url: notification[:url],
-                                created_at: Courier::Core::Date.distance_to_words(notification[:created_at]),
-                                read: notification[:read],
-                            }
-                        end
-                    end
-                    
-                    responseWithSuccessful(notifications)
-                end
+                format.json { respond_with_successful(Notification.index(current_user, @query, params[:view_type])) }
             end
         end
 
