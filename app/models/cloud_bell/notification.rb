@@ -58,7 +58,7 @@ module CloudBell
                     notifications = current_user.account.focus.tasks
                     .joins(:status, :detail)
                     .where(user_main: current_user)
-                    .where("cloud_focus_workflow_statuses.initial = ?", true)
+                    .where("cloud_focus_workflow_statuses.status_type in (?)", ["initial", "normal"])
                     .where("cloud_focus_task_details.deadline <= ?", LC::Date.now.end_of_day)
                     .count
                 else 
