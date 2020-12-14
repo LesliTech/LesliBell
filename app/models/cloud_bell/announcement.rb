@@ -16,25 +16,22 @@ For more information read the license file including with this software.
 // · 
 
 =end
+module CloudBell
+    class Announcement < ApplicationRecord
+        belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
+        belongs_to :user, class_name: "::User", foreign_key: "users_id"
 
-CloudBell::Engine.routes.draw do
-
-    root to: "dashboards#show"
-
-    resources :notifications, only: [:index, :show] do
-        member do
-            scope :resources do
-                put :read
-            end
+        def self.index(current_user, query)
+            []
         end
-        collection do
-            put :read
-            get :options
-            get :count
-            get :list
+
+        def show(current_user, query)
+            self
         end
+
+        def self.count(current_user)
+            current_user.account.bell.announcements.count
+        end
+
     end
-
-    resources :announcements
-    
 end

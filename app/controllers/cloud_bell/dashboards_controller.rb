@@ -9,6 +9,8 @@ module CloudBell
             #    subject: 'New notification',
             #    href: '/test'
             #)
+            NotificationMailer.simple.deliver_now
+            UserMailer.welcome.deliver_now
         end
 
     end
