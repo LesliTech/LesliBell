@@ -12,4 +12,6 @@
     00.01. accounts
 
     10.00. notifications
+
+    11.00. announcements
 ```

@@ -17,24 +17,20 @@ For more information read the license file including with this software.
 
 =end
 
-CloudBell::Engine.routes.draw do
-
-    root to: "dashboards#show"
-
-    resources :notifications, only: [:index, :show] do
-        member do
-            scope :resources do
-                put :read
-            end
+class CreateCloudBellAnnouncements < ActiveRecord::Migration[6.0]
+    def change
+        create_table :cloud_bell_announcements do |t|
+            t.string    :name
+            t.string    :kind
+            t.string    :message
+            t.string    :status
+            t.datetime  :expiration_at
+            t.boolean   :can_be_closed, :default => true
+            t.datetime  :deleted_at, index: true
+            t.timestamps
         end
-        collection do
-            put :read
-            get :options
-            get :count
-            get :list
-        end
+        add_reference :cloud_bell_announcements, :users, foreign_key: true
+        add_reference :cloud_bell_announcements, :cloud_bell_accounts, foreign_key: true
+        add_reference :cloud_bell_announcements, :roles, foreign_key: true
     end
-
-    resources :announcements
-    
 end

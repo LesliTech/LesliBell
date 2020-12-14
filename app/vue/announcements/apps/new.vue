@@ -1,5 +1,5 @@
-=begin
-
+<script>
+/*
 Copyright (c) 2020, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to 
@@ -14,27 +14,25 @@ For more information read the license file including with this software.
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 // · 
+*/
 
-=end
 
-CloudBell::Engine.routes.draw do
+// 
+import componentForm from "../components/form.vue"
 
-    root to: "dashboards#show"
-
-    resources :notifications, only: [:index, :show] do
-        member do
-            scope :resources do
-                put :read
-            end
-        end
-        collection do
-            put :read
-            get :options
-            get :count
-            get :list
-        end
-    end
-
-    resources :announcements
-    
-end
+export default {
+    components: {
+        "component-form": componentForm
+    }
+}
+</script>
+<template>
+    <section class="application-component">
+        <component-header title="New announcement"></component-header>
+        <div class="card">
+            <div class="card-content">
+                <component-form></component-form>
+            </div>
+        </div>
+    </section>
+</template>
