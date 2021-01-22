@@ -1,25 +1,16 @@
 =begin
 
-Lesli
+Copyright (c) 2020, all rights reserved.
 
-Copyright (c) 2020, Lesli Technologies, S. A.
+All the information provided by this platform is protected by international laws related  to 
+industrial property, intellectual property, copyright and relative international laws. 
+All intellectual or industrial property rights of the code, texts, trade mark, design, 
+pictures and any other information belongs to the owner of this platform.
 
-All the information provided by this website is protected by laws of Guatemala related 
-to industrial property, intellectual property, copyright and relative international laws. 
-Lesli Technologies, S. A. is the exclusive owner of all intellectual or industrial property
-rights of the code, texts, trade mark, design, pictures and any other information.
-Without the written permission of Lesli Technologies, S. A., any replication, modification,
+Without the written permission of the owner, any replication, modification,
 transmission, publication is strictly forbidden.
+
 For more information read the license file including with this software.
-
-Lesli - Your Smart Business Assistant
-
-Powered by https://www.lesli.tech
-Building a better future, one line of code at a time.
-
-@contact  <hello@lesli.tech>
-@website  <https://lesli.tech>
-@license  Propietary - all rights reserved.
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 // · 
@@ -36,39 +27,7 @@ module CloudBell
         def index
             respond_to do |format|
                 format.html {  }
-                format.json do
-                    if params[:view_type] == "count"
-                        if defined?(DeutscheLeibrenten)
-                            notifications = current_user.account.focus.tasks
-                            .joins(:status)
-                            .where(user_main: current_user)
-                            .where("cloud_focus_workflow_statuses.initial = ?", true)
-                            .count
-
-                        else 
-                            notifications = current_user.account.bell.notifications
-                            .where(user: current_user, read: false)
-                            .count
-                        end
-                    else
-                        notifications = CloudBell::Notification
-                        .where(user: current_user, read: false)
-                        .order(created_at: :DESC)
-                        .limit(50)
-                        .map do |notification|
-                            {
-                                id: notification[:id],
-                                subject: notification[:subject],
-                                category: notification[:category],
-                                url: notification[:url],
-                                created_at: Courier::Core::Date.distance_to_words(notification[:created_at]),
-                                read: notification[:read],
-                            }
-                        end
-                    end
-                    
-                    responseWithSuccessful(notifications)
-                end
+                format.json { respond_with_successful(Notification.index(current_user, @query, params[:view_type])) }
             end
         end
 

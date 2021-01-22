@@ -1,0 +1,54 @@
+<script>
+/*
+Copyright (c) 2020, all rights reserved.
+
+All the information provided by this platform is protected by international laws related  to 
+industrial property, intellectual property, copyright and relative international laws. 
+All intellectual or industrial property rights of the code, texts, trade mark, design, 
+pictures and any other information belongs to the owner of this platform.
+
+Without the written permission of the owner, any replication, modification,
+transmission, publication is strictly forbidden.
+
+For more information read the license file including with this software.
+
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+// · 
+*/
+
+
+// · 
+export default {
+    data() {
+        return {
+            translations: {},
+            notifications: [],
+        }
+    },
+    mounted() {
+        this.getNotifications()
+    },
+    methods: {
+        getNotifications() {
+            this.http.get(this.url.bell("notifications").s).then(result => {
+                this.notifications = result.data
+            })
+        }
+    }
+}
+</script>
+<template>
+    <section class="application-component">
+        <component-header title="Notifications"></component-header>
+        <div class="card">
+            <div class="card-content">
+                <div :class="['message', 'is-'+notification.kind]" v-for="notification in notifications" :key="notification.id">
+                    <div class="message-body">
+                        {{ notification.subject }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+</template>

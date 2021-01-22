@@ -1,24 +1,16 @@
 =begin
 
-Lesli
+Copyright (c) 2020, all rights reserved.
 
-Copyright (c) 2020, Lesli Technologies, S. A.
+All the information provided by this platform is protected by international laws related  to 
+industrial property, intellectual property, copyright and relative international laws. 
+All intellectual or industrial property rights of the code, texts, trade mark, design, 
+pictures and any other information belongs to the owner of this platform.
 
-All the information provided by this website is protected by laws of Guatemala related 
-to industrial property, intellectual property, copyright and relative international laws. 
-Lesli Technologies, S. A. is the exclusive owner of all intellectual or industrial property
-rights of the code, texts, trade mark, design, pictures and any other information.
-Without the written permission of Lesli Technologies, S. A., any replication, modification,
+Without the written permission of the owner, any replication, modification,
 transmission, publication is strictly forbidden.
+
 For more information read the license file including with this software.
-
-LesliCloud - Your Smart Business Assistant
-
-Powered by https://www.lesli.tech
-Building a better future, one line of code at a time.
-
-@license  Propietary - all rights reserved.
-@version  0.1.0-alpha
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 // · 
@@ -33,16 +25,15 @@ require "cloud_bell/version"
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
 
-    spec.name        = "cloud_bell"
-    spec.version     = CloudBell::VERSION
-    spec.authors     = ["LesliTech"]
-    spec.email       = ["hello@lesli.tech"]
-    spec.homepage    = "https://lesli.cloud"
-    spec.summary     = "Smart notification system for LesliCloud"
-    spec.license     = "All rights reserved"
+    spec.name    = "cloud_bell"
+    spec.version = CloudBell::VERSION
+    spec.authors = ["The Lesli Development Team"]
+    spec.summary = "Notes & Notebooks for The Lesli platform"
+    spec.license = "All rights reserved"
 
-    spec.files = Dir["{app,config,db,lib}/**/*", "license", "Rakefile", "readme.md"]
+    spec.files = Dir["{app,config,db,lib}/**/*", "license", "Rakefile", "readme.md", "lesli.yml"]
+    spec.metadata['allowed_push_host'] = 'https://rubygems.pkg.github.com/leitfaden'
 
-    spec.add_dependency "rails", "~> 6.0.0"
+    spec.add_dependency "rails", "~> 6.1.0"
     
 end

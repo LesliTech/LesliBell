@@ -1,53 +1,63 @@
 =begin
 
-Lesli
+Copyright (c) 2020, all rights reserved.
 
-Copyright (c) 2020, Lesli Technologies, S. A.
+All the information provided by this platform is protected by international laws related  to 
+industrial property, intellectual property, copyright and relative international laws. 
+All intellectual or industrial property rights of the code, texts, trade mark, design, 
+pictures and any other information belongs to the owner of this platform.
 
-All the information provided by this website is protected by laws of Guatemala related 
-to industrial property, intellectual property, copyright and relative international laws. 
-Lesli Technologies, S. A. is the exclusive owner of all intellectual or industrial property
-rights of the code, texts, trade mark, design, pictures and any other information.
-Without the written permission of Lesli Technologies, S. A., any replication, modification,
+Without the written permission of the owner, any replication, modification,
 transmission, publication is strictly forbidden.
+
 For more information read the license file including with this software.
-
-LesliCloud - Your Smart Business Assistant
-
-Powered by https://www.lesli.tech
-Building a better future, one line of code at a time.
-
-@license  Propietary - all rights reserved.
-@version  0.1.0-alpha
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 // · 
 
 =end
+
 module CloudBell
     class Notification < ApplicationRecord
         belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
 
         enum category: {
-            link: "link",
             info: "info",
-            danger: "danger",
-            primary: "primary",
             success: "success",
-            warning: "warning"
+            warning: "warning",
+            danger: "danger"
         }
 
         enum sender: {
             web: "web",
-            email: "email"
+            email: "email",
+            push: "push"
         }
 
-        def self.options
-            {
-                categories: categories.map { |key, value| {value: key, text: value} },
-                sender: senders.map { |key, value| {value: key, text: value} }
-            }
+        enum status: {
+            created: "created",
+            sent: "sent",
+            read: "read"
+        }
+
+        def self.index current_user, query, view_type
+            current_user.account.bell.notifications
+            .order(created_at: :DESC)
+            .map do |notification|
+                {
+                    id: notification[:id],
+                    subject: notification[:subject],
+                    kind: notification[:kind],
+                    url: notification[:url],
+                    created_at: LC::Date.distance_to_words(notification[:created_at]),
+                    status: notification[:status],
+                }
+            end
+        end
+
+        def self.count current_user
+            current_user.account.bell.notifications.count
         end
 
     end
