@@ -27,7 +27,9 @@ module CloudBell
         def index
             respond_to do |format|
                 format.html {  }
-                format.json { respond_with_successful(Notification.index(current_user, @query, params[:view_type])) }
+                format.json { 
+                    respond_with_successful(Notification.index(current_user, @query)) 
+                }
             end
         end
 
