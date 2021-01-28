@@ -41,19 +41,34 @@ module CloudBell
             read: "read"
         }
 
-        def self.index current_user, query, view_type
-            current_user.account.bell.notifications
+        def self.index current_user, query
+            notifications = current_user.account.bell.notifications
             .order(created_at: :DESC)
-            .map do |notification|
-                {
-                    id: notification[:id],
-                    subject: notification[:subject],
-                    kind: notification[:kind],
-                    url: notification[:url],
-                    created_at: LC::Date.distance_to_words(notification[:created_at]),
-                    status: notification[:status],
-                }
-            end
+            
+            # add pagination
+            notifications = notifications
+            .page(query[:pagination][:page])
+            .per(20) #.per(query[:pagination][:perPage])
+            .order(:updated_at)
+
+            LC::Response.pagination(
+                notifications.current_page,
+                notifications.total_pages,
+                notifications.total_count,
+                notifications.length,
+                notifications.map do |notification|
+                    {
+                        id: notification[:id],
+                        subject: notification[:subject],
+                        body: notification[:body],
+                        kind: notification[:kind],
+                        url: notification[:url],
+                        created_at: LC::Date.distance_to_words(notification[:created_at]),
+                        status: notification[:status],
+                    }
+                end
+            )
+
         end
 
         def self.count current_user
