@@ -22,12 +22,12 @@ import app from "LesliVue/app"
 
 
 // · Import apps and components
-import appIndex from "./apps/index.vue"
+import pageIndex from "./pages/index.vue"
 
 
 
 // · Cloud app
 app("CloudBell", "[index]", "/bell/notifications", [{
     path: "/",
-    component: appIndex
+    component: pageIndex
 }])

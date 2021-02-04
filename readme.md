@@ -16,6 +16,22 @@ Version 0.1.0-alpha
 - Emails
 
 
+### Quick reference & examples
+
+```ruby
+    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell")
+    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell", category: "info")
+    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell", category: "success")
+    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell", category: "warning")
+    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell", category: "danger")
+
+    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell")
+    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell", category: "info")
+    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell", category: "success")
+    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell", category: "warning")
+    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell", category: "danger")
+```
+
 #### License
 -------
 Copyright (c) 2020, all rights reserved.

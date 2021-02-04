@@ -30,7 +30,7 @@ export default {
     },
     methods: {
         getNotifications() {
-            this.http.get(this.url.bell("notifications").s).then(result => {
+            this.http.get(this.url.bell("notifications")).then(result => {
                 this.notifications = result.data
             })
         }
@@ -42,7 +42,10 @@ export default {
         <component-header title="Notifications"></component-header>
         <div class="card">
             <div class="card-content">
-                <div :class="['message', 'is-'+notification.kind]" v-for="notification in notifications" :key="notification.id">
+                <div 
+                    v-for="notification in notifications.records" 
+                    :key="notification.id"
+                    :class="['message', 'is-'+notification.kind]">
                     <div class="message-body">
                         {{ notification.subject }}
                     </div>
