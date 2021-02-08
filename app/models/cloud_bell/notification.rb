@@ -48,7 +48,7 @@ module CloudBell
             # add pagination
             notifications = notifications
             .page(query[:pagination][:page])
-            .per(20) #.per(query[:pagination][:perPage])
+            .per(query[:pagination][:perPage])
             .order(:updated_at)
 
             LC::Response.pagination(

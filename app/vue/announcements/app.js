@@ -22,16 +22,16 @@ import app from "LesliVue/app"
 
 
 // · Import apps and components
-import appList from "./apps/list.vue"
-import appNew from "./apps/new.vue"
+import pageList from "./pages/list.vue"
+import pageNew from "./pages/new.vue"
 
 
 
 // · Cloud app
 app("CloudBell", "[list]", "/bell/announcements", [{
     path: "/",
-    component: appList
+    component: pageList
 }, {
     path: "/new",
-    component: appNew
+    component: pageNew
 }])

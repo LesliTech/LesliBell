@@ -30,7 +30,7 @@ export default {
     },
     methods: {
         getAnnouncements() {
-            this.http.get(this.url.bell("announcements")).then(result => {
+            this.http.get(this.url.bell("announcements").paginate(1)).then(result => {
                 this.announcements = result.data
             })
         }
@@ -54,14 +54,14 @@ export default {
             </div>
         </component-header>
         <div class="card">
-            <div class="card-content">
-                <div :class="['message', 'is-'+announcement.kind]" v-for="announcement in announcements" :key="announcement.id">
+            <component-data-empty v-if="announcements.pagination.count_total <= 0"></component-data-empty>
+            <div class="card-content" v-if="announcements.pagination.count_total > 0">
+                <div :class="['message', 'is-'+announcement.kind]" v-for="announcement in announcements.records" :key="announcement.id">
                     <div class="message-body">
-                        {{ announcement.subject }}
+                        {{ announcement.name }}
                     </div>
                 </div>
             </div>
         </div>
-        
     </section>
 </template>
