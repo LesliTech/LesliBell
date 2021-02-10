@@ -22,16 +22,16 @@ export default {
     data() {
         return {
             translations: {},
-            announcements: [],
+            notifications: [],
         }
     },
     mounted() {
-        this.getAnnouncements()
+        this.getNotifications()
     },
     methods: {
-        getAnnouncements() {
-            this.http.get(this.url.bell("announcements")).then(result => {
-                this.announcements = result.data
+        getNotifications() {
+            this.http.get(this.url.bell("notifications")).then(result => {
+                this.notifications = result.data
             })
         }
     }
@@ -39,25 +39,15 @@ export default {
 </script>
 <template>
     <section class="application-component">
-        <component-header title="Announcements">
-            <div class="buttons">
-                <router-link class="button" tag="button" to="/">
-                    <span class="icon">
-                        <i class="fas fa-list"></i>
-                    </span>
-                    <span>List announcements</span>
-                </router-link>
-                <router-link class="button" tag="button" to="/new">
-                    <b-icon icon="plus" size="is-small" />
-                    <span>New announcements</span>
-                </router-link>
-            </div>
-        </component-header>
+        <component-header title="Notifications"></component-header>
         <div class="card">
             <div class="card-content">
-                <div :class="['message', 'is-'+announcement.kind]" v-for="announcement in announcements" :key="announcement.id">
+                <div 
+                    v-for="notification in notifications.records" 
+                    :key="notification.id"
+                    :class="['message', 'is-'+notification.kind]">
                     <div class="message-body">
-                        {{ announcement.subject }}
+                        {{ notification.subject }}
                     </div>
                 </div>
             </div>
