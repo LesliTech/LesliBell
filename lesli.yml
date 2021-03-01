@@ -7,6 +7,6 @@ info:
     name: "CloudBell"
     code: "cloud_bell"
     github:
-        url: "https://github.com/leitfaden/CloudBell"
-        ssh: "git@github.com:leitfaden/CloudBell.git"
-        ssh_backup: "git@github.com:LesliTech/CloudBell.git"
+        url: "https://github.com/leitfaden/cloud_bell"
+        ssh: "git@github.com:leitfaden/cloud_bell.git"
+        ssh_backup: "git@github.com:LesliTech/cloud_bell.git"
