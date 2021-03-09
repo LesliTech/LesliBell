@@ -18,9 +18,11 @@ For more information read the license file including with this software.
 =end
 
 module CloudBell
-    class Notification < ApplicationRecord
+    class Notification < ApplicationLesliRecord
         belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
+
+        after_create :send_notification
 
         enum category: {
             info: "info",
@@ -69,6 +71,15 @@ module CloudBell
                 end
             )
 
+        end
+
+        def send_notification
+            case sender
+            when "email"
+                NotificationMailer.with({user: user, notification: self}).notification.deliver_later
+            when "web"
+            when "push"
+            end
         end
 
         def self.count current_user
