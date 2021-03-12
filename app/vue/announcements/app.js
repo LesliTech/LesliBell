@@ -22,7 +22,8 @@ import app from "LesliVue/app"
 
 
 // · Import apps and components
-import pageList from "./pages/list.vue"
+import pageIndex from "./pages/index.vue"
+import pageEdit from "./pages/edit.vue"
 import pageNew from "./pages/new.vue"
 
 
@@ -30,8 +31,11 @@ import pageNew from "./pages/new.vue"
 // · Cloud app
 app("CloudBell", "[list]", "/bell/announcements", [{
     path: "/",
-    component: pageList
+    component: pageIndex
 }, {
     path: "/new",
     component: pageNew
+}, {
+    path: "/:id/edit",
+    component: pageEdit
 }])

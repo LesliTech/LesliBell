@@ -25,6 +25,25 @@ import componentForm from "../components/form.vue"
 export default {
     components: {
         "component-form": componentForm
+    },
+    data() {
+        return {
+            announcement_id: null,
+            announcement: {}
+        }
+    },
+    mounted() {
+        this.announcement_id = this.$route.params.id
+        this.getAnnouncement()
+    },
+    methods: {
+
+        getAnnouncement() {
+            this.http.get(this.url.bell("announcements/:id", { id: this.announcement_id })).then(result => {
+                this.announcement = result.data
+            })
+        }
+
     }
 }
 </script>
@@ -33,7 +52,7 @@ export default {
         <component-header title="New announcement"></component-header>
         <div class="card">
             <div class="card-content">
-                <component-form></component-form>
+                <component-form :announcement="this.announcement"></component-form>
             </div>
         </div>
     </section>
