@@ -21,7 +21,7 @@ require_dependency "cloud_bell/application_controller"
 
 module CloudBell
     class AnnouncementsController < ApplicationLesliController
-        before_action :set_announcement, only: [:update, :destroy]
+        before_action :set_announcement, only: [:show, :update, :destroy]
 
         # GET /announcements
         def index
@@ -66,9 +66,8 @@ module CloudBell
         # PATCH/PUT /announcements/1
         def update
             return respond_with_not_found unless @announcement
-
             if @announcement.update(announcement_params)
-                respond_with_successful(@announcement.show(current_user, query))
+                respond_with_successful(@announcement.show(current_user, @query))
             else
                 respond_with_error(@announcement.errors.full_messages.to_sentence)
             end

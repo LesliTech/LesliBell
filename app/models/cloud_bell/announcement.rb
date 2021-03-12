@@ -28,8 +28,9 @@ module CloudBell
                 :name,
                 :kind,
                 :status,
+                :message,
                 :can_be_closed,
-                LC::Date2.new.format("date_time").db_timestamps
+                LC::Date2.new.date_time.db_timestamps
             )
             .page(query[:pagination][:page])
             .per(query[:pagination][:perPage])
@@ -40,7 +41,10 @@ module CloudBell
                 announcements.total_pages,
                 announcements.total_count,
                 announcements.length,
-                announcements
+                announcements.map do |announcement|
+                    announcement[:message][:delta] = ""
+                    announcement
+                end
             )
         end
 

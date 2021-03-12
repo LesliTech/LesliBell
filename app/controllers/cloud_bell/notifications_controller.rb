@@ -76,7 +76,7 @@ module CloudBell
         def read
             if @notification.user == current_user
                 @notification.update(read: true)
-                responseWithSuccessful
+                respond_with_successful
             else
                 responseWithError('Unable to mark notification as read','This notification does not belong to the logged user')
             end
@@ -86,11 +86,11 @@ module CloudBell
             current_user.account.bell.notifications
             .where(read: false, user:current_user)
             .update_all(:read => true)
-            responseWithSuccessful()
+            respond_with_successful()
         end
 
         def options
-            return responseWithSuccessful(Notification.options)
+            return respond_with_successful(Notification.options)
         end
 
         private
