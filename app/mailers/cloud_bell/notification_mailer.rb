@@ -23,7 +23,7 @@ module CloudBell
             user = params[:user]
             notification = params[:notification]
 
-            @data = @data.merge({
+            self.build_data_from_params({}, {
                 notification: notification,
                 link_text: I18n.t("bell.notifications.mailer_btn_open_url"),
                 user: {
