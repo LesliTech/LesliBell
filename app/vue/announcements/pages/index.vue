@@ -22,7 +22,9 @@ export default {
     data() {
         return {
             translations: {},
-            announcements: [],
+            announcements: {
+                pagination: {}
+            },
         }
     },
     mounted() {
@@ -53,15 +55,17 @@ export default {
                 </router-link>
             </div>
         </component-header>
-        <div class="card">
+        <div class="box">
             <component-data-empty v-if="announcements.pagination.count_total <= 0"></component-data-empty>
-            <div class="card-content" v-if="announcements.pagination.count_total > 0">
-                <div :class="['message', 'is-'+announcement.kind]" v-for="announcement in announcements.records" :key="announcement.id">
-                    <div class="message-body">
-                        {{ announcement.name }}
+            <a :href="url.bell('announcements/:id/edit', { id: 1 })">
+                <b-notification 
+                    v-for="announcement in announcements.records" 
+                    :key="announcement.id" 
+                    type="is-info">
+                    <div v-html="announcement.message.html">
                     </div>
-                </div>
-            </div>
+                </b-notification>
+            </a>
         </div>
     </section>
 </template>

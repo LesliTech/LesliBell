@@ -19,16 +19,33 @@ For more information read the license file including with this software.
 
 import componentRichtextEditor from "LesliVue/components/editors/richtext.vue"
 
+
+// · 
 export default {
+    props: {
+        announcement: {
+            type: Object,
+            default() {
+                return {}
+            }
+        }
+    },
     components: {
         "component-richtext-editor": componentRichtextEditor
     },
     data() {
         return {
-            announcement: {}
         }
     },
     methods: {
+
+        formSubmit() {
+            if (this.announcement.id) {
+                this.putAnnouncement()
+            } else {
+                this.postAnnouncement()
+            }
+        },
 
         postAnnouncement() {
             this.http.post(this.url.bell("announcements"), {
@@ -40,13 +57,25 @@ export default {
                 }
                 this.msg.success("Announcement created successfully") 
             })
+        },
+
+        putAnnouncement() {
+            this.http.put(this.url.bell("announcements/:id", { id: this.announcement.id }), {
+                announcement: this.announcement
+            }).then(result => {
+                if (!result.successful) {
+                    this.msg.error(result.error.message)
+                    return
+                }
+                this.msg.success("Announcement updated successfully") 
+            })
         }
 
     }
 }
 </script>
 <template>
-    <form @submit.prevent="postAnnouncement()">
+    <form @submit.prevent="formSubmit()">
         <div class="field">
             <label class="label">Name</label>
             <div class="control">
@@ -65,12 +94,7 @@ export default {
                 </b-select>
             </b-field>
             <b-field label="expiration date">
-                <b-datepicker
-                    v-model="announcement.expiration_at"
-                    placeholder="Click to select..."
-                    icon="calendar-today"
-                    trap-focus>
-                </b-datepicker>
+               
             </b-field>
             <b-field label="can be closed?">
                 <b-select>
@@ -83,7 +107,7 @@ export default {
         <div class="field">
             <label class="label">Message</label>
             <div class="control">
-                <component-richtext-editor v-model="announcement.message"></component-richtext-editor>
+                <component-richtext-editor mode="simple" v-model="announcement.message"></component-richtext-editor>
             </div>
         </div>
 

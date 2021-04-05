@@ -22,7 +22,7 @@ class CreateCloudBellAnnouncements < ActiveRecord::Migration[6.0]
         create_table :cloud_bell_announcements do |t|
             t.string    :name
             t.string    :kind
-            t.string    :message
+            t.json      :message
             t.string    :status
             t.datetime  :expiration_at
             t.boolean   :can_be_closed, :default => true
