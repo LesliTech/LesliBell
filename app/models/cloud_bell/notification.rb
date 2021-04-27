@@ -32,9 +32,11 @@ module CloudBell
         }
 
         enum sender: {
-            web: "web",
-            email: "email",
-            push: "push"
+            web: "web",         # notification for web interface only
+            email: "email",     # notification sent by email only
+            mobile: "mobile",   # notification for mobile only
+            push: "push",       # notification will be showed in all the interfaces
+            api: "api"          # notification for api clients only
         }
 
         enum status: {
@@ -43,9 +45,13 @@ module CloudBell
             read: "read"
         }
 
-        def self.index current_user, query
+        def self.index current_user, query, only_own_notifications=false
+            
             notifications = current_user.account.bell.notifications
             .order(created_at: :DESC)
+
+            # work only with notifications that belongs to the user
+            notifications = notifications.where(:user => current_user, :status => ["created", "sent", nil]) if only_own_notifications
             
             # add pagination
             notifications = notifications
@@ -73,6 +79,35 @@ module CloudBell
 
         end
 
+        def self.read(current_user, id)
+
+            # check if it is needed to mark all notifications as read
+            if id == "all"
+
+                return current_user.account.bell.notifications
+                .where(:user => current_user, :status => ["created", "sent", nil])
+                .update_all(:status => "read", :deleted_at => Time.current)
+
+            end
+
+            # mark a specific notification as read
+            notification = current_user.account.bell.notifications.find(id)
+
+            # mark notification as read if notification exists
+            if !notification.blank?
+
+                notification.update(:status => "read") 
+
+                # return notification id that were marked as read
+                return notification.id
+
+            end
+
+            # if error, return 0
+            return 0
+
+        end
+
         def send_notification
             case sender
             when "email"
@@ -82,8 +117,10 @@ module CloudBell
             end
         end
 
-        def self.count current_user
-            current_user.account.bell.notifications.count
+        def self.count current_user, only_own_notifications=false
+            notifications = current_user.account.bell.notifications
+            notifications = notifications.where(:user => current_user, :status => ["created", "sent", nil]) if only_own_notifications
+            notifications.count
         end
 
     end

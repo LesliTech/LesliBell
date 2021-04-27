@@ -1,6 +1,6 @@
 =begin
 
-Copyright (c) 2020, all rights reserved.
+Copyright (c) 2021, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to 
 industrial property, intellectual property, copyright and relative international laws. 
@@ -17,25 +17,25 @@ For more information read the license file including with this software.
 
 =end
 
-CloudBell::Engine.routes.draw do
 
-    root to: "dashboards#show"
+require 'rails_helper'
+require 'spec_helper'
+require 'byebug'
 
-    resources :notifications, only: [:index, :show, :create] do
-        member do
-            scope :resources do
-                put :read
-            end
-        end
-        collection do
-            put :read
-            get :options
-            get :count
-            get :list
-        end
+
+RSpec.describe 'lib/cloud_bell/version.rb', type: :request do
+
+    it 'is expected to have valid VERSION information' do
+        version = CloudBell::VERSION
+        expect(version.class.to_s).to eql('String')
+        expect(version.length).to be >= 5
     end
 
-    resources :announcements, only: [:index, :show, :create, :edit, :update] do 
-    end
-    
+    it 'is expected to have valid BUILD information' do 
+        build = CloudBell::BUILD
+        date = Date.parse(build)
+        expect(build.class.to_s).to eql('String')
+        expect(date.class.to_s).to eql('Date')
+    end 
+
 end

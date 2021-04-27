@@ -33,6 +33,11 @@ export default {
             this.http.get(this.url.bell("notifications")).then(result => {
                 this.notifications = result.data
             })
+        },
+        testNotification() {
+            this.http.post(this.url.bell("notifications")).then(result => {
+                
+            })
         }
     }
 }
@@ -42,6 +47,7 @@ export default {
         <component-header title="Notifications"></component-header>
         <div class="card">
             <div class="card-content">
+                <button class="button is-primary" @click="testNotification()">test</button>
                 <div 
                     v-for="notification in notifications.records" 
                     :key="notification.id"

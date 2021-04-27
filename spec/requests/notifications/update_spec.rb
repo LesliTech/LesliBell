@@ -1,6 +1,6 @@
 =begin
 
-Copyright (c) 2020, all rights reserved.
+Copyright (c) 2021, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to 
 industrial property, intellectual property, copyright and relative international laws. 
@@ -17,25 +17,28 @@ For more information read the license file including with this software.
 
 =end
 
-CloudBell::Engine.routes.draw do
 
-    root to: "dashboards#show"
+require 'rails_helper'
+require 'spec_helper'
+require 'byebug'
 
-    resources :notifications, only: [:index, :show, :create] do
-        member do
-            scope :resources do
-                put :read
-            end
+
+RSpec.describe "PUT:/bell/notifications/:id", type: :request do
+    include_context 'user authentication'
+
+    it "Change user password" do
+
+        before(:all) do
+            put "/bell/notifications/1.json", params: {
+                notifications: {
+
+                }
+            }
         end
-        collection do
-            put :read
-            get :options
-            get :count
-            get :list
-        end
+
+        include_examples 'successful standard json response'
+
     end
 
-    resources :announcements, only: [:index, :show, :create, :edit, :update] do 
-    end
-    
 end
+
