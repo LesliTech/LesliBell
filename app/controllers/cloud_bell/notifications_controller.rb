@@ -35,6 +35,7 @@ module CloudBell
 
         # GET /notifications/1
         def show
+            respond_with_successful(@notification)
         end
 
         # GET /notifications/new
@@ -69,7 +70,7 @@ module CloudBell
         # PATCH/PUT /notifications/1
         def update
             if @notification.update(notification_params)
-                redirect_to @notification, notice: 'Notification was successfully updated.'
+                respond_with_successful(@notification)
             else
                 render :edit
             end
