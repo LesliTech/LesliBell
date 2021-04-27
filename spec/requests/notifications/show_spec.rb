@@ -26,13 +26,19 @@ RSpec.describe 'GET:/bell/notifications/:id.json', type: :request do
     include_context 'user authentication'
     
     before(:all) do
-        get '/bell/notifications/1.json' 
+
+        # register a notification to the user, so we have at least one active notification
+        @notification = Courier::Bell::Notification.new(@user, "notification from rspec")
+
+        # get notification
+        get "/bell/notifications/#{ @notification[:id] }.json"
+
     end
 
     include_examples 'successful standard json response'
 
-    it 'is expected to respond with all the users' do
-        expect(@response_body["data"]).to eql(notifications.find(1))
+    it 'is expected to respond with notification' do
+        expect(@response_body["data"]["id"]).to eql(@notification[:id])
     end
     
 end
