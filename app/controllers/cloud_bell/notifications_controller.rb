@@ -35,6 +35,7 @@ module CloudBell
 
         # GET /notifications/1
         def show
+            respond_with_successful(@notification)
         end
 
         # GET /notifications/new
@@ -48,6 +49,15 @@ module CloudBell
 
         # POST /notifications
         def create
+
+            notification = Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell")
+            ActionCable.server.broadcast('web_notifications_channel', {
+                notifications: Courier::Bell::Notification.count(current_user),
+                notification: notification
+            })
+
+            respond_with_successful()
+            return 
             @notification = Notification.new(notification_params)
 
             if @notification.save
@@ -60,7 +70,7 @@ module CloudBell
         # PATCH/PUT /notifications/1
         def update
             if @notification.update(notification_params)
-                redirect_to @notification, notice: 'Notification was successfully updated.'
+                respond_with_successful(@notification)
             else
                 render :edit
             end
@@ -70,23 +80,6 @@ module CloudBell
         def destroy
             @notification.destroy
             redirect_to notifications_url, notice: 'Notification was successfully destroyed.'
-        end
-
-        # PUT /api/notifications/1/read
-        def read
-            if @notification.user == current_user
-                @notification.update(read: true)
-                respond_with_successful
-            else
-                responseWithError('Unable to mark notification as read','This notification does not belong to the logged user')
-            end
-        end
-
-        def read_all
-            current_user.account.bell.notifications
-            .where(read: false, user:current_user)
-            .update_all(:read => true)
-            respond_with_successful()
         end
 
         def options

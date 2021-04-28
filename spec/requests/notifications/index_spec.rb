@@ -1,6 +1,6 @@
 =begin
 
-Copyright (c) 2020, all rights reserved.
+Copyright (c) 2021, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to 
 industrial property, intellectual property, copyright and relative international laws. 
@@ -17,25 +17,24 @@ For more information read the license file including with this software.
 
 =end
 
-CloudBell::Engine.routes.draw do
+require 'rails_helper'
+require 'spec_helper'
+require 'byebug'
 
-    root to: "dashboards#show"
 
-    resources :notifications, only: [:index, :show, :create, :update] do
-        member do
-            scope :resources do
-                put :read
-            end
-        end
-        collection do
-            put :read
-            get :options
-            get :count
-            get :list
-        end
+RSpec.describe 'GET:/bell/notifications.json', type: :request do
+    include_context 'user authentication'
+    
+    before(:all) do
+        get '/bell/notifications.json' 
     end
 
-    resources :announcements, only: [:index, :show, :create, :edit, :update] do 
+    include_examples 'successful standard json response'
+
+    it 'is expected to respond with all the notification for the current user' do
+        notifications = Courier::Bell::Notification.index(@user, { pagination: { page: 1, perPage: 999 }})
+        notifications = notifications[:pagination][:count_results]
+        expect(@response_body["data"]["pagination"]["count_results"]).to eql(notifications)
     end
     
 end

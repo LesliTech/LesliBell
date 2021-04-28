@@ -1,6 +1,6 @@
 =begin
 
-Copyright (c) 2020, all rights reserved.
+Copyright (c) 2021, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to 
 industrial property, intellectual property, copyright and relative international laws. 
@@ -17,25 +17,28 @@ For more information read the license file including with this software.
 
 =end
 
-CloudBell::Engine.routes.draw do
+require 'rails_helper'
+require 'spec_helper'
+require 'byebug'
 
-    root to: "dashboards#show"
 
-    resources :notifications, only: [:index, :show, :create, :update] do
-        member do
-            scope :resources do
-                put :read
-            end
-        end
-        collection do
-            put :read
-            get :options
-            get :count
-            get :list
-        end
+RSpec.describe 'GET:/bell/notifications/:id.json', type: :request do
+    include_context 'user authentication'
+    
+    before(:all) do
+
+        # register a notification to the user, so we have at least one active notification
+        @notification = Courier::Bell::Notification.new(@user, "notification from rspec")
+
+        # get notification
+        get "/bell/notifications/#{ @notification[:id] }.json"
+
     end
 
-    resources :announcements, only: [:index, :show, :create, :edit, :update] do 
+    include_examples 'successful standard json response'
+
+    it 'is expected to respond with notification' do
+        expect(@response_body["data"]["id"]).to eql(@notification[:id])
     end
     
 end
