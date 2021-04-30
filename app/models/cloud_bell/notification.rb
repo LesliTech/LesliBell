@@ -111,9 +111,13 @@ module CloudBell
         def send_notification
             case sender
             when "email"
-                NotificationMailer.with({user: user, notification: self}).notification.deliver_later
+                NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
             when "web"
             when "push"
+                ActionCable.server.broadcast('web_notifications_channel', {
+                    notifications: Courier::Bell::Notification.count(user, true),
+                    notification: self
+                })
             end
         end
 
