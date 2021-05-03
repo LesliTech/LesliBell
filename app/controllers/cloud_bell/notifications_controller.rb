@@ -2,9 +2,9 @@
 
 Copyright (c) 2020, all rights reserved.
 
-All the information provided by this platform is protected by international laws related  to 
-industrial property, intellectual property, copyright and relative international laws. 
-All intellectual or industrial property rights of the code, texts, trade mark, design, 
+All the information provided by this platform is protected by international laws related  to
+industrial property, intellectual property, copyright and relative international laws.
+All intellectual or industrial property rights of the code, texts, trade mark, design,
 pictures and any other information belongs to the owner of this platform.
 
 Without the written permission of the owner, any replication, modification,
@@ -13,7 +13,7 @@ transmission, publication is strictly forbidden.
 For more information read the license file including with this software.
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-// · 
+// ·
 
 =end
 
@@ -27,8 +27,8 @@ module CloudBell
         def index
             respond_to do |format|
                 format.html {  }
-                format.json { 
-                    respond_with_successful(Notification.index(current_user, @query)) 
+                format.json {
+                    respond_with_successful(Notification.index(current_user, @query))
                 }
             end
         end
@@ -49,22 +49,8 @@ module CloudBell
 
         # POST /notifications
         def create
-
             notification = Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell")
-            ActionCable.server.broadcast('web_notifications_channel', {
-                notifications: Courier::Bell::Notification.count(current_user),
-                notification: notification
-            })
-
-            respond_with_successful()
-            return 
-            @notification = Notification.new(notification_params)
-
-            if @notification.save
-                redirect_to @notification, notice: 'Notification was successfully created.'
-            else
-                render :new
-            end
+            return respond_with_successful()
         end
 
         # PATCH/PUT /notifications/1
