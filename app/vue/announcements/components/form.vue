@@ -35,6 +35,14 @@ export default {
     },
     data() {
         return {
+            translations: {
+                core: {
+                    shared: I18n.t("core.shared"),
+                },
+                bell: {
+                    announcements: I18n.t("bell.announcements"),
+                }
+            },
         }
     },
     methods: {
@@ -55,7 +63,7 @@ export default {
                     this.msg.error(result.error.message)
                     return
                 }
-                this.msg.success("Announcement created successfully") 
+                this.msg.success(this.translations.bell.announcements.messages_success_announcement_created_successfully) 
             })
         },
 
@@ -67,7 +75,7 @@ export default {
                     this.msg.error(result.error.message)
                     return
                 }
-                this.msg.success("Announcement updated successfully") 
+                this.msg.success(this.translations.bell.announcements.messages_success_announcement_updated_successfully) 
             })
         }
 
@@ -77,14 +85,14 @@ export default {
 <template>
     <form @submit.prevent="formSubmit()">
         <div class="field">
-            <label class="label">Name</label>
+            <label class="label">{{ translations.bell.announcements.column_name }}</label>
             <div class="control">
                 <input class="input" type="text" placeholder="Text input" v-model="announcement.name">
             </div>
         </div>
 
         <b-field grouped>
-            <b-field label="category">
+            <b-field :label="translations.bell.announcements.column_kind">
                 <b-select>
                     <option>normal</option>
                     <option>info</option>
@@ -93,19 +101,19 @@ export default {
                     <option>danger</option>
                 </b-select>
             </b-field>
-            <b-field label="expiration date">
+            <b-field :label="translations.bell.announcements.column_expiration_at">
                
             </b-field>
-            <b-field label="can be closed?">
+            <b-field :label="translations.bell.announcements.column_can_be_closed">
                 <b-select>
-                    <option>yes</option>
-                    <option>no</option>
+                    <option>{{ translations.core.shared.view_text_yes }}</option>
+                    <option>{{ translations.core.shared.view_text_no }}</option>
                 </b-select>
             </b-field>
         </b-field>
 
         <div class="field">
-            <label class="label">Message</label>
+            <label class="label">{{ translations.bell.announcements.column_message }}</label>
             <div class="control">
                 <component-richtext-editor mode="simple" v-model="announcement.message"></component-richtext-editor>
             </div>

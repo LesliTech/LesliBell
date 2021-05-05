@@ -21,7 +21,14 @@ For more information read the license file including with this software.
 export default {
     data() {
         return {
-            translations: {},
+            translations: {
+                core: {
+                    shared: I18n.t("core.shared"),
+                },
+                bell: {
+                    announcements: I18n.t("bell.announcements"),
+                }
+            },
             announcements: {
                 pagination: {}
             },
@@ -41,17 +48,17 @@ export default {
 </script>
 <template>
     <section class="application-component">
-        <component-header title="Announcements">
+        <component-header :title="translations.bell.announcements.view_title_announcements">
             <div class="buttons">
                 <router-link class="button" tag="button" to="/">
                     <span class="icon">
                         <i class="fas fa-list"></i>
                     </span>
-                    <span>List announcements</span>
+                    <span>{{ translations.core.shared.view_btn_list }}</span>
                 </router-link>
                 <router-link class="button" tag="button" to="/new">
                     <b-icon icon="plus" size="is-small" />
-                    <span>New announcements</span>
+                    <span>{{ translations.bell.announcements.view_btn_new }}</span>
                 </router-link>
             </div>
         </component-header>
