@@ -23,6 +23,18 @@ import componentForm from "../components/form.vue"
 
 // · 
 export default {
+    data() {
+        return {
+            translations: {
+                core: {
+                    shared: I18n.t("core.shared"),
+                },
+                bell: {
+                    announcements: I18n.t("bell.announcements"),
+                }
+            },
+        }
+    },
     components: {
         "component-form": componentForm
     }
@@ -30,7 +42,7 @@ export default {
 </script>
 <template>
     <section class="application-component">
-        <component-header title="New announcement"></component-header>
+        <component-header :title="translations.bell.announcements.view_title_new_announcement"></component-header>
         <div class="card">
             <div class="card-content">
                 <component-form></component-form>
