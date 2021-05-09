@@ -109,12 +109,13 @@ module CloudBell
         end
 
         def send_notification
+
             case sender
             when "email"
                 NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
             when "web"
             when "push"
-                ActionCable.server.broadcast('web_notifications_channel', {
+                ActionCable.server.broadcast("web_notifications_channel_#{ user.id }", {
                     notifications: Courier::Bell::Notification.count(user, true),
                     notification: self
                 })
@@ -125,6 +126,13 @@ module CloudBell
             notifications = current_user.account.bell.notifications
             notifications = notifications.where(:user => current_user, :status => ["created", "sent", nil]) if only_own_notifications
             notifications.count
+        end
+
+        def self.options
+            {
+                categories: categories.map { |key, value| {value: key, text: value} },
+                sender: senders.map { |key, value| {value: key, text: value} }
+            }
         end
 
     end

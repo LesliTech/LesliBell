@@ -23,7 +23,7 @@ module CloudBell
         #.where(:expiration_at => LC::Date2.new.date_time.db_column("expiration_at"))
         def self.index(current_user, query)
             announcements = current_user.account.bell.announcements.all
-            .where("expiration_at > ?", LC::Date2.new.now)
+            .where("expiration_at > ?", LC::Date2.new.get)
             .select(
                 :id,
                 :name,

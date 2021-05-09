@@ -21,7 +21,14 @@ For more information read the license file including with this software.
 export default {
     data() {
         return {
-            translations: {},
+            translations: {
+                core: {
+                    shared: I18n.t("core.shared"),
+                },
+                bell: {
+                    notifications: I18n.t("bell.notifications"),
+                }
+            },
             notifications: [],
         }
     },
@@ -44,7 +51,7 @@ export default {
 </script>
 <template>
     <section class="application-component">
-        <component-header title="Notifications"></component-header>
+        <component-header :title="translations.bell.notifications.view_title_notifications"></component-header>
         <div class="card">
             <div class="card-content">
                 <button class="button is-primary" @click="testNotification()">test</button>
