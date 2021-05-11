@@ -36,6 +36,32 @@ export default {
         this.getNotifications()
     },
     methods: {
+
+        prepareDesktopNotification() {
+
+            if (!("Notification" in window)) {
+                console.log("This browser does not support desktop notification");
+                return
+            }
+
+            // Let's check whether notification permissions have already been granted
+            if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var notification = new Notification("Hi there!");
+                return
+            }
+
+            // Otherwise, we need to ask the user for permission
+            if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        var notification = new Notification("Hi there!");
+                    }
+                })
+            }
+
+        },
         getNotifications() {
             this.http.get(this.url.bell("notifications")).then(result => {
                 this.notifications = result.data
@@ -45,6 +71,7 @@ export default {
             this.http.post(this.url.bell("notifications")).then(result => {
                 
             })
+            this.prepareDesktopNotification()   
         }
     }
 }
