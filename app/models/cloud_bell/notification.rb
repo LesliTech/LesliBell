@@ -115,10 +115,26 @@ module CloudBell
                 NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
             when "web"
             when "push"
-                ActionCable.server.broadcast("web_notifications_channel_#{ user.id }", {
-                    notifications: Courier::Bell::Notification.count(user, true),
-                    notification: self
-                })
+                pushes = Rails.application.config.lesli_settings["configuration"]["security"]["enable_pushes"] || false
+                if pushes
+                    pushManager = User::Webpush.all.each do |pushManager|
+                        Webpush.payload_send(
+                            endpoint: pushManager.endpoint,
+                            message: self.subject,
+                            p256dh: pushManager.p256dh_key,
+                            auth: pushManager.auth_key,
+                            vapid: {
+                                public_key: Rails.application.credentials.services[:vapid][:public_key],
+                                private_key: Rails.application.credentials.services[:vapid][:private_key]
+                            }
+                        )
+                    end
+                end
+
+                #ActionCable.server.broadcast("web_notifications_channel_#{ user.id }", {
+                #    notifications: Courier::Bell::Notification.count(user, true),
+                #    notification: self
+                #})
             end
         end
 
