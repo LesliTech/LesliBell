@@ -110,32 +110,28 @@ module CloudBell
 
         def send_notification
 
-            case sender
-            when "email"
+            if sender == "email"
                 NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
-            when "web"
-            when "push"
-                pushes = Rails.application.config.lesli_settings["configuration"]["security"]["enable_pushes"] || false
-                if pushes
-                    pushManager = User::Webpush.all.each do |pushManager|
-                        Webpush.payload_send(
-                            endpoint: pushManager.endpoint,
-                            message: self.subject,
-                            p256dh: pushManager.p256dh_key,
-                            auth: pushManager.auth_key,
-                            vapid: {
-                                public_key: Rails.application.credentials.services[:vapid][:public_key],
-                                private_key: Rails.application.credentials.services[:vapid][:private_key]
-                            }
-                        )
-                    end
-                end
-
-                #ActionCable.server.broadcast("web_notifications_channel_#{ user.id }", {
-                #    notifications: Courier::Bell::Notification.count(user, true),
-                #    notification: self
-                #})
+                return 
             end
+
+            if sender == "push"
+                channel = "notifications_#{ user.id }"
+                begin
+                    return if !Rails.application.config.lesli_settings["configuration"]["security"]["enable_websockets"]
+                    Faraday.post("http://localhost:8080/api/wss/channel/#{ channel }/message", {
+                        id: self.id,
+                        subject: self.subject,
+                        category: self.kind,
+                        body: self.body || "",
+                        url: self.url || "",
+                        created_at_date: LC::Date2.new(self.created_at).date_time
+                    })
+                rescue
+                end
+                return 
+            end
+            
         end
 
         def self.count current_user, only_own_notifications=false
