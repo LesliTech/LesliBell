@@ -2,9 +2,9 @@
 
 Copyright (c) 2020, all rights reserved.
 
-All the information provided by this platform is protected by international laws related  to 
-industrial property, intellectual property, copyright and relative international laws. 
-All intellectual or industrial property rights of the code, texts, trade mark, design, 
+All the information provided by this platform is protected by international laws related  to
+industrial property, intellectual property, copyright and relative international laws.
+All intellectual or industrial property rights of the code, texts, trade mark, design,
 pictures and any other information belongs to the owner of this platform.
 
 Without the written permission of the owner, any replication, modification,
@@ -13,7 +13,7 @@ transmission, publication is strictly forbidden.
 For more information read the license file including with this software.
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-// · 
+// ·
 
 =end
 
@@ -46,13 +46,13 @@ module CloudBell
         }
 
         def self.index current_user, query, only_own_notifications=false
-            
+
             notifications = current_user.account.bell.notifications
             .order(created_at: :DESC)
 
             # work only with notifications that belongs to the user
             notifications = notifications.where(:user => current_user, :status => ["created", "sent", nil]) if only_own_notifications
-            
+
             # add pagination
             notifications = notifications
             .page(query[:pagination][:page])
@@ -96,7 +96,7 @@ module CloudBell
             # mark notification as read if notification exists
             if !notification.blank?
 
-                notification.update(:status => "read") 
+                notification.update(:status => "read")
 
                 # return notification id that were marked as read
                 return notification.id
@@ -115,10 +115,6 @@ module CloudBell
                 NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
             when "web"
             when "push"
-                ActionCable.server.broadcast("web_notifications_channel_#{ user.id }", {
-                    notifications: Courier::Bell::Notification.count(user, true),
-                    notification: self
-                })
             end
         end
 
