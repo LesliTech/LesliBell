@@ -19,17 +19,17 @@ For more information read the license file including with this software.
 
 <template>
 
-    <%= nav_link(root_path) do %>
+    <%= navigation_vue_item(cloud_bell.root_path) do %>
         <i class="fas fa-tachometer-alt"></i>
         <span><%= I18n.t("bell.shared.sidebar_nav_dashboard")%></span>
     <% end %>
 
-    <%= nav_link(notifications_path) do %>
+    <%= navigation_vue_item(cloud_bell.notifications_path) do %>
         <i class="fas fa-bell"></i>
         <span><%= I18n.t("bell.shared.sidebar_nav_notifications")%></span>
     <% end %>
 
-    <%= nav_link(announcements_path) do %>
+    <%= navigation_vue_item(cloud_bell.announcements_path) do %>
         <i class="fas fa-bullhorn"></i>
         <span><%= I18n.t("bell.shared.sidebar_nav_announcements")%></span>
     <% end %>
