@@ -19,16 +19,23 @@ For more information read the license file including with this software.
 
 
 // · Import main app
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-import app from 'LesliCoreVue/app'
+import app from "LesliVue/app2"
 
 
-
-// · Import apps and components
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-
+// · Import apps 
+import dashboardIndex from "./dashboards/actions/index.vue"
+import notificationIndex from "./notifications/actions/index.vue"
+import announcementIndex from "./announcements/actions/index.vue"
 
 
 // · Cloud app
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-app("CloudBell", "[]", "/bell", [])
+app("CloudBell", "/bell", "[dashboard]", [{
+    path: "/",
+    component: dashboardIndex
+}, {
+    path: "/notifications",
+    component: notificationIndex
+}, {
+    path: "/announcements",
+    component: announcementIndex
+}])

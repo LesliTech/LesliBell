@@ -50,10 +50,13 @@ export default {
 </script>
 <template>
     <section class="application-component">
-        <component-header :title="translations.bell.notifications.view_title_notifications"></component-header>
+        <component-header :title="translations.bell.notifications.view_title_notifications">
+            <div class="buttons">
+                <button class="button is-primary" @click="testNotification()">test</button>
+            </div>
+        </component-header>
         <div class="card">
             <div class="card-content">
-                <button class="button is-primary" @click="testNotification()">test</button>
                 <div 
                     v-for="notification in notifications.records" 
                     :key="notification.id"
