@@ -1,5 +1,5 @@
 module CloudBell
-    class ApplicationRecord < ActiveRecord::Base
+    class ApplicationRecord < ApplicationLesliRecord
         self.abstract_class = true
     end
 end
