@@ -20,14 +20,14 @@ module CloudBell
     class Announcement < ApplicationRecord
         belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
-        #.where(:expiration_at => LC::Date2.new.date_time.db_column("expiration_at"))
+
         def self.index(current_user, query)
             announcements = current_user.account.bell.announcements.all
-            .where("expiration_at > ?", LC::Date2.new.get)
+            .where("expiration_at is NULL or expiration_at > ? ", LC::Date2.new.get)
             .select(
                 :id,
                 :name,
-                :kind,
+                "COALESCE(kind, 'info') as category",
                 :status,
                 :message,
                 :can_be_closed,
