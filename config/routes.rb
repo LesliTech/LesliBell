@@ -36,6 +36,9 @@ CloudBell::Engine.routes.draw do
     end
 
     resources :announcements, only: [:index, :show, :create, :edit, :update] do 
+        collection do
+            get :options
+            get :list
+        end
     end
-    
 end

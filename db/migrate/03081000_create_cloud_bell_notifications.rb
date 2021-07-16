@@ -27,7 +27,10 @@ class CreateCloudBellNotifications < ActiveRecord::Migration[6.0]
             t.string    :kind
             t.string    :sender
             t.string    :status
-            t.datetime  :deleted_at, index: true            
+            t.string    :base_path   
+            
+            t.datetime  :deleted_at, index: true
+      
             t.timestamps
         end
         add_reference :cloud_bell_notifications, :users, foreign_key: true
