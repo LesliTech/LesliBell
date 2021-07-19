@@ -32,12 +32,25 @@ export default {
             announcements: {
                 pagination: {}
             },
+            columns: [{
+                field: 'id',
+                label: 'ID',
+                width: '40',
+                numeric: true
+            }, {
+                field: 'name',
+                label: 'Name',
+            }]
         }
     },
     mounted() {
         this.getAnnouncements()
     },
     methods: {
+        viewAnnouncement(announcement) {
+            console.log(announcement)
+            this.$router.push(`announcements/${announcement.id}/edit`)
+        },
         getAnnouncements() {
             this.http.get(this.url.bell("announcements").paginate(1)).then(result => {
                 this.announcements = result.data
@@ -50,29 +63,23 @@ export default {
     <section class="application-component">
         <component-header :title="translations.bell.announcements.view_title_announcements">
             <div class="buttons">
-                <router-link class="button" tag="button" to="/">
+                <router-link class="button" tag="button" to="announcements/list">
                     <span class="icon">
                         <i class="fas fa-list"></i>
                     </span>
                     <span>{{ translations.core.shared.view_btn_list }}</span>
                 </router-link>
-                <router-link class="button" tag="button" to="/new">
+                <router-link class="button" tag="button" to="announcements/new">
                     <b-icon icon="plus" size="is-small" />
                     <span>{{ translations.bell.announcements.view_btn_new }}</span>
                 </router-link>
             </div>
         </component-header>
-        <div class="box">
-            <component-data-empty v-if="announcements.pagination.count_total <= 0"></component-data-empty>
-            <a :href="url.bell('announcements/:id/edit', { id: 1 })">
-                <b-notification 
-                    v-for="announcement in announcements.records" 
-                    :key="announcement.id" 
-                    type="is-info">
-                    <div v-html="announcement.message.html">
-                    </div>
-                </b-notification>
-            </a>
-        </div>
+
+        <b-table :hoverable="true" :data="announcements.records" :columns="columns" @click="viewAnnouncement">
+            <template slot="empty">
+                <component-data-empty></component-data-empty>
+            </template>
+        </b-table>
     </section>
 </template>

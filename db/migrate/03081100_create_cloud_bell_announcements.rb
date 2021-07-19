@@ -20,10 +20,11 @@ For more information read the license file including with this software.
 class CreateCloudBellAnnouncements < ActiveRecord::Migration[6.0]
     def change
         create_table :cloud_bell_announcements do |t|
+            t.string    :url, index: true
             t.string    :name
             t.string    :kind
             t.json      :message
-            t.string    :status
+            t.boolean   :status
             t.datetime  :expiration_at
             t.boolean   :can_be_closed, :default => true
             t.datetime  :deleted_at, index: true

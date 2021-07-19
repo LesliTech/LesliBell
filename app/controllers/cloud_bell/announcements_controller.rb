@@ -22,7 +22,17 @@ require_dependency "cloud_bell/application_controller"
 module CloudBell
     class AnnouncementsController < ApplicationLesliController
         before_action :set_announcement, only: [:show, :update, :destroy]
-
+        
+        # GET /announcements/list
+        def list
+            respond_to do |format|
+                format.html {}
+                format.json do                    
+                    respond_with_successful(Announcement.list(current_user, @query))
+                end
+            end
+        end
+        
         # GET /announcements
         def index
             respond_to do |format|
@@ -56,6 +66,7 @@ module CloudBell
         def create
             announcement = current_user.account.bell.announcements.new(announcement_params)
             announcement.user = current_user
+            
             if announcement.save
                 respond_with_successful(announcement)
             else
@@ -84,8 +95,12 @@ module CloudBell
             end
         end
 
+        def options 
+            respond_with_successful(CloudBell::Announcement.options(current_user, @query))    
+        end
+        
         private
-
+        
         # Use callbacks to share common setup or constraints between actions.
         def set_announcement
             @announcement = Announcement.find(params[:id])
@@ -96,10 +111,12 @@ module CloudBell
             params.require(:announcement).permit(
                 :id, 
                 :name, 
+                :status,
                 :kind,
-                {message: {}},
+                :message,
                 :expiration_at, 
-                :can_be_closed
+                :can_be_closed,
+                :base_path
             )
         end
     end
