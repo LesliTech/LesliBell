@@ -48,7 +48,7 @@ module CloudBell
             announcements = announcements.select(
                 :id,
                 :name,
-                :kind,
+                "COALESCE(kind, 'info') as category",
                 :status,
                 :message,
                 :can_be_closed,
@@ -59,12 +59,12 @@ module CloudBell
         end
         
         def self.index(current_user, query)
-            announcements = current_user.account.bell.announcements
-            .where("expiration_at > ?", LC::Date2.new.get)
+            announcements = current_user.account.bell.announcements.all
+            .where("expiration_at is NULL or expiration_at > ? ", LC::Date2.new.get)
             .select(
                 :id,
                 :name,
-                :kind,
+                "COALESCE(kind, 'info') as category",
                 :status,
                 :message,
                 :can_be_closed,
@@ -79,16 +79,8 @@ module CloudBell
                 announcements.total_pages,
                 announcements.total_count,
                 announcements.length,
-                announcements.map do |announcement|
-                    if announcement[:message]
-                        JSON.parse(announcement[:message])
-                    end
-                    
-                    announcement
-                end
+                announcements
             )
-            
-            []
         end
 
         def show(current_user, query)
