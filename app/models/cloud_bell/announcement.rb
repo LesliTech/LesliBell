@@ -20,7 +20,44 @@ module CloudBell
     class Announcement < ApplicationRecord
         belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
+        #.where(:expiration_at => LC::Date2.new.date_time.db_column("expiration_at"))
+        
+        before_create :init_announcement
+        
+        def init_announcement
+            self.status ||= true
+        end
+        
+        enum kind: {
+            normal:   "normal",
+            info:     "info",
+            success:  "success",
+            warning:  "warning",
+            danger:   "danger"
+        }
+        
+        def self.list(current_user, query)
+            filters = query[:filters]||{}
+            
+            announcements = current_user.account.bell.announcements     
 
+            announcements = announcements.where("expiration_at > '#{LC::Date.now}' or expiration_at is null") if filters[:expiration_at] === true
+            announcements = announcements.where("status = ?", filters[:status]) if filters[:status].present?
+            announcements = announcements.where(base_path: filters[:base_path]) if filters[:base_path].present?
+            
+            announcements = announcements.select(
+                :id,
+                :name,
+                :kind,
+                :status,
+                :message,
+                :can_be_closed,
+                :expiration_at,
+                "concat(user_details.first_name, ' ', user_details.last_name) as user_creator"
+            )
+            .left_joins(user: [:detail])
+        end
+        
         def self.index(current_user, query)
             announcements = current_user.account.bell.announcements.all
             .where("expiration_at is NULL or expiration_at > ? ", LC::Date2.new.get)
@@ -42,10 +79,7 @@ module CloudBell
                 announcements.total_pages,
                 announcements.total_count,
                 announcements.length,
-                announcements.map do |announcement|
-                    announcement[:message][:delta] = ""
-                    announcement
-                end
+                announcements
             )
         end
 
@@ -57,5 +91,10 @@ module CloudBell
             current_user.account.bell.announcements.count
         end
 
+        def self.options(current_user, query)
+            { 
+                kinds: self.kinds.map {|k,_| {text: k, value: k}}
+            }
+        end
     end
 end
