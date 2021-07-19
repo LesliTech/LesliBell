@@ -111,6 +111,7 @@ module CloudBell
             params.require(:announcement).permit(
                 :id, 
                 :name, 
+                :status,
                 :kind,
                 :message,
                 :expiration_at, 
