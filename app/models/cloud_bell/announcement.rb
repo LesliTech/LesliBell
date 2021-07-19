@@ -39,7 +39,10 @@ module CloudBell
         def self.list(current_user, query)
             filters = query[:filters]||{}
             
-            announcements = current_user.account.bell.announcements            
+            announcements = current_user.account.bell.announcements     
+
+            announcements = announcements.where("expiration_at > '#{LC::Date.now}' or expiration_at is null") if filters[:expiration_at] === true
+            announcements = announcements.where("status = ?", filters[:status]) if filters[:status].present?
             announcements = announcements.where(base_path: filters[:base_path]) if filters[:base_path].present?
             
             announcements = announcements.select(
@@ -48,8 +51,11 @@ module CloudBell
                 :kind,
                 :status,
                 :message,
-                :can_be_closed
+                :can_be_closed,
+                :expiration_at,
+                "concat(user_details.first_name, ' ', user_details.last_name) as user_creator"
             )
+            .left_joins(user: [:detail])
         end
         
         def self.index(current_user, query)
@@ -75,7 +81,7 @@ module CloudBell
                 announcements.length,
                 announcements.map do |announcement|
                     if announcement[:message]
-                        announcement[:message][:delta] = ""
+                        JSON.parse(announcement[:message])
                     end
                     
                     announcement
