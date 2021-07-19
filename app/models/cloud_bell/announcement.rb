@@ -48,7 +48,7 @@ module CloudBell
             announcements = announcements.select(
                 :id,
                 :name,
-                "COALESCE(kind, 'info') as category",
+                :kind,
                 :status,
                 :message,
                 :can_be_closed,
