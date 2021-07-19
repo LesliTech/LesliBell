@@ -24,7 +24,7 @@ class CreateCloudBellAnnouncements < ActiveRecord::Migration[6.0]
             t.string    :name
             t.string    :kind
             t.json      :message
-            t.string    :status
+            t.boolean   :status
             t.datetime  :expiration_at
             t.boolean   :can_be_closed, :default => true
             t.datetime  :deleted_at, index: true
