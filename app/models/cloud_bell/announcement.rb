@@ -66,9 +66,13 @@ module CloudBell
         end
         
         def self.index(current_user, query)
-            announcements = current_user.account.bell.announcements.all
-            .where("end_at is NULL or end_at > ? ", LC::Date2.new.get)
-            .select(
+            filters = query[:filters]||{}
+            
+            announcements = current_user.account.bell.announcements
+            announcements = announcements.where("start_at <= '#{LC::Date.now.end_of_day}' or start_at is null") if filters[:start_at]
+            announcements = announcements.where("end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is null") if filters[:end_at]
+            
+            announcements = announcements.select(
                 :id,
                 :name,
                 :category,
