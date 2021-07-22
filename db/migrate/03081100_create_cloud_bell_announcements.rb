@@ -26,7 +26,7 @@ class CreateCloudBellAnnouncements < ActiveRecord::Migration[6.0]
             t.string    :base_path
             t.json      :message
             t.boolean   :status
-            t.datetime  :begin_at
+            t.datetime  :start_at
             t.datetime  :end_at
             t.boolean   :can_be_closed, :default => true
             t.datetime  :deleted_at, index: true
