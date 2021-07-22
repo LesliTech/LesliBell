@@ -112,9 +112,10 @@ module CloudBell
                 :id, 
                 :name, 
                 :status,
-                :kind,
+                :category,
                 :message,
-                :expiration_at, 
+                :start_at, 
+                :end_at,
                 :can_be_closed,
                 :base_path
             )
