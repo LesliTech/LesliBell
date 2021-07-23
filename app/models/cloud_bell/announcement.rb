@@ -20,7 +20,6 @@ module CloudBell
     class Announcement < ApplicationRecord
         belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
-        #.where(:expiration_at => LC::Date2.new.date_time.db_column("expiration_at"))
         
         before_create :init_announcement
         
@@ -28,7 +27,7 @@ module CloudBell
             self.status ||= true
         end
         
-        enum kind: {
+        enum category: {
             normal:   "normal",
             info:     "info",
             success:  "success",
@@ -41,30 +40,42 @@ module CloudBell
             
             announcements = current_user.account.bell.announcements     
 
-            announcements = announcements.where("expiration_at > '#{LC::Date.now}' or expiration_at is null") if filters[:expiration_at] === true
+            announcements = announcements.where("start_at <= '#{LC::Date.now.end_of_day}' or start_at is null") if filters[:start_at]
+            announcements = announcements.where("end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is null") if filters[:end_at]
             announcements = announcements.where("status = ?", filters[:status]) if filters[:status].present?
             announcements = announcements.where(base_path: filters[:base_path]) if filters[:base_path].present?
             
             announcements = announcements.select(
                 :id,
                 :name,
-                :kind,
+                :category,
                 :status,
                 :message,
                 :can_be_closed,
-                :expiration_at,
+                :end_at,
+                :start_at,
+                :end_at,
                 "concat(user_details.first_name, ' ', user_details.last_name) as user_creator"
             )
             .left_joins(user: [:detail])
+            .map do |announcement|
+                announcement.attributes.merge({
+                    message: announcement[:message].present? ? JSON.parse(announcement[:message]) : {}
+                })
+            end
         end
         
         def self.index(current_user, query)
-            announcements = current_user.account.bell.announcements.all
-            .where("expiration_at is NULL or expiration_at > ? ", LC::Date2.new.get)
-            .select(
+            filters = query[:filters]||{}
+            
+            announcements = current_user.account.bell.announcements
+            announcements = announcements.where("start_at <= '#{LC::Date.now.end_of_day}' or start_at is null") if filters[:start_at]
+            announcements = announcements.where("end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is null") if filters[:end_at]
+            
+            announcements = announcements.select(
                 :id,
                 :name,
-                "COALESCE(kind, 'info') as category",
+                :category,
                 :status,
                 :message,
                 :can_be_closed,
@@ -93,7 +104,7 @@ module CloudBell
 
         def self.options(current_user, query)
             { 
-                kinds: self.kinds.map {|k,_| {text: k, value: k}}
+                categories: self.categories.map {|k,_| {text: k, value: k}}
             }
         end
     end
