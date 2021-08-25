@@ -118,8 +118,12 @@ module CloudBell
             if sender == "push"
                 channel = "notifications_#{ user.id }"
                 begin
-                    return if !Rails.application.config.lesli_settings["configuration"]["security"]["enable_websockets"]
-                    Faraday.post("http://localhost:8080/api/wss/channel/#{ channel }/message", {
+                    return if !Rails.application.config.lesli_settings["security"]["enable_websockets"]
+
+                    broadcast_server = 'https://lesli.raven.dev.gt' # production hots
+                    broadcast_server = 'http://localhost:8080' # development
+
+                    Faraday.post("#{broadcast_server}/api/wss/channel/#{ channel }/message", {
                         id: self.id,
                         subject: self.subject,
                         category: self.kind,
@@ -127,6 +131,7 @@ module CloudBell
                         url: self.url || "",
                         created_at_date: LC::Date2.new(self.created_at).date_time
                     })
+                    
                 rescue
                 end
                 return 
