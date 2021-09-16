@@ -50,7 +50,7 @@ module CloudBell
         # POST /notifications
         def create
             notification = Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell")
-            return respond_with_successful()
+            return respond_with_successful(notification)
         end
 
         # PATCH/PUT /notifications/1
