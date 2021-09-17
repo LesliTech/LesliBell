@@ -17,20 +17,20 @@ For more information read the license file including with this software.
 
 =end
 
-module CloudBabel
+module CloudBell
     class NotificationService
-        def self.generate(user, subject, role_names:nil, body:nil, url:nil, kind:nil, category:nil)
+        def self.generate(user, subject, role_names:nil, body:nil, url:nil, category:nil)
 
             if not user or role_names
                 notifications = []
                 User.joins(:roles).where("roles.name in (?)", role_names).each do |user|
                     notification = user.account.bell.notifications.create({
+                        category: category,
                         subject: subject,
+                        status: 'created',
                         body: body,
-                        kind: category || kind,
                         user: user,
-                        url: url,
-                        sender: sender
+                        url: url
                     })
 
                     notifications.append({ id: notification.id })
@@ -39,12 +39,12 @@ module CloudBabel
                 return notifications
             else
                 notification = user.account.bell.notifications.create({
+                    category: category,
                     subject: subject,
+                    status: 'created',
                     body: body,
-                    kind: category || kind,
                     user: user,
-                    url: url,
-                    sender: sender
+                    url: url
                 })
 
                 return { id: notification.id }
