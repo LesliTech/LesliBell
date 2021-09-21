@@ -18,53 +18,71 @@ For more information read the license file including with this software.
 =end
 
 
-require 'rails_helper'
-require 'spec_helper'
-require 'byebug'
+# include helpers, configuration & initializers for request tests
+require 'lesli_request_helper'
 
 
 [{
-    "id": 23,
-    "subject": "New notification created",
-    "body": nil,
-    "kind": nil,
-    "url": "/bell",
+    subject: Faker::Lorem.sentence(word_count: 3)
 }, {
-    "subject": "New notification created",
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "kind": "danger",
-    "url": "/bell"
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2)
 }, {
-    "subject": "New notification created",
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "kind": "warning",
-    "url": "/bell"
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample
 }, {
-    "subject": "New notification created",
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "kind": "success",
-    "url": "/bell"
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud')
 }, {
-    "subject": "New notification created",
-    "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "kind": "info",
-    "url": "/bell"
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud'),
+    user_receiver_id: (User.all.sample).id
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud'),
+    user_receiver_email: (User.all.sample).email
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud'),
+    role_names: (Role.all.sample).name
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud')
 }].each do |notification|
 
     RSpec.describe 'POST:/bell/notifications', type: :request do
-        include_context 'user authentication'
 
-        before(:all) do
-            #notification[:users_id] = @user.id
+        include_context 'request user authentication'
+
+        it "is expected to create a new notification with #{notification.size} parameters" do
+
             post("/bell/notifications.json", params: {
                 notification: notification
             })
-        end
 
-        include_examples 'successful standard json response'
+            expect_json_response_successful
 
-        it 'is expected to create a new notification' do
-            #expect(@response_body["data"]["id"]).to be > 0
+            response_body = response_json
+            notification_id = response_body['data']['id']
+            notification_result = CloudBell::Notification.find(notification_id)
+
+            expect(notification_id).to eql(notification_result.id)
+            expect(notification[:subject]).to eql(notification_result[:subject])
+            expect(notification[:body]).to eql(notification_result[:body])
+            expect(notification[:category] || 'info').to eql(notification_result[:category])
+            expect(notification[:url]).to eql(notification_result[:url])
+
         end
 
     end

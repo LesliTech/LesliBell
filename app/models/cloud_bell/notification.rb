@@ -26,23 +26,22 @@ module CloudBell
 
         enum category: {
             info: "info",
-            success: "success",
+            danger: "danger",
             warning: "warning",
-            danger: "danger"
+            success: "success"
+            
         }
 
-        enum sender: {
+        enum channel: {
             web: "web",         # notification for web interface only
             email: "email",     # notification sent by email only
             mobile: "mobile",   # notification for mobile only
-            push: "push",       # notification will be showed in all the interfaces
-            api: "api"          # notification for api clients only
         }
 
         enum status: {
-            created: "created",
+            read: "read",
             sent: "sent",
-            read: "read"
+            created: "created"
         }
 
         def self.index current_user, query, only_own_notifications=false
@@ -110,32 +109,42 @@ module CloudBell
 
         def send_notification
 
-            if sender == "email"
-                NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
-                return 
-            end
+            # here I should check settings for prefered notification channels
+            ['web'].each do |channel|
 
-            if sender == "push"
-                channel = "notifications_#{ user.id }"
-                begin
-                    return if !Rails.application.config.lesli_settings["security"]["enable_websockets"]
-
-                    broadcast_server = 'https://lesli.raven.dev.gt' # production hots
-                    broadcast_server = 'http://localhost:8080' # development
-
-                    Faraday.post("#{broadcast_server}/api/wss/channel/#{ channel }/message", {
-                        id: self.id,
-                        subject: self.subject,
-                        category: self.kind,
-                        body: self.body || "",
-                        url: self.url || "",
-                        created_at_date: LC::Date2.new(self.created_at).date_time
-                    })
-                    
-                rescue
+                if channel == "email"
+                    NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
+                    next
                 end
-                return 
+
+                if channel == "web"
+                    begin
+
+                        wss_id = "notifications_#{ user.id }"
+
+                        return if !Rails.application.config.lesli_settings["security"]["enable_websockets"]
+
+                        broadcast_server = 'https://lesli.raven.dev.gt' # production hots
+                        broadcast_server = 'http://localhost:8080'      # development
+
+                        LC::Debug.msg(Faraday.post("#{broadcast_server}/api/wss/channel/#{ wss_id }/message", {
+                            id: self.id,
+                            subject: self.subject,
+                            category: self.category || 'info',
+                            body: self.body || 'info',
+                            url: self.url || 'info',
+                            created_at_date: LC::Date2.new(self.created_at).date_time
+                        }))
+
+                    rescue => exception
+                        Honeybadger.notify(exception)
+                    end
+                    next
+                end
+
             end
+
+            self.update(status: 'sent')
             
         end
 

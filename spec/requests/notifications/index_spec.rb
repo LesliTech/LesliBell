@@ -17,24 +17,29 @@ For more information read the license file including with this software.
 
 =end
 
-require 'rails_helper'
-require 'spec_helper'
-require 'byebug'
 
+# include helpers, configuration & initializers for request tests
+require 'lesli_request_helper'
 
+#
 RSpec.describe 'GET:/bell/notifications.json', type: :request do
-    include_context 'user authentication'
-    
-    before(:all) do
-        get '/bell/notifications.json' 
-    end
 
-    include_examples 'successful standard json response'
+    include_context 'request user authentication'
 
     it 'is expected to respond with all the notification for the current user' do
-        notifications = Courier::Bell::Notification.index(@user, { pagination: { page: 1, perPage: 999 }})
-        notifications = notifications[:pagination][:count_results]
-        expect(@response_body["data"]["pagination"]["count_results"]).to eql(notifications)
+
+        get('/bell/notifications.json') 
+
+        expect_json_response_successful
+
+        response_body = response_json
+
+        notification_index = CloudBell::Notification.index(@current_user, @query)
+
+        expect(response_body['data']['pagination']['count_total']).to eql(CloudBell::Notification.all.count)
+        expect(response_body['data']['pagination']['count_results']).to eql(response_body['data']['records'].size)
+        expect(response_body['data']['pagination']['count_results']).to be <= @query[:pagination][:perPage]
+
     end
     
 end
