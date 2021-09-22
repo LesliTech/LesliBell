@@ -145,7 +145,7 @@ module CloudBell
                 if channel == "mobile"
                     begin
 
-                        Courier::Talk::Notification.create(user, {
+                        Courier::One::Firebase::Notification.create(user, {
                             user: user,
                             subject: self.subject,
                             body: self.body,
