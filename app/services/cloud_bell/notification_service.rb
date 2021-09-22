@@ -19,9 +19,9 @@ For more information read the license file including with this software.
 
 module CloudBell
     class NotificationService
-        def self.generate(user, subject, role_names:nil, body:nil, url:nil, category:nil)
+        def self.generate(user, subject, role_names:nil, user_receiver_emails:nil, body:nil, url:nil, category:nil)
 
-            if not user or role_names
+            if role_names
                 notifications = []
                 User.joins(:roles).where("roles.name in (?)", role_names).each do |user|
                     notification = user.account.bell.notifications.create({
@@ -37,7 +37,28 @@ module CloudBell
                 end
 
                 return notifications
+            elsif user_receiver_emails
+                notifications = []
+                user_receiver_emails.each do |user_email|
+                    user = User.find_by(:email => user_email)
+                    next unless user
+
+                    notification = user.account.bell.notifications.create({
+                        category: category,
+                        subject: subject,
+                        status: 'created',
+                        body: body,
+                        user: user,
+                        url: url
+                    })
+
+                    notifications.append({ id: notification.id })
+                end
+
+                return notifications
             else
+                return unless user
+
                 notification = user.account.bell.notifications.create({
                     category: category,
                     subject: subject,
