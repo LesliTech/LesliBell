@@ -150,6 +150,7 @@ module CloudBell
                             subject: self.subject,
                             body: self.body,
                             url: self.url,
+                            media: nil,
                             category: self.category || 'info',
                             created_at: LC::Date2.new(self.created_at).date_time
                         })
