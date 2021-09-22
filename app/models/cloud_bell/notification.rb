@@ -152,7 +152,7 @@ module CloudBell
                             url: self.url,
                             media: nil,
                             category: self.category || 'info',
-                            created_at: LC::Date2.new(self.created_at).date_time
+                            created_at: self.created_at
                         })
 
                     rescue => exception
