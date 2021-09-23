@@ -110,7 +110,7 @@ module CloudBell
         def send_notification
 
             # here I should check settings for prefered notification channels
-            ['web'].each do |channel|
+            ['web', 'mobile'].each do |channel|
 
                 if channel == "email"
                     NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
@@ -135,6 +135,25 @@ module CloudBell
                             url: self.url || 'info',
                             created_at_date: LC::Date2.new(self.created_at).date_time
                         }))
+
+                    rescue => exception
+                        Honeybadger.notify(exception)
+                    end
+                    next
+                end
+
+                if channel == "mobile"
+                    begin
+
+                        Courier::One::Firebase::Notification.create(user, {
+                            user: user,
+                            subject: self.subject,
+                            body: self.body,
+                            url: self.url,
+                            media: nil,
+                            category: self.category || 'info',
+                            created_at: self.created_at
+                        })
 
                     rescue => exception
                         Honeybadger.notify(exception)
