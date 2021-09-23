@@ -49,8 +49,19 @@ module CloudBell
 
         # POST /notifications
         def create
-            notification = Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell")
-            return respond_with_successful()
+
+            user = ::User.find(notification_params[:user_receiver_id]) if notification_params[:user_receiver_id]
+            user = ::User.find_by(email: notification_params[:user_receiver_email]) if notification_params[:user_receiver_email]
+
+            notification = CloudBell::NotificationService.generate(
+                user || current_user, 
+                notification_params[:subject], 
+                role_names:notification_params[:role_names], 
+                category:notification_params[:category] || "info",
+                body:notification_params[:body], 
+                url:notification_params[:url]
+            )
+            return respond_with_successful(notification)
         end
 
         # PATCH/PUT /notifications/1
@@ -81,7 +92,16 @@ module CloudBell
 
         # Only allow a trusted parameter "white list" through.
         def notification_params
-            params.fetch(:notification, {})
+            params.require(:notification).permit(
+                :id, 
+                :subject, 
+                :body, 
+                :category, 
+                :url, 
+                :user_receiver_id, 
+                :user_receiver_email, 
+                role_names: []
+            )
         end
 
     end

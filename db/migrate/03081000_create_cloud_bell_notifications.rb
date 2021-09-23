@@ -24,11 +24,9 @@ class CreateCloudBellNotifications < ActiveRecord::Migration[6.0]
             t.string    :subject
             t.text      :body
             t.string    :url
-            t.string    :kind
-            t.string    :sender
             t.string    :status
-            t.string    :base_path   
-            
+            t.string    :category
+            t.string    :channel
             t.datetime  :deleted_at, index: true
       
             t.timestamps

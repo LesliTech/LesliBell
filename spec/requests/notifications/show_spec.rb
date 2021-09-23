@@ -17,28 +17,83 @@ For more information read the license file including with this software.
 
 =end
 
-require 'rails_helper'
-require 'spec_helper'
-require 'byebug'
+
+# include helpers, configuration & initializers for request tests
+require 'lesli_request_helper'
 
 
-RSpec.describe 'GET:/bell/notifications/:id.json', type: :request do
-    include_context 'user authentication'
-    
-    before(:all) do
+[{
+    subject: Faker::Lorem.sentence(word_count: 3)
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2)
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud')
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud'),
+    user_receiver_id: (User.all.sample).id
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud'),
+    user_receiver_email: (User.all.sample).email
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud'),
+    role_names: (Role.all.sample).name
+}, {
+    subject: Faker::Lorem.sentence(word_count: 3),
+    body: Faker::Lorem.paragraph(sentence_count: 2),
+    category: ["info", "danger", "warning", "success"].sample,
+    url: Faker::Internet.url(host: 'test.lesli.cloud')
+}].each do |notification|
 
-        # register a notification to the user, so we have at least one active notification
-        @notification = Courier::Bell::Notification.new(@user, "notification from rspec")
+    RSpec.describe 'POST:/bell/notifications', type: :request do
 
-        # get notification
-        get "/bell/notifications/#{ @notification[:id] }.json"
+        include_context 'request user authentication'
+
+        it 'is expected to respond with notification with #{notification.size} parameters' do
+
+            # register a notification to the user, so we have at least one active notification
+            notification_id = (Courier::Bell::Notification.new(
+                @current_user, 
+                notification['subject'], 
+                role_names: notification['role_names'], 
+                category: (notification['category'] || 'info'),
+                body: notification['body'], 
+                url: notification['url']
+            ))[:id]
+
+            notification_result = CloudBell::Notification.find(notification_id)
+
+            # get notification
+            get("/bell/notifications/#{ notification_id }.json")
+
+            expect_json_response_successful
+
+            response_body = response_json
+
+            expect(response_body['data']['id']).to eql(notification_result.id)
+            expect(response_body['data']['subject']).to eql(notification_result[:subject])
+            expect(response_body['data']['body']).to eql(notification_result[:body])
+            expect(response_body['data']['url']).to eql(notification_result[:url])
+            expect(response_body['data']['category'] || 'info').to eql(notification_result[:category])
+
+        end
 
     end
 
-    include_examples 'successful standard json response'
-
-    it 'is expected to respond with notification' do
-        expect(@response_body["data"]["id"]).to eql(@notification[:id])
-    end
-    
 end
