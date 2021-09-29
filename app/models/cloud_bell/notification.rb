@@ -29,7 +29,7 @@ module CloudBell
             danger: "danger",
             warning: "warning",
             success: "success"
-            
+
         }
 
         enum channel: {
@@ -164,7 +164,7 @@ module CloudBell
             end
 
             self.update(status: 'sent')
-            
+
         end
 
         def self.count current_user, only_own_notifications=false
@@ -176,7 +176,7 @@ module CloudBell
         def self.options
             {
                 categories: categories.map { |key, value| {value: key, text: value} },
-                sender: senders.map { |key, value| {value: key, text: value} }
+                channels: channels.map { |key, value| {value: key, text: value} }
             }
         end
 
