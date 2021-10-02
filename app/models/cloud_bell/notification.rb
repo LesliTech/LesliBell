@@ -127,14 +127,14 @@ module CloudBell
                         broadcast_server = 'https://lesli.raven.dev.gt' # production hots
                         broadcast_server = 'http://localhost:8080'      # development
 
-                        LC::Debug.msg(Faraday.post("#{broadcast_server}/api/wss/channel/#{ wss_id }/message", {
+                        Faraday.post("#{broadcast_server}/api/wss/channel/#{ wss_id }/message", {
                             id: self.id,
                             subject: self.subject,
                             category: self.category || 'info',
                             body: self.body || 'info',
                             url: self.url || 'info',
                             created_at_date: LC::Date2.new(self.created_at).date_time
-                        }))
+                        })
 
                     rescue => exception
                         Honeybadger.notify(exception)

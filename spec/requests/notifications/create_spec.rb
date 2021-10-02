@@ -47,13 +47,13 @@ require 'lesli_request_helper'
     body: Faker::Lorem.paragraph(sentence_count: 2),
     category: ["info", "danger", "warning", "success"].sample,
     url: Faker::Internet.url(host: 'test.lesli.cloud'),
-    user_receiver_email: (User.all.sample).email
+    user_receiver_emails: [(User.all.sample).email]
 }, {
     subject: Faker::Lorem.sentence(word_count: 3),
     body: Faker::Lorem.paragraph(sentence_count: 2),
     category: ["info", "danger", "warning", "success"].sample,
     url: Faker::Internet.url(host: 'test.lesli.cloud'),
-    role_names: (Role.all.sample).name
+    role_receiver_names: [(Role.all.sample).name]
 }, {
     subject: Faker::Lorem.sentence(word_count: 3),
     body: Faker::Lorem.paragraph(sentence_count: 2),
@@ -75,13 +75,9 @@ require 'lesli_request_helper'
 
             response_body = response_json
             notification_id = response_body['data']['id']
-            notification_result = CloudBell::Notification.find(notification_id)
+            notification_result = CloudBell::Notification.where(:id => notification_id).first
 
-            expect(notification_id).to eql(notification_result.id)
-            expect(notification[:subject]).to eql(notification_result[:subject])
-            expect(notification[:body]).to eql(notification_result[:body])
-            expect(notification[:category] || 'info').to eql(notification_result[:category])
-            expect(notification[:url]).to eql(notification_result[:url])
+            expect(notification_id).to include(notification_result.id)
 
         end
 
