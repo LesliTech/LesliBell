@@ -51,17 +51,20 @@ module CloudBell
         def create
 
             notification = Courier::Bell::Notification.new(
-                    @current_user,
-                    notification_params[:subject],
-                    url: notification_params[:url],
-                    body: notification_params[:body],
-                    category: notification_params[:category],
-                    user_receiver_id: notification_params[:user_receiver_id],
-                    role_receiver_names: notification_params[:role_receiver_names],
-                    user_receiver_emails: notification_params[:user_receiver_emails],
-                )
+                @current_user,
+                notification_params[:subject],
+                url: notification_params[:url],
+                body: notification_params[:body],
+                type: notification_params[:type],
+                media: notification_params[:media],
+                payload: notification_params[:payload],
+                category: notification_params[:category],
+                user_receiver_id: notification_params[:user_receiver_id],
+                role_receiver_names: notification_params[:role_receiver_names],
+                user_receiver_emails: notification_params[:user_receiver_emails],
+            )
 
-                respond_with_successful(notification)
+            respond_with_successful(notification)
 
         end
 
@@ -95,14 +98,16 @@ module CloudBell
         def notification_params
             params.require(:notification).permit(
                 :id,
-                :subject,
-                :category,
-                :media,
-                :body,
                 :url,
+                :type,
+                :body,
+                :media,
+                :subject,
+                :payload,
+                :category,
                 :user_receiver_id,
                 role_receiver_names: [],
-                user_receiver_emails: []
+                user_receiver_emails: [],
             )
         end
 

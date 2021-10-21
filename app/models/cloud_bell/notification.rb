@@ -152,7 +152,10 @@ module CloudBell
                             url: self.url,
                             media: nil,
                             category: self.category || 'info',
-                            created_at: self.created_at
+                            created_at: self.created_at,
+                            type: self.type,
+                            media: self.media,
+                            payload: self.payload,
                         })
 
                     rescue => exception
