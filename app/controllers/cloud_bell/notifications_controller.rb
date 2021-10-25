@@ -55,11 +55,11 @@ module CloudBell
                 notification_params[:subject],
                 url: notification_params[:url],
                 body: notification_params[:body],
-                type: notification_params[:type],
                 media: notification_params[:media],
                 payload: notification_params[:payload],
                 category: notification_params[:category],
                 user_receiver_id: notification_params[:user_receiver_id],
+                notification_type: notification_params[:notification_type],
                 role_receiver_names: notification_params[:role_receiver_names],
                 user_receiver_emails: notification_params[:user_receiver_emails],
             )
@@ -99,13 +99,13 @@ module CloudBell
             params.require(:notification).permit(
                 :id,
                 :url,
-                :type,
                 :body,
                 :media,
                 :subject,
-                :payload,
                 :category,
                 :user_receiver_id,
+                :notification_type,
+                payload: {},
                 role_receiver_names: [],
                 user_receiver_emails: [],
             )

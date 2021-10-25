@@ -27,7 +27,7 @@ class CreateCloudBellNotifications < ActiveRecord::Migration[6.0]
             t.string    :status
             t.string    :category
             t.string    :channel
-            # t.string    :type
+            # t.string    :notification_type
             # t.string    :media
             # t.json      :payload
 

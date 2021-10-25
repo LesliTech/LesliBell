@@ -20,7 +20,7 @@ For more information read the license file including with this software.
 module CloudBell
     class NotificationService
 
-        def self.generate(user, subject, body:nil, url:nil, category:nil, user_receiver_id:nil, role_receiver_names:nil, user_receiver_emails:nil, type:nil, media:nil, payload:nil)
+        def self.generate(user, subject, body:nil, url:nil, category:nil, user_receiver_id:nil, role_receiver_names:nil, user_receiver_emails:nil, notification_type:nil, media:nil, payload:nil)
             # validate that the notifications has a valid category
             category = 'info' if not ['info', 'danger', 'warning', 'success'].include?(category)
 
@@ -28,12 +28,12 @@ module CloudBell
             notification_params = {
                 url: url,
                 body: body,
-                type: type,
                 media: media,
                 payload: payload,
                 subject: subject,
                 status: 'created',
                 category: category,
+                notification_type: notification_type,
             }
 
             # notifications to create
