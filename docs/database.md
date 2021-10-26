@@ -3,7 +3,7 @@
 ```plaintext
     00.01. accounts
 
-    10.00. notifications
+    10.01. notifications
 
-    11.00. announcements
+    11.01. announcements
 ```
