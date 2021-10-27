@@ -147,12 +147,14 @@ module CloudBell
 
                         Courier::One::Firebase::Notification.create(user, {
                             user: user,
-                            subject: self.subject,
-                            body: self.body,
                             url: self.url,
-                            media: nil,
-                            category: self.category || 'info',
-                            created_at: self.created_at
+                            body: self.body,
+                            media: self.media,
+                            subject: self.subject,
+                            payload: self.payload,
+                            category: self.category,
+                            created_at: self.created_at,
+                            type: self.notification_type,
                         })
 
                     rescue => exception
