@@ -27,11 +27,11 @@ module CloudBell
         def self.send_webpush user, notification
 
             message = {
-                title: "titulo de notificacion #{LC::Date2.new.date.to_s}",
-                body: "cuerpo de notificacion",
-                url: "https://urlallevaraldarclickalanotificacion.com",
-                icon: "http://example.com/icon.pn",
-                tag: "lesli-driver"
+                subject: notification[:subject],
+                body: notification[:body],
+                url: notification[:url],
+                #icon: "http://example.com/icon.pn",
+                #tag: "lesli-driver"
             }
 
             User::Webpush.all.each do |sub|
@@ -70,7 +70,21 @@ module CloudBell
             })
         end
 
-        def self.generate(user, subject, body:nil, url:nil, category:nil, user_receiver_id:nil, role_receiver_names:nil, user_receiver_emails:nil, notification_type:nil, media:nil, payload:nil)
+        def self.generate(
+            user, 
+            subject, 
+            url:nil, 
+            body:nil, 
+            media:nil,
+            payload:nil,
+            channel:nil,
+            category:nil, 
+            user_receiver_id:nil, 
+            notification_type:nil, 
+            role_receiver_names:nil, 
+            user_receiver_emails:nil
+        )
+
             # validate that the notifications has a valid category
             category = 'info' if not ['info', 'danger', 'warning', 'success'].include?(category)
 
@@ -80,10 +94,11 @@ module CloudBell
                 body: body,
                 media: media,
                 payload: payload,
+                channel: channel,
                 subject: subject,
-                status: 'created',
                 category: category,
                 notification_type: notification_type,
+                status: 'created',
             }
 
             # notifications to create

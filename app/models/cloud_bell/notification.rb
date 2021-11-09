@@ -29,13 +29,14 @@ module CloudBell
             danger: "danger",
             warning: "warning",
             success: "success"
-
         }
 
         enum channel: {
-            web: "web",         # notification for web interface only
-            email: "email",     # notification sent by email only
-            mobile: "mobile",   # notification for mobile only
+            email: "email",                 # notification sent by email only
+            webpush: "webpush",             # notification for web interface only
+            mobilepush: "mobilepush",       # notification for mobile only
+            mobiledialog: "mobiledialog",   # open a dialog in the main app screen
+            push: "push",                   # webpush & mobilepush
         }
 
         enum status: {
@@ -110,10 +111,23 @@ module CloudBell
         def send_notification
 
             # here I should check settings for prefered notification channels
-            ['webpush', 'mobilepush'].each do |channel|
-                NotificationService.send_email(user, self) if channel == 'email'
-                NotificationService.send_webpush(user, self) if channel == 'webpush'
-                NotificationService.send_mobilepush(user, self) if channel == 'mobilepush'
+            ['web', 'mobile', 'email'].each do |authorized_channel|
+                
+                # if channel is authorized check if channels is included in the senders
+                if authorized_channel == 'email'
+                    NotificationService.send_email(user, self) if ['email'].include?(self.channel)
+                end 
+
+                # if channel is authorized check if channels is included in the senders
+                if authorized_channel == 'web'
+                    NotificationService.send_webpush(user, self) if ['webpush','push'].include?(self.channel)
+                end 
+
+                # if channel is authorized check if channels is included in the senders
+                if authorized_channel == 'mobile'
+                    NotificationService.send_mobilepush(user, self) if ['mobilepush', 'push'].include?(self.channel)
+                end
+
             end
 
             self.update(status: 'sent')
