@@ -8,12 +8,12 @@
 
 #### notification types 
 - info
+- danger
 - warning
-- error
+- success
 
 #### sender methods
-- push notifications
-    - browser notifications
-    - app notifications
-- flash messages
-- Announcements
+- webpush: web push notifications (web browser)
+- mobilepush: mobile push notifications (iOS/Android app)
+- email: email notifications (standard email)
+

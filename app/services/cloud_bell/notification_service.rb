@@ -20,7 +20,71 @@ For more information read the license file including with this software.
 module CloudBell
     class NotificationService
 
-        def self.generate(user, subject, body:nil, url:nil, category:nil, user_receiver_id:nil, role_receiver_names:nil, user_receiver_emails:nil, notification_type:nil, media:nil, payload:nil)
+        def self.send_email user, notification
+            NotificationMailer.with({ user: user, notification: notification }).notification.deliver_later
+        end
+
+        def self.send_webpush user, notification
+
+            message = {
+                subject: notification[:subject],
+                body: notification[:body],
+                url: notification[:url],
+                #icon: "http://example.com/icon.pn",
+                #tag: "lesli-driver"
+            }
+
+            User::Webpush.all.each do |sub|
+                begin
+                    result = Webpush.payload_send(
+                        endpoint: sub[:endpoint],
+                        message: JSON.generate(message),
+                        p256dh: sub[:p256dh_key],
+                        auth: sub[:auth_key],
+                        ttl: 600, # optional, ttl in seconds, defaults to 2419200 (4 weeks)
+                        urgency: 'normal', # optional, it can be very-low, low, normal, high, defaults to normal
+                        vapid: {
+                            public_key: Rails.application.credentials.dig(:services, :vapid, :public_key),
+                            private_key: Rails.application.credentials.dig(:services, :vapid, :private_key)
+                        }
+                    )
+                rescue => exception 
+                    # if error delete subscription from database
+                    sub.destroy
+                    #sub.destroy_fully!
+                end
+            end
+        end
+
+        def self.send_mobilepush user, notification
+            Courier::One::Firebase::Notification.create(user, {
+                user: user,
+                url: notification.url,
+                body: notification.body,
+                media: notification.media,
+                subject: notification.subject,
+                payload: notification.payload,
+                category: notification.category,
+                created_at: notification.created_at,
+                type: notification.notification_type,
+            })
+        end
+
+        def self.generate(
+            user, 
+            subject, 
+            url:nil, 
+            body:nil, 
+            media:nil,
+            payload:nil,
+            channel:nil,
+            category:nil, 
+            user_receiver_id:nil, 
+            notification_type:nil, 
+            role_receiver_names:nil, 
+            user_receiver_emails:nil
+        )
+
             # validate that the notifications has a valid category
             category = 'info' if not ['info', 'danger', 'warning', 'success'].include?(category)
 
@@ -30,10 +94,11 @@ module CloudBell
                 body: body,
                 media: media,
                 payload: payload,
+                channel: channel,
                 subject: subject,
-                status: 'created',
                 category: category,
                 notification_type: notification_type,
+                status: 'created',
             }
 
             # notifications to create
