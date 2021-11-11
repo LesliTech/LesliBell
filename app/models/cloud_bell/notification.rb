@@ -29,13 +29,14 @@ module CloudBell
             danger: "danger",
             warning: "warning",
             success: "success"
-
         }
 
         enum channel: {
-            web: "web",         # notification for web interface only
-            email: "email",     # notification sent by email only
-            mobile: "mobile",   # notification for mobile only
+            email: "email",                 # notification sent by email only
+            webpush: "webpush",             # notification for web interface only
+            mobilepush: "mobilepush",       # notification for mobile only
+            mobiledialog: "mobiledialog",   # open a dialog in the main app screen
+            push: "push",                   # webpush & mobilepush
         }
 
         enum status: {
@@ -110,59 +111,21 @@ module CloudBell
         def send_notification
 
             # here I should check settings for prefered notification channels
-            ['web', 'mobile'].each do |channel|
+            ['web', 'mobile', 'email'].each do |authorized_channel|
+                
+                # if channel is authorized check if channels is included in the senders
+                if authorized_channel == 'email'
+                    NotificationService.send_email(user, self) if ['email'].include?(self.channel)
+                end 
 
-                if channel == "email"
-                    NotificationMailer.with({ user: user, notification: self }).notification.deliver_later
-                    next
-                end
+                # if channel is authorized check if channels is included in the senders
+                if authorized_channel == 'web'
+                    NotificationService.send_webpush(user, self) if ['webpush','push'].include?(self.channel)
+                end 
 
-                if channel == "web"
-                    begin
-
-                        wss_id = "notifications_#{ user.id }"
-
-                        if Rails.application.config.lesli_settings["security"]["enable_websockets"]
-
-                            broadcast_server = 'https://lesli.raven.dev.gt' # production hots
-                            broadcast_server = 'http://localhost:8080'      # development
-
-                            Faraday.post("#{broadcast_server}/api/wss/channel/#{ wss_id }/message", {
-                                id: self.id,
-                                subject: self.subject,
-                                category: self.category || 'info',
-                                body: self.body || 'info',
-                                url: self.url || 'info',
-                                created_at_date: LC::Date2.new(self.created_at).date_time
-                            })
-
-                        end
-
-                    rescue => exception
-                        Honeybadger.notify(exception)
-                    end
-                    next
-                end
-
-                if channel == "mobile"
-                    begin
-
-                        Courier::One::Firebase::Notification.create(user, {
-                            user: user,
-                            url: self.url,
-                            body: self.body,
-                            media: self.media,
-                            subject: self.subject,
-                            payload: self.payload,
-                            category: self.category,
-                            created_at: self.created_at,
-                            type: self.notification_type,
-                        })
-
-                    rescue => exception
-                        Honeybadger.notify(exception)
-                    end
-                    next
+                # if channel is authorized check if channels is included in the senders
+                if authorized_channel == 'mobile'
+                    NotificationService.send_mobilepush(user, self) if ['mobilepush', 'push'].include?(self.channel)
                 end
 
             end

@@ -50,8 +50,8 @@ module CloudBell
         # POST /notifications
         def create
 
-            notification = Courier::Bell::Notification.new(
-                @current_user,
+            notification = CloudBell::NotificationService.generate(
+                current_user,
                 notification_params[:subject],
                 url: notification_params[:url],
                 body: notification_params[:body],

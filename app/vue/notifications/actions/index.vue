@@ -41,7 +41,11 @@ export default {
             })
         },
         testNotification() {
-            this.http.post(this.url.bell("notifications")).then(result => {
+            this.http.post(this.url.bell("notifications"), {
+                notification: {
+                    subject: 'test'
+                }
+            }).then(result => {
                 
             })
         }
