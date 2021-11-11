@@ -122,19 +122,21 @@ module CloudBell
 
                         wss_id = "notifications_#{ user.id }"
 
-                        return if !Rails.application.config.lesli_settings["security"]["enable_websockets"]
+                        if Rails.application.config.lesli_settings["security"]["enable_websockets"]
 
-                        broadcast_server = 'https://lesli.raven.dev.gt' # production hots
-                        broadcast_server = 'http://localhost:8080'      # development
+                            broadcast_server = 'https://lesli.raven.dev.gt' # production hots
+                            broadcast_server = 'http://localhost:8080'      # development
 
-                        Faraday.post("#{broadcast_server}/api/wss/channel/#{ wss_id }/message", {
-                            id: self.id,
-                            subject: self.subject,
-                            category: self.category || 'info',
-                            body: self.body || 'info',
-                            url: self.url || 'info',
-                            created_at_date: LC::Date2.new(self.created_at).date_time
-                        })
+                            Faraday.post("#{broadcast_server}/api/wss/channel/#{ wss_id }/message", {
+                                id: self.id,
+                                subject: self.subject,
+                                category: self.category || 'info',
+                                body: self.body || 'info',
+                                url: self.url || 'info',
+                                created_at_date: LC::Date2.new(self.created_at).date_time
+                            })
+
+                        end
 
                     rescue => exception
                         Honeybadger.notify(exception)
