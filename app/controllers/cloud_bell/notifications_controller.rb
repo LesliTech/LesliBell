@@ -52,13 +52,8 @@ module CloudBell
 
             notification = CloudBell::NotificationService.generate(
                 current_user,
-                "hola"
-            )
-=begin
-            notification = Courier::Bell::Notification.new(
-                @current_user,
                 notification_params[:subject],
-                #url: notification_params[:url],
+                url: notification_params[:url],
                 body: notification_params[:body],
                 media: notification_params[:media],
                 payload: notification_params[:payload],
@@ -68,7 +63,7 @@ module CloudBell
                 role_receiver_names: notification_params[:role_receiver_names],
                 user_receiver_emails: notification_params[:user_receiver_emails],
             )
-=end
+
             respond_with_successful(notification)
 
         end
