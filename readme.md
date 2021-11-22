@@ -6,7 +6,7 @@
 
 <hr/>
 
-Version 0.1.0-alpha
+Version 1.1.0
 
 
 - Push notifications (native browser notification through ws)
