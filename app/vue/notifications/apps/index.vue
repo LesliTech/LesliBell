@@ -63,7 +63,7 @@ export default {
                     subject: 'test'
                 }
             }).then(result => {
-                this.msg.info('Notification sent')
+                this.msg.info(translations.bell.notifications.messages_info_notification_test_sent)
             })
         }
     }
