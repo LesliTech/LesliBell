@@ -35,8 +35,9 @@ RSpec.describe 'GET:/bell/notifications.json', type: :request do
         response_body = response_json
 
         notification_index = CloudBell::Notification.index(@current_user, @query)
+        notification_result = @current_user.account.bell.notifications.count
 
-        expect(response_body['data']['pagination']['count_total']).to eql(CloudBell::Notification.all.count)
+        expect(response_body['data']['pagination']['count_total']).to eql(notification_result)
         expect(response_body['data']['pagination']['count_results']).to eql(response_body['data']['records'].size)
         expect(response_body['data']['pagination']['count_results']).to be <= @query[:pagination][:perPage]
 
