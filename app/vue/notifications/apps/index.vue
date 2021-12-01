@@ -29,10 +29,27 @@ export default {
                     notifications: I18n.t("bell.notifications"),
                 }
             },
+            columns: [{
+                field: 'id',
+                label: 'ID',
+                width: '40',
+                numeric: true
+            }, {
+                field: 'subject',
+                label: 'Notification',
+            }, {
+                field: 'body',
+                label: ''
+            }, {
+                field: 'created_at',
+                label: 'Created at'
+            }],
             notifications: [],
         }
     },
-
+    mounted() {
+        this.getNotifications()
+    },
     methods: {
 
         getNotifications() {
@@ -46,7 +63,7 @@ export default {
                     subject: 'test'
                 }
             }).then(result => {
-                
+                this.msg.info(translations.bell.notifications.messages_info_notification_test_sent)
             })
         }
     }
@@ -59,18 +76,14 @@ export default {
                 <button class="button is-primary" @click="testNotification()">test</button>
             </div>
         </component-header>
-        <div class="card">
-            <div class="card-content">
-                <div 
-                    v-for="notification in notifications.records" 
-                    :key="notification.id"
-                    :class="['message', 'is-'+notification.kind]">
-                    <div class="message-body">
-                        {{ notification.subject }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+
+        <div class="box">
+        <b-table 
+            v-if="notifications.records" 
+            :row-class="(row, index) => `message is-${ row.category }`"
+            :data="notifications.records" 
+            :columns="columns">
+        </b-table>
+        </div> 
     </section>
 </template>
