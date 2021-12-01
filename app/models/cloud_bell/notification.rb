@@ -45,13 +45,19 @@ module CloudBell
             created: "created"
         }
 
-        def self.index current_user, query, only_own_notifications=false
+        def self.index current_user, query, only_own_notifications=true
 
-            notifications = current_user.account.bell.notifications
+            notifications = []
+
+            # work with all notifications
+            notifications = current_user.account.bell
+            .notifications
             .order(created_at: :DESC)
 
             # work only with notifications that belongs to the user
-            notifications = notifications.where(:user => current_user, :status => ["created", "sent", nil]) if only_own_notifications
+            if only_own_notifications
+                notifications = notifications.where(:user => current_user, :status => ["created", "sent", nil]) 
+            end
 
             # add pagination
             notifications = notifications
@@ -67,10 +73,10 @@ module CloudBell
                 notifications.map do |notification|
                     {
                         id: notification[:id],
-                        subject: notification[:subject],
-                        body: notification[:body],
-                        kind: notification[:kind],
                         url: notification[:url],
+                        body: notification[:body],
+                        subject: notification[:subject],
+                        category: notification[:category],
                         created_at: LC::Date.distance_to_words(notification[:created_at]),
                         status: notification[:status],
                     }
