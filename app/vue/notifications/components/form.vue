@@ -16,6 +16,9 @@ For more information read the license file including with this software.
 // ·
 */
 
+// · List of Imported Components
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+
 
 // ·
 export default {
@@ -24,6 +27,12 @@ export default {
         return {
             notification: {},
             options: null,
+            users: null,
+            roles: null,
+            receiver_users: [],
+            receiver_roles: [],
+            filteredUsers: [],
+            filteredRoles: [],
             submitting: false,
             translations: {
                 core: {
@@ -36,9 +45,49 @@ export default {
         }
     },
     mounted() {
+        this.getUsers()
+        this.getRoles()
         this.getNotificationsOptions()
     },
     methods: {
+
+        getUsers() {
+            this.http.get(this.url.lesli('administration/users/list')).then(result => {
+                if (result.successful) {
+                    this.users = result.data
+                } else {
+                    this.msg.error(result.error.message)
+                }
+            }).catch(error => {
+                console.log(error)
+            })
+        },
+
+        getRoles() {
+            this.http.get(this.url.lesli('administration/roles/list')).then(result => {
+                if (result.successful) {
+                    this.roles = result.data
+                } else {
+                    this.msg.error(result.error.message)
+                }
+            }).catch(error => {
+                console.log(error)
+            })
+        },
+
+        getFilteredUsers(text) {
+            this.filteredUsers = this.users.filter((option) => {
+
+                return (option.email||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0 || (option.name||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
+            })
+        },
+
+        getFilteredRoles(text) {
+            this.filteredRoles = this.roles.filter((option) => {
+
+                return (option.name||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
+            })
+        },
 
         getNotificationsOptions() {
             this.http.get(this.url.bell('notifications/options')).then(result => {
@@ -62,15 +111,22 @@ export default {
 
         postNotification() {
             this.http.post(this.url.bell("notifications"), {
-                notification: this.notification
+                notification: {
+                    ...this.notification,
+                    user_receiver_emails: this.receiver_users.map(user => user.email),
+                    role_receiver_names: this.receiver_roles.map(user => user.name),
+                }
             }).then(result => {
                 if (result.successful) {
-                    this.msg.success("this.translations.bell.notifications.messages_success_notification_created_successfully")
+                    this.msg.success(this.translations.bell.notifications.messages_success_notification_created_successfully)
                 } else {
                     this.msg.error(result.error.message)
                 }
             }).finally(() => {
                 this.submitting = false
+                this.notification = {}
+                this.receiver_users = []
+                this.receiver_roles = []
             })
         },
 
@@ -79,7 +135,7 @@ export default {
                 notification: this.notification
             }).then(result => {
                 if (result.successful) {
-                    this.msg.success("this.translations.bell.notifications.messages_success_notification_updated_successfully")
+                    this.msg.success(this.translations.bell.notifications.messages_success_notification_updated_successfully)
                 } else {
                     this.msg.error(result.error.message)
                 }
@@ -93,7 +149,7 @@ export default {
         'data.notification': function(notification) {
             this.notification = notification
         }
-    }
+    },
 }
 </script>
 <template>
@@ -145,7 +201,7 @@ export default {
                         <div class="column is-12">
                             <b-select
                                 v-if="options"
-                                :placeholder="translations.core.view_placeholder_select_option"
+                                :placeholder="translations.core.shared.view_placeholder_select_option"
                                 expanded
                                 v-model="notification.category"
                             >
@@ -166,6 +222,51 @@ export default {
                             </b-button>
                         </div>
                     </div>
+                </b-field>
+            </b-field>
+
+            <b-field grouped>
+                <b-field :label="translations.bell.notifications.view_text_receiver_users" :message="translations.bell.notifications.view_text_leave_empty_for_self_notification">
+                    <b-taginput
+                        v-model="receiver_users"
+                        :data="filteredUsers"
+                        autocomplete
+                        field="email"
+                        :open-on-focus="true"
+                        icon="user"
+                        :placeholder="translations.core.shared.view_placeholder_search"
+                        @typing="getFilteredUsers"
+                    >
+                        <template v-slot="props">
+                            <strong> {{ props.option.email }} </strong>
+                            <template v-if="props.option.name != null">
+                                : {{ props.option.name }}
+                            </template>
+                        </template>
+                        <template #empty>
+                            {{ translations.bell.notifications.view_text_email_not_found }}
+                        </template>
+                    </b-taginput>
+                </b-field>
+
+                <b-field :label="translations.bell.notifications.view_text_receiver_roles" :message="translations.bell.notifications.view_text_leave_empty_for_self_notification">
+                    <b-taginput
+                        v-model="receiver_roles"
+                        :data="filteredRoles"
+                        autocomplete
+                        field="name"
+                        :open-on-focus="true"
+                        icon="fas fa-shield-alt"
+                        :placeholder="translations.core.shared.view_placeholder_search"
+                        @typing="getFilteredRoles"
+                    >
+                        <template v-slot="props">
+                            <strong> {{ props.option.name }} </strong>
+                        </template>
+                        <template #empty>
+                            {{ translations.bell.notifications.view_text_role_not_found }}
+                        </template>
+                    </b-taginput>
                 </b-field>
             </b-field>
 
