@@ -25,6 +25,8 @@ import app from "LesliVue/app2"
 // · Import apps 
 import dashboardIndex from "./dashboards/actions/index.vue"
 import notificationIndex from "./notifications/apps/index.vue"
+import notificationNew from "./notifications/apps/new.vue"
+import notificationEdit from "./notifications/apps/edit.vue"
 import announcementIndex from "./announcements/actions/index.vue"
 import announcementEdit from "./announcements/actions/edit.vue"
 import announcementNew from "./announcements/actions/new.vue"
@@ -38,6 +40,12 @@ app("CloudBell", "/bell", "[dashboard]", [{
     path: "/notifications",
     component: notificationIndex
 }, {
+    path: "/notifications/new",
+    component: notificationNew
+}, {
+    path: "/notifications/:id/edit",
+    component: notificationEdit
+}, {
     path: "/announcements",
     component: announcementIndex
 }, {
@@ -46,4 +54,6 @@ app("CloudBell", "/bell", "[dashboard]", [{
 }, {
     path: "/announcements/:id/edit",
     component: announcementEdit
-}])
+}], {
+    notification: null,
+})
