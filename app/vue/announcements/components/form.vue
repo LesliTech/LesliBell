@@ -40,6 +40,7 @@ export default {
     data() {
         return {
             options: null,
+            submitting: false,
             message: {},
             richText: {
                 delta: null,
@@ -81,6 +82,7 @@ export default {
         },
 
         formSubmit() {
+            this.submitting = true
             if (this.announcement.id) {
                 this.putAnnouncement()
             } else {
@@ -95,11 +97,13 @@ export default {
                     message: JSON.stringify(this.richText)
                 }
             }).then(result => {
-                if (!result.successful) {
+                if (result.successful) {
+                    this.msg.success(this.translations.bell.announcements.messages_success_announcement_created_successfully)
+                } else {
                     this.msg.error(result.error.message)
-                    return
                 }
-                this.msg.success(this.translations.bell.announcements.messages_success_announcement_created_successfully)
+            }).finally(() => {
+                this.submitting = false
             })
         },
 
@@ -110,11 +114,13 @@ export default {
                     message: JSON.stringify(this.richText)
                 }
             }).then(result => {
-                if (!result.successful) {
+                if (result.successful) {
+                    this.msg.success(this.translations.bell.announcements.messages_success_announcement_updated_successfully)
+                } else {
                     this.msg.error(result.error.message)
-                    return
                 }
-                this.msg.success(this.translations.bell.announcements.messages_success_announcement_updated_successfully)
+            }).finally(() => {
+                this.submitting = false
             })
         }
 
@@ -130,117 +136,127 @@ export default {
 </script>
 <template>
     <form @submit.prevent="formSubmit()">
-        <b-field>
-            <template v-slot:label>
-                {{ translations.bell.announcements.column_name }} <sup class="has-text-danger">*</sup>
-            </template>
-            <b-input name="name" ref="announcement-name" type="text" placeholder="Text input" required v-model="announcement.name">
-            </b-input>
-        </b-field>
 
-        <b-field grouped>
-            <b-field
-                :label="translations.bell.announcements.column_start_at"
-            >
-                <vc-date-picker
-                    v-model="announcement.start_at"
-                    :locale="date.vcDatepickerConfig()"
-                    :popover="{ visibility: 'focus' }"
-                    :min-date="announcement.id ? null : new Date()"
+        <fieldset :disabled="submitting">
+            <b-field>
+                <template v-slot:label>
+                    {{ translations.bell.announcements.column_name }} <sup class="has-text-danger">*</sup>
+                </template>
+                <b-input name="name" ref="announcement-name" type="text" placeholder="Text input" required v-model="announcement.name">
+                </b-input>
+            </b-field>
+
+            <b-field grouped>
+                <b-field
+                    :label="translations.bell.announcements.column_start_at"
                 >
-                    <template v-slot="{ inputValue, inputEvents }">
-                        <input
-                            class="input is-default"
-                            v-on="inputEvents"
-                            :value="inputValue"
-                            :placeholder="translations.core.shared.text_select_date"
-                        />
-                    </template>
-                </vc-date-picker>
-            </b-field>
-
-            <b-field
-                :label="translations.bell.announcements.column_end_at"
-                :message="translations.bell.announcements.view_text_expiration_date_indefinite"
-            >
-                <vc-date-picker
-                    v-model="announcement.end_at"
-                    :locale="date.vcDatepickerConfig()"
-                    :popover="{ visibility: 'focus' }"
-                    :min-date="announcement.id ? null : new Date()"
-                >
-                    <template v-slot="{ inputValue, inputEvents }">
-                        <input
-                            class="input is-default"
-                            v-on="inputEvents"
-                            :value="inputValue"
-                            :placeholder="translations.core.shared.text_select_date"
-                        />
-                    </template>
-                </vc-date-picker>
-            </b-field>
-
-            <b-field :label="translations.bell.announcements.column_can_be_closed">
-                <b-select v-model="announcement.can_be_closed">
-                    <option value="true">{{ translations.core.shared.view_text_yes }}</option>
-                    <option value="false">{{ translations.core.shared.view_text_no }}</option>
-                </b-select>
-            </b-field>
-        </b-field>
-
-        <b-field>
-            <template v-slot:label>
-                {{ translations.bell.announcements.column_kind }}<sup class="has-text-danger">*</sup>
-            </template>
-            <div class="columns">
-                <div class="column is-4">
-                    <b-select
-                        v-if="options"
-                        :placeholder="translations.core.view_placeholder_select_option"
-                        required
-                        expanded
-                        v-model="announcement.category"
+                    <vc-date-picker
+                        v-model="announcement.start_at"
+                        :locale="date.vcDatepickerConfig()"
+                        :popover="{ visibility: 'focus' }"
+                        :min-date="announcement.id ? null : new Date()"
                     >
-                        <option
-                            v-for="category in options.categories"
-                            :key="category.value"
-                            :value="category.value"
-                        >
-                            {{ object_utils.translateEnum(translations.bell.announcements, 'column_enum_category', category.text) }}
-                        </option>
+                        <template v-slot="{ inputValue, inputEvents }">
+                            <input
+                                class="input is-default"
+                                v-on="inputEvents"
+                                :value="inputValue"
+                                :placeholder="translations.core.shared.text_select_date"
+                            />
+                        </template>
+                    </vc-date-picker>
+                </b-field>
+
+                <b-field
+                    :label="translations.bell.announcements.column_end_at"
+                    :message="translations.bell.announcements.view_text_expiration_date_indefinite"
+                >
+                    <vc-date-picker
+                        v-model="announcement.end_at"
+                        :locale="date.vcDatepickerConfig()"
+                        :popover="{ visibility: 'focus' }"
+                        :min-date="announcement.id ? null : new Date()"
+                    >
+                        <template v-slot="{ inputValue, inputEvents }">
+                            <input
+                                class="input is-default"
+                                v-on="inputEvents"
+                                :value="inputValue"
+                                :placeholder="translations.core.shared.text_select_date"
+                            />
+                        </template>
+                    </vc-date-picker>
+                </b-field>
+
+                <b-field :label="translations.bell.announcements.column_can_be_closed">
+                    <b-select v-model="announcement.can_be_closed">
+                        <option value="true">{{ translations.core.shared.view_text_yes }}</option>
+                        <option value="false">{{ translations.core.shared.view_text_no }}</option>
                     </b-select>
+                </b-field>
+            </b-field>
+
+            <b-field>
+                <template v-slot:label>
+                    {{ translations.bell.announcements.column_kind }}<sup class="has-text-danger">*</sup>
+                </template>
+                <div class="columns">
+                    <div class="column is-4">
+                        <b-select
+                            v-if="options"
+                            :placeholder="translations.core.view_placeholder_select_option"
+                            required
+                            expanded
+                            v-model="announcement.category"
+                        >
+                            <option
+                                v-for="category in options.categories"
+                                :key="category.value"
+                                :value="category.value"
+                            >
+                                {{ object_utils.translateEnum(translations.bell.announcements, 'column_enum_category', category.text) }}
+                            </option>
+                        </b-select>
+                    </div>
+                    <div class="column">
+                        <b-button :type="`is-${announcement.category}`">
+                            <span>
+                                <b-icon icon="fa-brush" size="is-small"></b-icon>
+                            </span>
+                        </b-button>
+                    </div>
                 </div>
-                <div class="column">
-                    <b-button :type="`is-${announcement.category}`">
-                        <span>
-                            <b-icon icon="fa-brush" size="is-small"></b-icon>
-                        </span>
-                    </b-button>
+            </b-field>
+
+            <b-field>
+                <template v-slot:label>
+                    {{ translations.bell.announcements.view_text_triggered_on }} <sup class="has-text-danger">*</sup>
+                </template>
+                <b-input type="text" :placeholder="translations.bell.announcements.view_text_base_path_placeholder" required v-model="announcement.base_path">
+                </b-input>
+            </b-field>
+
+            <div class="field text-editor-container">
+                <label class="label">{{ translations.bell.announcements.column_message }}</label>
+                <div class="control">
+                    <component-rich-text-editor :value="message" @input="richTextInput" @html="richTextHtml" type="tiny"></component-rich-text-editor>
+                    <!-- <component-richtext-editor :value="message" @input="richTextInput" @html="richTextHtml" type="tiny"></component-richtext-editor> -->
                 </div>
             </div>
-        </b-field>
 
-        <b-field>
-            <template v-slot:label>
-                {{ translations.bell.announcements.view_text_triggered_on }} <sup class="has-text-danger">*</sup>
-            </template>
-            <b-input type="text" :placeholder="translations.bell.announcements.view_text_base_path_placeholder" required v-model="announcement.base_path">
-            </b-input>
-        </b-field>
-
-        <div class="field text-editor-container">
-            <label class="label">{{ translations.bell.announcements.column_message }}</label>
-            <div class="control">
-                <component-rich-text-editor :value="message" @input="richTextInput" @html="richTextHtml" type="tiny"></component-rich-text-editor>
+            <div class="buttons">
+                <b-button name="submit-button" type="is-primary" expanded native-type="submit" class="submit-button">
+                    <span v-if="submitting">
+                        <b-icon icon="circle-notch" custom-class="fa-spin" size="is-small" />
+                        &nbsp;
+                        {{ translations.core.shared.view_btn_saving }}
+                    </span>
+                    <span v-else>
+                        {{ translations.core.shared.view_btn_save }}
+                    </span>
+                </b-button>
             </div>
-        </div>
-
-
-        <div class="field is-grouped">
-            <div class="control">
-                <input type="submit" class="button is-link" value="submit" />
-            </div>
-        </div>
+        </fieldset>
 
     </form>
 </template>

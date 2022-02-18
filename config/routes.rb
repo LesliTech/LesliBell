@@ -21,12 +21,13 @@ CloudBell::Engine.routes.draw do
 
     root to: "dashboards#show"
 
-    resources :notifications, only: [:index, :show, :create, :update] do
+    resources :notifications, only: [:index, :new, :show, :create, :edit, :update] do
         member do
             scope :resources do
                 put :read
             end
         end
+
         collection do
             put :read
             get :options
@@ -35,7 +36,7 @@ CloudBell::Engine.routes.draw do
         end
     end
 
-    resources :announcements, only: [:index, :show, :create, :edit, :update, :destroy] do 
+    resources :announcements, only: [:index, :new, :show, :create, :edit, :update, :destroy] do 
         collection do
             get :options
             get :list
