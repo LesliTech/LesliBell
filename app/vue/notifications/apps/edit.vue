@@ -28,27 +28,32 @@ export default {
     },
     data() {
         return {
-            announcement_id: null,
-            announcement: {},
+            notification_id: null,
             translations: {
                 core: {
                     shared: I18n.t("core.shared"),
                 },
                 bell: {
-                    announcements: I18n.t("bell.announcements"),
+                    notifications: I18n.t("bell.notifications"),
                 }
             },
         }
     },
     mounted() {
-        this.announcement_id = this.$route.params.id
-        this.getAnnouncement()
+        this.notification_id = this.$route.params.id
+        this.getNotification()
     },
     methods: {
 
-        getAnnouncement() {
-            this.http.get(this.url.bell("announcements/:id", { id: this.announcement_id })).then(result => {
-                this.announcement = result.data
+        getNotification() {
+            this.http.get(this.url.bell("notifications/:id", { id: this.notification_id })).then(result => {
+                if (result.successful) {
+                    this.data.notification = result.data
+                } else {
+                    this.msg.error(result.error.message)
+                }
+            }).catch(error => {
+                console.log(error)
             })
         }
 
@@ -57,10 +62,10 @@ export default {
 </script>
 <template>
     <section class="application-component">
-        <component-header :title="translations.bell.announcements.view_title_edit_announcement"></component-header>
+        <component-header :title="translations.bell.notifications.view_title_edit_notification"></component-header>
         <div class="card">
             <div class="card-content">
-                <component-form :announcement="this.announcement"></component-form>
+                <component-form></component-form>
             </div>
         </div>
     </section>

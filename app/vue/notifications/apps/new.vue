@@ -23,44 +23,29 @@ import componentForm from "../components/form.vue"
 
 // · 
 export default {
-    components: {
-        "component-form": componentForm
-    },
     data() {
         return {
-            announcement_id: null,
-            announcement: {},
             translations: {
                 core: {
                     shared: I18n.t("core.shared"),
                 },
                 bell: {
-                    announcements: I18n.t("bell.announcements"),
+                    notifications: I18n.t("bell.notifications"),
                 }
             },
         }
     },
-    mounted() {
-        this.announcement_id = this.$route.params.id
-        this.getAnnouncement()
-    },
-    methods: {
-
-        getAnnouncement() {
-            this.http.get(this.url.bell("announcements/:id", { id: this.announcement_id })).then(result => {
-                this.announcement = result.data
-            })
-        }
-
+    components: {
+        "component-form": componentForm
     }
 }
 </script>
 <template>
     <section class="application-component">
-        <component-header :title="translations.bell.announcements.view_title_edit_announcement"></component-header>
+        <component-header :title="translations.bell.notifications.view_title_new_notification"></component-header>
         <div class="card">
             <div class="card-content">
-                <component-form :announcement="this.announcement"></component-form>
+                <component-form></component-form>
             </div>
         </div>
     </section>
