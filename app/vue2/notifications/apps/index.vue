@@ -85,16 +85,17 @@ export default {
                 </router-link>
             </div>
         </component-header>
-
+        <component-toolbar>
+        </component-toolbar>
         <div class="box">
-        <b-table
-            v-if="notifications.records"
-            :row-class="(row, index) => `message is-${ row.category }`"
-            :data="notifications.records"
-            :columns="columns"
-            hoverable
-            @click="viewNotification"
-        ></b-table>
+            <b-table
+                v-if="notifications.records"
+                :row-class="(row, index) => `message is-${ row.category }`"
+                :data="notifications.records"
+                :columns="columns"
+                hoverable
+                @click="viewNotification"
+            ></b-table>
         </div>
     </section>
 </template>
