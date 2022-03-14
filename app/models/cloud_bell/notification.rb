@@ -118,7 +118,7 @@ module CloudBell
 
             # here I should check settings for prefered notification channels
             ['web', 'mobile', 'email'].each do |authorized_channel|
-                
+
                 # if channel is authorized check if channels is included in the senders
                 if authorized_channel == 'email'
                     NotificationService.send_email(user, self) if ['email'].include?(self.channel)
