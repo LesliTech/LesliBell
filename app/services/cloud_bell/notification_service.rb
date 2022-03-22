@@ -88,6 +88,9 @@ module CloudBell
             # validate that the notifications has a valid category
             category = 'info' if not ['info', 'danger', 'warning', 'success'].include?(category)
 
+            # set push (web and mobile) notifications as default channel
+            channel = 'push' unless channel
+
             # base notification data
             notification_params = {
                 url: url,
