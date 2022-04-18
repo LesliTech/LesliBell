@@ -100,7 +100,6 @@ require 'lesli_request_helper'
 }].each do |notification|
 
     RSpec.describe 'POST:/bell/notifications', type: :request do
-
         include_context 'request user authentication'
 
         it "is expected to create a new notification with #{notification.size} parameters" do
@@ -109,16 +108,15 @@ require 'lesli_request_helper'
                 notification: notification
             })
 
+            # sharec examples
             expect_json_response_successful
 
+            # custom
             response_body = response_json
             notification_id = response_body['data']['id']
             notification_result = CloudBell::Notification.where(:id => notification_id).first
 
             expect(notification_id).to include(notification_result.id)
-
         end
-
     end
-
 end

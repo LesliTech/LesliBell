@@ -17,23 +17,19 @@ For more information read the license file including with this software.
 
 =end
 
-require 'rails_helper'
-require 'spec_helper'
-require 'byebug'
-
+require "lesli_request_helper"
 
 RSpec.describe 'GET:/bell/announcements.json', type: :request do
-    include_context 'user authentication'
+    include_context "request user authentication"
     
-    before(:all) do
-        get '/bell/announcements.json' 
-    end
-
-    include_examples 'successful standard json response'
-
     it 'is expected to respond with all the announcements' do
-        expect(@response_body["successful"]).to eql(true)
-        expect(@response_body["data"]["pagination"]["count_total"]).to eql(@user.account.bell.announcements.count)
-    end
-    
+        get '/bell/announcements.json' 
+
+        # shared examples
+        expect_json_response_successful
+
+        # custom specs
+        expect(response_json["successful"]).to eql(true)
+        expect(response_data["pagination"]["count_total"]).to eql(@current_user.account.bell.announcements.count)
+    end 
 end

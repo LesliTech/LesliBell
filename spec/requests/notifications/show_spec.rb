@@ -101,7 +101,6 @@ require 'lesli_request_helper'
 }].each do |notification|
 
     RSpec.describe 'GET:/bell/notifications', type: :request do
-
         include_context 'request user authentication'
 
         it "is expected to respond with notification with #{notification.size} parameters" do
@@ -121,18 +120,15 @@ require 'lesli_request_helper'
             # get notification
             get("/bell/notifications/#{ notification_id }.json")
 
+            # shared examples
             expect_json_response_successful
 
-            response_body = response_json
-
-            expect(response_body['data']['id']).to eql(notification_result.id)
-            expect(response_body['data']['subject']).to eql(notification_result[:subject])
-            expect(response_body['data']['body']).to eql(notification_result[:body])
-            expect(response_body['data']['url']).to eql(notification_result[:url])
-            expect(response_body['data']['category'] || 'info').to eql(notification_result[:category])
-
+            # custom specs
+            expect(response_data['id']).to eql(notification_result.id)
+            expect(response_data['subject']).to eql(notification_result[:subject])
+            expect(response_data['body']).to eql(notification_result[:body])
+            expect(response_data['url']).to eql(notification_result[:url])
+            expect(response_data['category'] || 'info').to eql(notification_result[:category])
         end
-
     end
-
 end

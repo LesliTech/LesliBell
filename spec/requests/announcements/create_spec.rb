@@ -17,17 +17,12 @@ For more information read the license file including with this software.
 
 =end
 
-
-require 'rails_helper'
-require 'spec_helper'
-require 'byebug'
-
-
+require "lesli_request_helper"
 
 RSpec.describe 'POST:/bell/announcements', type: :request do
-    include_context 'user authentication'
+    include_context "request user authentication"
 
-    before(:all) do
+    it "is expected to create a new announcement" do
         post("/bell/announcements.json", params: {
             announcement: {
                 base_path: "/crm/",
@@ -40,12 +35,12 @@ RSpec.describe 'POST:/bell/announcements', type: :request do
                 status: true
             }
         })
-    end
 
-    include_examples 'successful standard json response'
+        # shared examples
+        expect_json_response_successful
 
-    it 'is expected to create a new announcement' do
-        expect(@response_body["successful"]).to eql(true)
-        expect(@response_body["data"]["id"]).to be > 0
+        # custom specs
+        expect(response_json["successful"]).to eql(true)
+        expect(response_data["id"]).to be > 0
     end
 end

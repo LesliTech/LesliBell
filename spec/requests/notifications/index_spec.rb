@@ -23,24 +23,23 @@ require 'lesli_request_helper'
 
 #
 RSpec.describe 'GET:/bell/notifications.json', type: :request do
-
     include_context 'request user authentication'
 
     it 'is expected to respond with all the notification for the current user' do
 
         get('/bell/notifications.json') 
 
+        # shared examples
         expect_json_response_successful
 
-        response_body = response_json
+
+        # custom
 
         notification_index = CloudBell::Notification.index(@current_user, @query)
         notification_result = @current_user.account.bell.notifications.where(:user => @current_user).count
 
-        expect(response_body['data']['pagination']['count_total']).to eql(notification_result)
-        expect(response_body['data']['pagination']['count_results']).to eql(response_body['data']['records'].size)
-        expect(response_body['data']['pagination']['count_results']).to be <= @query[:pagination][:perPage]
-
+        expect(response_data['pagination']['count_total']).to eql(notification_result)
+        expect(response_data['pagination']['count_results']).to eql(response_data['records'].size)
+        expect(response_data['pagination']['count_results']).to be <= @query[:pagination][:perPage]
     end
-    
 end

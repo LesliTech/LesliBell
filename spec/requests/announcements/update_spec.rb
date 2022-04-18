@@ -18,36 +18,49 @@ For more information read the license file including with this software.
 =end
 
 
-require 'rails_helper'
-require 'spec_helper'
-require 'byebug'
-
+require "lesli_request_helper"
 
 RSpec.describe "PUT:/bell/announcements/:id", type: :request do
-    include_context 'user authentication'
+    include_context "request user authentication"
     
-    before(:all) do
+    let!(:create_new_announcement) do
+        new_announcement =  @current_user.account.bell.announcements.create(
+            base_path: "/crm/",
+            can_be_closed: true,
+            category: "success",
+            end_at: "2021-07-23T19:13:33.431Z",
+            message: "{\"delta\":{\"ops\":[{\"insert\":\"Testing announcements\\n\"}]},\"html\":\"<p>Testing announcements</p>\"}",
+            name: "General Information",
+            start_at: "2021-07-22T19:13:31.450Z",
+            status: true
+        )
+        new_announcement.user = @current_user
+        new_announcement.save()
+        new_announcement
+    end
+
+    it 'is expected to update an announcement' do
+        create_new_announcement
         @new_attributes = {
             "name" => Faker::Name.name,
             "status" => Faker::Boolean.boolean,
             "can_be_closed" => Faker::Boolean.boolean   
         }
         
-        @announcement = @user.account.bell.announcements.first 
+        @announcement = @current_user.account.bell.announcements.first 
                 
         put("/bell/announcements/#{@announcement.id}.json", params: {
             announcement: @new_attributes
         })
-    end
 
-    include_examples 'successful standard json response'
+        # shared examples
+        expect_json_response_successful
 
-
-    it 'is expected to update an announcement' do                
-        expect(@response_body["data"]["id"]).to eql(@announcement.id)
-        expect(@response_body["data"]["name"]).to eql(@new_attributes["name"])
-        expect(@response_body["data"]["status"]).to eql(@new_attributes["status"])
-        expect(@response_body["data"]["can_be_closed"]).to eql(@new_attributes["can_be_closed"])
+        # custom specs
+        expect(response_data["id"]).to eql(@announcement.id)
+        expect(response_data["name"]).to eql(@new_attributes["name"])
+        expect(response_data["status"]).to eql(@new_attributes["status"])
+        expect(response_data["can_be_closed"]).to eql(@new_attributes["can_be_closed"])
     end    
 end
 
