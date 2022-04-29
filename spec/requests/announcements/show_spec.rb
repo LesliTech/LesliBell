@@ -17,28 +17,41 @@ For more information read the license file including with this software.
 
 =end
 
-require 'rails_helper'
-require 'spec_helper'
-require 'byebug'
-
+require "lesli_request_helper"
 
 RSpec.describe 'GET:/bell/announcements/:id.json', type: :request do
-    include_context 'user authentication'
-    
-    before(:all) do
-        @announcement = @user.account.bell.announcements.first
-                
-        get "/bell/announcements/#{@announcement.id}.json" 
+    include_context "request user authentication"
+
+    let!(:create_new_announcement) do
+        new_announcement =  @current_user.account.bell.announcements.new(
+            base_path: "/crm/",
+            can_be_closed: true,
+            category: "success",
+            end_at: "2021-07-23T19:13:33.431Z",
+            message: "{\"delta\":{\"ops\":[{\"insert\":\"Testing announcements\\n\"}]},\"html\":\"<p>Testing announcements</p>\"}",
+            name: "General Information",
+            start_at: "2021-07-22T19:13:31.450Z",
+            status: true
+        )
+        new_announcement.user = @current_user
+        new_announcement.save()
+        new_announcement
     end
 
-    include_examples 'successful standard json response'
+    it 'is expected to respond with the announcement requested' do
+        announcement = create_new_announcement
 
-    it 'is expected to respond with the announcement requested' do        
-        @announcement.attributes.except("created_at", "updated_at").each do |key, value|      
+        get "/bell/announcements/#{announcement.id}.json" 
+        
+        # shared examples
+        expect_json_response_successful
+
+        # custom specs
+        announcement.attributes.except("created_at", "updated_at").each do |key, value|      
             if (value.is_a?(Time))                
-                expect(LC::Date.datetime(@response_body["data"][key])).to eql(LC::Date.datetime(value))
+                expect(LC::Date.datetime(response_data[key])).to eql(LC::Date.datetime(value))
             else
-                expect(@response_body["data"][key]).to eql(value)  
+                expect(response_data[key]).to eql(value)  
             end
         end
     end
