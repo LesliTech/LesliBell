@@ -18,8 +18,3 @@ For more information read the license file including with this software.
 =end
 
 # ======================== CloudBell cron jobs
-
-# Notification
-every 30.minutes do
-    rake 'cloud_bell:cron:send_email'
-end
