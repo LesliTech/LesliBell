@@ -1,6 +1,6 @@
-<%#
+/*
 
-Copyright (c) 2020, all rights reserved.
+Copyright (c) 2022, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to 
 industrial property, intellectual property, copyright and relative international laws. 
@@ -15,23 +15,20 @@ For more information read the license file including with this software.
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 // · 
 
-%>
+*/
 
-<template>
 
-    <%= navigation_vue_item(cloud_bell.root_path) do %>
-        <i class="fas fa-tachometer-alt"></i>
-        <span><%= I18n.t("bell.shared.sidebar_nav_dashboard")%></span>
-    <% end %>
+// · Import main app
+import app from "LesliVue/app"
 
-    <%= navigation_vue_item(cloud_bell.notifications_path) do %>
-        <i class="fas fa-bell"></i>
-        <span><%= I18n.t("bell.shared.sidebar_nav_notifications")%></span>
-    <% end %>
 
-    <%= navigation_vue_item(cloud_bell.announcements_path) do %>
-        <i class="fas fa-bullhorn"></i>
-        <span><%= I18n.t("bell.shared.sidebar_nav_announcements")%></span>
-    <% end %>
+// · Import apps and components
+import appDashboard from "LesliVue/cloud-objects/dashboards/apps/show.vue"
 
-</template>
+
+// · Cloud app
+app("CloudBell", [{
+    path: "/",
+    component: appDashboard
+}])
+

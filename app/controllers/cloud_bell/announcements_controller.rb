@@ -20,7 +20,7 @@ For more information read the license file including with this software.
 require_dependency "cloud_bell/application_controller"
 
 module CloudBell
-    class AnnouncementsController < ApplicationLesliController
+    class AnnouncementsController < ApplicationController
         before_action :set_announcement, only: [:show, :update, :destroy]
         
         # GET /announcements/list
