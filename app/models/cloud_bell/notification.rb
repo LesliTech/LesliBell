@@ -65,6 +65,8 @@ module CloudBell
             .per(query[:pagination][:perPage])
             .order(:updated_at)
 
+            return notifications
+
             LC::Response.pagination(
                 notifications.current_page,
                 notifications.total_pages,
