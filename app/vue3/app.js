@@ -25,10 +25,19 @@ import app from "LesliVue/app"
 // · Import apps and components
 import appDashboard from "LesliVue/cloud-objects/dashboards/apps/show.vue"
 
+import appNotificationsIndex from "./apps/notifications/index.vue"
+import appNotificationsNew from "./apps/notifications/new.vue"
+
 
 // · Cloud app
 app("CloudBell", [{
     path: "/",
     component: appDashboard
+}, {
+    path: "/notifications",
+    component: appNotificationsIndex
+}, {
+    path: "/notifications/new",
+    component: appNotificationsNew
 }])
 
