@@ -33,16 +33,79 @@ export const useBellNotification = defineStore("bell.Notification", {
     state: () => {
         return {
             loading: false,
-            record: null,
+            users: [],
+            roles: [],
+            filteredUsers: [],
+            filteredRoles: [],
+            record: {
+                subject: null,
+                body: null,
+                url: null,
+                status: null,
+                notification_type: null,
+                category: null,
+            },
+            receiverUsers: [],
+            receiverRoles: [],
         }
     },
     actions: {
 
         create() {
-            this.http.post(this.url.bell("notifications"), this.record).then(() => {
-                this.msg.success(this.translations.bell.notifications.messages_success_notification_created_successfully)
+            this.loading = true
+
+            this.http.post(this.url.bell("notifications"), {
+                notification: {
+                    ...this.record,
+                    user_receiver_emails: this.receiverUsers,
+                    role_receiver_names: this.receiverRoles,
+
+                }
+            }).then(() => {
+                this.msg.success(translations.bell.notifications.messages_success_notification_created_successfully)
             }).catch(error => {
+                this.msg.danger(error)
+            }).finally(() => {
+                this.record = {}
+                this.receiverUsers = []
+                this.receiverRoles = []
+                this.loading = false
+            })
+        },
+
+        getUsers() {
+            this.loading = true
+            this.http.get(this.url.admin('users/list')).then(result => {
+                this.users = result
+            }).catch(error => {
+                this.msg.danger(error)
                 console.log(error)
+            }).finally(() => {
+                this.loading = false
+            })
+        },
+
+        getRoles() {
+            this.loading = true
+            this.http.get(this.url.admin('roles/list')).then(result => {
+                this.roles = result
+            }).catch(error => {
+                this.msg.danger(error)
+                console.log(error)
+            }).finally(() => {
+                this.loading = false
+            })
+        },
+
+        getFilteredUsers(text) {
+            this.filteredUsers = this.users.filter((option) => {
+                return (option.email||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0 || (option.name||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
+            })
+        },
+
+        getFilteredRoles(text) {
+            this.filteredRoles = this.roles.filter((option) => {
+                return (option.name||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
             })
         },
 

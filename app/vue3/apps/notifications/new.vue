@@ -20,7 +20,7 @@ For more information read the license file including with this software.
 import { onMounted } from "vue"
 
 // · import components and lazy loading implementation
-// import ComponentNotificationForm from "CloudBell/apps/notifications/components/form.vue"
+import ComponentNotificationForm from "CloudBell/apps/notifications/components/form.vue"
 
 // · 
 import { useBellNotification } from "CloudBell/stores/notification"
@@ -47,7 +47,7 @@ onMounted(() => {})
 
         <lesli-header :title="translations.bell.notifications.view_title_notifications"></lesli-header>
 
-        <!-- <component-notification-form></component-notification-form> -->
+        <component-notification-form></component-notification-form>
 
     </section>
 </template>
