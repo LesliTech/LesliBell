@@ -28,7 +28,7 @@ module CloudBell
             respond_to do |format|
                 format.html {  }
                 format.json {
-                    respond_with_successful(Notification.index(current_user, @query))
+                    respond_with_pagination(Notification.index(current_user, @query))
                 }
             end
         end

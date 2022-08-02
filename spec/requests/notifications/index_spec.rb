@@ -32,14 +32,12 @@ RSpec.describe 'GET:/bell/notifications.json', type: :request do
         # shared examples
         expect_response_with_successful
 
-
         # custom
-
         notification_index = CloudBell::Notification.index(@current_user, @query)
-        notification_result = @current_user.account.bell.notifications.where(:user => @current_user).count
+        notification_count = @current_user.account.bell.notifications.where(:user => @current_user, :status => ["created", "sent", nil]).count
 
-        expect(response_json['pagination']['count_total']).to eql(notification_result)
-        expect(response_json['pagination']['count_results']).to eql(response_json['records'].size)
-        expect(response_json['pagination']['count_results']).to be <= @query[:pagination][:perPage]
+        expect(response_json['pagination']['total']).to eql(notification_count)
+        expect(response_json['pagination']['results']).to eql(response_json['records'].size)
+        expect(response_json['pagination']['results']).to be <= @query[:pagination][:perPage]
     end
 end
