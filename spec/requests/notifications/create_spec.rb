@@ -2,9 +2,9 @@
 
 Copyright (c) 2021, all rights reserved.
 
-All the information provided by this platform is protected by international laws related  to 
-industrial property, intellectual property, copyright and relative international laws. 
-All intellectual or industrial property rights of the code, texts, trade mark, design, 
+All the information provided by this platform is protected by international laws related  to
+industrial property, intellectual property, copyright and relative international laws.
+All intellectual or industrial property rights of the code, texts, trade mark, design,
 pictures and any other information belongs to the owner of this platform.
 
 Without the written permission of the owner, any replication, modification,
@@ -13,7 +13,7 @@ transmission, publication is strictly forbidden.
 For more information read the license file including with this software.
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-// · 
+// ·
 
 =end
 
@@ -109,11 +109,10 @@ require 'lesli_request_helper'
             })
 
             # sharec examples
-            expect_json_response_successful
+            expect_response_with_successful
 
             # custom
-            response_body = response_json
-            notification_id = response_body['data']['id']
+            notification_id = response_json['id']
             notification_result = CloudBell::Notification.where(:id => notification_id).first
 
             expect(notification_id).to include(notification_result.id)

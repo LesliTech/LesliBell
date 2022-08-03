@@ -2,9 +2,9 @@
 
 Copyright (c) 2021, all rights reserved.
 
-All the information provided by this platform is protected by international laws related  to 
-industrial property, intellectual property, copyright and relative international laws. 
-All intellectual or industrial property rights of the code, texts, trade mark, design, 
+All the information provided by this platform is protected by international laws related  to
+industrial property, intellectual property, copyright and relative international laws.
+All intellectual or industrial property rights of the code, texts, trade mark, design,
 pictures and any other information belongs to the owner of this platform.
 
 Without the written permission of the owner, any replication, modification,
@@ -13,7 +13,7 @@ transmission, publication is strictly forbidden.
 For more information read the license file including with this software.
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-// · 
+// ·
 
 =end
 
@@ -41,17 +41,17 @@ RSpec.describe 'GET:/bell/announcements/:id.json', type: :request do
     it 'is expected to respond with the announcement requested' do
         announcement = create_new_announcement
 
-        get "/bell/announcements/#{announcement.id}.json" 
-        
+        get "/bell/announcements/#{announcement.id}.json"
+
         # shared examples
-        expect_json_response_successful
+        expect_response_with_successful
 
         # custom specs
-        announcement.attributes.except("created_at", "updated_at").each do |key, value|      
-            if (value.is_a?(Time))                
-                expect(LC::Date.datetime(response_data[key])).to eql(LC::Date.datetime(value))
+        announcement.attributes.except("created_at", "updated_at").each do |key, value|
+            if (value.is_a?(Time))
+                expect(LC::Date.datetime(response_json[key])).to eql(LC::Date.datetime(value))
             else
-                expect(response_data[key]).to eql(value)  
+                expect(response_json[key]).to eql(value)
             end
         end
     end
