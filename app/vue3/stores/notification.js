@@ -57,9 +57,8 @@ export const useBellNotification = defineStore("bell.Notification", {
             this.http.post(this.url.bell("notifications"), {
                 notification: {
                     ...this.record,
-                    user_receiver_emails: this.receiverUsers,
-                    role_receiver_names: this.receiverRoles,
-
+                    user_receiver_emails: this.receiverUsers.map(user => user.email),
+                    role_receiver_names: this.receiverRoles.map(role => role.name),
                 }
             }).then(() => {
                 this.msg.success(translations.bell.notifications.messages_success_notification_created_successfully)
@@ -94,18 +93,6 @@ export const useBellNotification = defineStore("bell.Notification", {
                 console.log(error)
             }).finally(() => {
                 this.loading = false
-            })
-        },
-
-        getFilteredUsers(text) {
-            this.filteredUsers = this.users.filter((option) => {
-                return (option.email||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0 || (option.name||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
-            })
-        },
-
-        getFilteredRoles(text) {
-            this.filteredRoles = this.roles.filter((option) => {
-                return (option.name||'').toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
             })
         },
 

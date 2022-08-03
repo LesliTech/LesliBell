@@ -90,7 +90,6 @@ onMounted(() => {
             </div>
         </div>
 
-
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">
@@ -100,9 +99,30 @@ onMounted(() => {
             <div class="column">
                 <div class="control is-clearfix">
                     <lesli-input-tag
+                        v-model="notificationStore.receiverUsers"
                         :placeholder="translations.core.shared.view_placeholder_search"
                         :options="notificationStore.users"
-                        v-model="notificationStore.receiverUsers"
+                        :filterFields="['name', 'email']"
+                        showField="email"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="columns is-marginless has-border-bottom">
+            <div class="column is-4">
+                <label class="label">
+                    {{ translations.bell.notifications.view_text_receiver_roles }}
+                </label>
+            </div>
+            <div class="column">
+                <div class="control is-clearfix">
+                    <lesli-input-tag
+                        v-model="notificationStore.receiverRoles"
+                        :placeholder="translations.core.shared.view_placeholder_search"
+                        :options="notificationStore.roles"
+                        :filterFields="['name']"
+                        showField="name"
                     />
                 </div>
             </div>

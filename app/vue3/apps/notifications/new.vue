@@ -45,7 +45,7 @@ onMounted(() => {})
 <template>
     <section class="application-component">
 
-        <lesli-header :title="translations.bell.notifications.view_title_notifications"></lesli-header>
+        <lesli-header :title="translations.bell.notifications.view_title_new_notification"></lesli-header>
 
         <component-notification-form></component-notification-form>
 
