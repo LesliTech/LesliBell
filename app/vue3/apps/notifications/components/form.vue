@@ -17,21 +17,13 @@ For more information read the license file including with this software.
 */
 
 // · import vue tools
-import { onMounted, ref, computed } from "vue"
-import { useRouter } from "vue-router"
-import { useMsg } from "LesliVue/composables/msg"
-import { useUrl } from "LesliVue/composables/url"
+import { onMounted } from "vue"
 
 // · import store
 import { useBellNotification } from "CloudBell/stores/notification";
 
 // · implement store
 const notificationStore = useBellNotification()
-
-// · init vue composables
-const url = useUrl()
-const msg = useMsg()
-const router = useRouter()
 
 // . Defining translations
 const translations = {
