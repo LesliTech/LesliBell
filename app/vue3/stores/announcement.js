@@ -24,12 +24,12 @@ const translations = {
         shared: I18n.t("core.shared")
     },
     bell: {
-        notifications: I18n.t("bell.notifications")
+        notifications: I18n.t("bell.announcements")
     }
 }
 
 
-export const useBellNotification = defineStore("bell.Notification", {
+export const useBellAnnouncement = defineStore("bell.Announcement", {
     state: () => {
         return {
             loading: false,
@@ -59,7 +59,7 @@ export const useBellNotification = defineStore("bell.Notification", {
         },
         fetch() {
             this.http.get(
-                this.url.bell("notifications")
+                this.url.bell("announcements")
                 .paginate(this.pagination.page)
             ).then(result => {
                 this.pagination = result.pagination
@@ -70,7 +70,7 @@ export const useBellNotification = defineStore("bell.Notification", {
         post() {
             this.loading = true
 
-            this.http.post(this.url.bell("notifications"), {
+            this.http.post(this.url.bell("announcements"), {
                 notification: {
                     ...this.record,
                     user_receiver_emails: this.receiverUsers.map(user => user.email),

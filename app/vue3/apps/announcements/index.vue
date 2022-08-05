@@ -30,11 +30,11 @@ const date = inject("date")
 
 
 // · import lesli stores
-import { useBellNotification } from "CloudBell/stores/notification"
+import { useBellAnnouncement } from "CloudBell/stores/announcement"
 
 
 // · implement stores
-const storeNotification = useBellNotification()
+const storeAnnouncement = useBellAnnouncement()
 
 
 // ·
@@ -43,7 +43,7 @@ const translations = {
         shared: I18n.t("core.shared")
     },
     bell: {
-        notifications: I18n.t("bell.notifications")
+        notifications: I18n.t("bell.announcements")
     }
 }
 
@@ -51,23 +51,20 @@ const columns = [{
     field: "id",
     label: "ID"
 }, {
-    field: "subject",
-    label: "Notification"
-}, {
-    field: "url",
-    label: "Link"
+    field: "name",
+    label: "Name"
 }, {
     field: "status",
     label: "Status",
     align: "center"
 }, {
-    field: "created_at",
+    field: "created_at_date",
     label: "Sent at"
 }]
 
 // · initializing
 onMounted(() => {
-    storeNotification.fetch()
+    storeAnnouncement.fetch()
 })
 
 </script>
@@ -87,9 +84,9 @@ onMounted(() => {
 
         <lesli-table
             :columns="columns"
-            :records="storeNotification.records"
-            :pagination="storeNotification.pagination"
-            @paginate="storeNotification.paginate">
+            :records="storeAnnouncement.records"
+            :pagination="storeAnnouncement.pagination"
+            @paginate="storeAnnouncement.paginate">
             <template #id="{ value, record }">
                 <span :class="['tag', 'is-medium', 'is-' + record.category]">
                     {{ value }}
