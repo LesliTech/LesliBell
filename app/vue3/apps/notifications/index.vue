@@ -16,6 +16,27 @@ For more information read the license file including with this software.
 // ·
 */
 
+
+// · import vue tools
+import { ref, reactive, onMounted, watch, computed, inject } from "vue"
+import { useRouter, useRoute } from 'vue-router'
+
+
+// · initialize/inject plugins
+const router = useRouter()
+const msg = inject("msg")
+const url = inject("url")
+const date = inject("date")
+
+
+// · import lesli stores
+import { useBellNotification } from "CloudBell/stores/notification"
+
+
+// · implement stores
+const storeNotification = useBellNotification()
+
+
 // ·
 const translations = {
     core: {
@@ -26,12 +47,35 @@ const translations = {
     }
 }
 
+const columns = [{
+    field: "id",
+    label: "ID"
+}, {
+    field: "subject",
+    label: "Notification"
+}, {
+    field: "url",
+    label: "Link"
+}, {
+    field: "status",
+    label: "Status",
+    align: "center"
+}, {
+    field: "created_at",
+    label: "Sent at"
+}]
+
+// · initializing
+onMounted(() => {
+    storeNotification.fetch()
+})
+
 </script>
 <template>
     <section class="application-component">
 
         <lesli-header :title="translations.bell.notifications.view_title_notifications">
-            <button @click="url.bell('notifications/new').go()" class="button is-primary" size="is-primary">
+            <button @click="router.push(url.bell('notifications/new').s)" class="button is-primary" size="is-primary">
                 <span class="icon is-small">
                     <span class="material-icons">add</span>
                 </span>
@@ -40,6 +84,51 @@ const translations = {
                 </span>
             </button>
         </lesli-header>
+
+        <lesli-table
+            :columns="columns"
+            :records="storeNotification.records"
+            :pagination="storeNotification.pagination"
+            @paginate="storeNotification.paginate">
+            <template #id="{ value, record }">
+                <span :class="['tag', 'is-medium', 'is-' + record.category]">
+                    {{ value }}
+                </span>
+            </template>
+            <template #subject="{ column, value, record }">
+                <h4>{{ record.subject }}</h4>
+                <p>{{ record.body }}</p>
+            </template>
+            <template #url="{ value }">
+                <a :href="value" class="has-text-link hover">{{ value }}</a>
+            </template>
+            <template #created_at="{ value }">
+                <p>
+                    <span class="icon-text">
+                        <span class="icon">
+                            <span class="has-text-grey material-icons">
+                                calendar_month
+                            </span>
+                        </span>
+                        <span>
+                            {{ date.date(value) }}
+                        </span>
+                    </span>
+                </p>
+                <p>
+                    <span class="icon-text">
+                        <span class="icon">
+                            <span class="has-text-grey material-icons">
+                                schedule
+                            </span>
+                        </span>
+                        <span>
+                            {{ date.time(value) }}
+                        </span>
+                    </span>
+                </p>
+            </template>
+        </lesli-table>
 
     </section>
 </template>
