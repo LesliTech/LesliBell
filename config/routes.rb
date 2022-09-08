@@ -18,6 +18,9 @@ For more information read the license file including with this software.
 =end
 
 CloudBell::Engine.routes.draw do
+    # resources :announcements_activities
+    # resources :notifications_activities
+    resources :announcement_users
 
     root to: "dashboards#show"
 
@@ -34,12 +37,20 @@ CloudBell::Engine.routes.draw do
             get :count
             get :list
         end
+
+        scope module: :notification do
+            resources :notifications_activities
+        end
     end
 
     resources :announcements, only: [:index, :new, :show, :create, :edit, :update, :destroy] do 
         collection do
             get :options
             get :list
+        end
+
+        scope module: :announcement do
+            resources :announcements_activities
         end
     end
 end
