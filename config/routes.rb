@@ -18,6 +18,9 @@ For more information read the license file including with this software.
 =end
 
 CloudBell::Engine.routes.draw do
+  namespace :announcement do
+    resources :users
+  end
     # namespace :notification do
     #     resources :activities
     # end
