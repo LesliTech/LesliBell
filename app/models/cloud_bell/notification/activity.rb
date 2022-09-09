@@ -18,5 +18,11 @@ For more information read the license file including with this software.
 module CloudBell
     class Notification::Activity < CloudObject::Activity
         belongs_to :cloud_object, class_name: "CloudBell::Notification", foreign_key: "cloud_bell_notifications_id", optional: true
+        def self.log_activity_create(current_user, cloud_object)
+            cloud_object.activities.create(
+                user_creator: current_user,
+                category: "action_create"
+            )
+        end
     end
 end

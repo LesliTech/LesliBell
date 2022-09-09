@@ -64,7 +64,8 @@ module CloudBell
                 user_receiver_emails: notification_params[:user_receiver_emails],
             )
 
-            CloudBell::Notification.log_activity_create(current_user, notification)
+            notification_created = CloudBell::Notification.last
+            CloudBell::Notification::Activity.log_activity_create(current_user, notification_created)
             respond_with_successful(notification)
 
         end

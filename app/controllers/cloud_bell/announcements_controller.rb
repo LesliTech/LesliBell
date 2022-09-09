@@ -68,7 +68,7 @@ module CloudBell
             announcement.user = current_user
             
             if announcement.save
-                CloudBell::Announcement.log_activity_create(current_user, announcement)
+                CloudBell::Announcement::Activity.log_activity_create(current_user, announcement)
                 respond_with_successful(announcement)
             else
                 respond_with_error(announcement.errors.full_messages.to_sentence)

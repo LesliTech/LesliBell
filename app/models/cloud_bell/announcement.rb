@@ -17,7 +17,7 @@ For more information read the license file including with this software.
 
 =end
 module CloudBell
-    class Announcement < ApplicationRecord
+    class Announcement < CloudObject
         belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
         
