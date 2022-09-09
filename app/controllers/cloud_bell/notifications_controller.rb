@@ -64,13 +64,18 @@ module CloudBell
                 user_receiver_emails: notification_params[:user_receiver_emails],
             )
 
+            CloudBell::Notification.log_activity_create(current_user, notification)
             respond_with_successful(notification)
 
         end
 
         # PATCH/PUT /notifications/1
         def update
+            old_attributes = @notification.attributes
+
             if @notification.update(notification_params)
+                new_attributes = @notification.attributes
+                CloudBell::Notification.log_activity_update(current_user, @notification, old_attributes, new_attributes)
                 respond_with_successful(@notification)
             else
                 render :edit
@@ -80,6 +85,7 @@ module CloudBell
         # DELETE /notifications/1
         def destroy
             @notification.destroy
+            CloudBell::Notification.log_activity_destroy(current_user, @notification)
             redirect_to notifications_url, notice: 'Notification was successfully destroyed.'
         end
 

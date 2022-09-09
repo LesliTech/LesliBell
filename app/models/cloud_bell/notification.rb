@@ -22,6 +22,8 @@ module CloudBell
         belongs_to :account, class_name: "CloudBell::Account", foreign_key: "cloud_bell_accounts_id"
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
 
+        has_many :activities,   foreign_key: "cloud_bell_notifications_id"
+        
         after_create :send_notification
 
         enum category: {

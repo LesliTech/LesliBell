@@ -67,7 +67,7 @@ export const useBellNotification = defineStore("bell.Notification", {
             })
         },
 
-        post() {
+        createNotification() {
             this.loading = true
 
             this.http.post(this.url.bell("notifications"), {

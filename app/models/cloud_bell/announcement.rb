@@ -22,6 +22,8 @@ module CloudBell
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
         
         before_create :init_announcement
+
+        has_many :activities,   foreign_key: "cloud_bell_announcements_id"
         
         def init_announcement
             self.status ||= true
