@@ -18,11 +18,6 @@ For more information read the license file including with this software.
 =end
 
 CloudBell::Engine.routes.draw do
-    namespace :announcement do
-        resources :users
-    end
-
-    resources :announcement_users
 
     root to: "dashboards#show"
 
@@ -54,6 +49,7 @@ CloudBell::Engine.routes.draw do
 
         scope module: :announcement do
             resources :activities
+            resources :users
         end
 
     end
