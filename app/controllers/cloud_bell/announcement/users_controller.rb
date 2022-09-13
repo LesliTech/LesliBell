@@ -18,80 +18,80 @@ For more information read the license file including with this software.
 require_dependency "cloud_bell/application_controller"
 
 module CloudBell
-  class Announcement::UsersController < ApplicationController
-      before_action :set_announcement_user, only: [:show, :update, :destroy]
+    class Announcement::UsersController < ApplicationController
+        before_action :set_announcement_user, only: [:show, :update, :destroy]
 
-      # GET /announcement/users
-      def index
-          respond_to do |format|
-              format.html {}
-              format.json do
-                  respond_with_successful(Announcement::User.index(current_user, @query))
-              end
-          end
-      end
+        # GET /announcement/users
+        def index
+            respond_to do |format|
+                format.html {}
+                format.json do
+                    respond_with_successful(Announcement::User.index(current_user, @query))
+                end
+            end
+        end
 
-      # GET /announcement/users/1
-      def show
-          respond_to do |format|
-              format.html {}
-              format.json do
-                  return respond_with_not_found unless @announcement_user
-                  return respond_with_successful(@announcement_user.show(current_user, @query))
-              end
-          end
-      end
+        # GET /announcement/users/1
+        def show
+            respond_to do |format|
+                format.html {}
+                format.json do
+                    return respond_with_not_found unless @announcement_user
+                    return respond_with_successful(@announcement_user.show(current_user, @query))
+                end
+            end
+        end
 
-      # GET /announcement/users/new
-      def new
-      end
+        # GET /announcement/users/new
+        def new
+        end
 
-      # GET /announcement/users/1/edit
-      def edit
-      end
+        # GET /announcement/users/1/edit
+        def edit
+        end
 
-      # POST /announcement/users
-      def create
-          announcement_user = Announcement::User.new(announcement_user_params)
-          if announcement_user.save
-              respond_with_successful(announcement_user)
-          else
-              respond_with_error(announcement_user.errors.full_messages.to_sentence)
-          end
-      end
+        # POST /announcement/users
+        def create
+            announcement_user = Announcement::User.new(announcement_user_params)
+            if announcement_user.save
+                respond_with_successful(announcement_user)
+            else
+                respond_with_error(announcement_user.errors.full_messages.to_sentence)
+            end
+        end
 
-      # PATCH/PUT /announcement/users/1
-      def update
-          return respond_with_not_found unless @announcement_user
+        # PATCH/PUT /announcement/users/1
+        def update
+            return respond_with_not_found unless @announcement_user
 
-          if @announcement_user.update(announcement_user_params)
-              respond_with_successful(@announcement_user.show(current_user, @query))
-          else
-              respond_with_error(@announcement_user.errors.full_messages.to_sentence)
-          end
-      end
+            if @announcement_user.update(announcement_user_params)
+                respond_with_successful(@announcement_user.show(current_user, @query))
+            else
+                respond_with_error(@announcement_user.errors.full_messages.to_sentence)
+            end
+        end
 
-      # DELETE /announcement/users/1
-      def destroy
-          return respond_with_not_found unless @announcement_user
+        # DELETE /announcement/users/1
+        def destroy
+            return respond_with_not_found unless @announcement_user
 
-          if @announcement_user.destroy
-              respond_with_successful
-          else
-              respond_with_error(@announcement_user.errors.full_messages.to_sentence)
-          end
-      end
+            if @announcement_user.destroy
+                respond_with_successful
+            else
+                respond_with_error(@announcement_user.errors.full_messages.to_sentence)
+            end
+        end
 
-      private
+        private
 
-      # Use callbacks to share common setup or constraints between actions.
-      def set_announcement_user
-          @announcement_user = current_user.account.announcement_users.find(class_name, params[:id])
-      end
+        # Use callbacks to share common setup or constraints between actions.
+        def set_announcement_user
+            @announcement_user = current_user.account.announcement_users.find_by_id(params[:id])
+        end
 
-      # Only allow a list of trusted parameters through.
-      def announcement_user_params
-          params.require(:announcement_user).permit(:id, :name)
-      end
-  end
+        # Only allow a list of trusted parameters through.
+        def announcement_user_params
+            params.fetch(:announcement_user).permit(:id, :name)
+        end
+    end
 end
