@@ -56,10 +56,7 @@ module CloudBell
         def create
             announcement_user = Announcement::User.new()
             announcement_user.user = current_user
-            LC::Debug.msg(@announcement)
             announcement_user.announcement = @announcement
-
-            # announcement_user.announcement = announcement_user_params[:announcement_id]
 
             if announcement_user.save
                 respond_with_successful(announcement_user)
