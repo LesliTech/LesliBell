@@ -38,12 +38,15 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
             filteredUsers: [],
             filteredRoles: [],
             record: {
-                subject: null,
-                body: null,
-                url: null,
-                status: null,
-                notification_type: null,
+                name: null,
                 category: null,
+                url: null,
+                base_path: null,
+                message: null,
+                status: null,
+                start_at: null,
+                end_at: null,
+                can_be_closed: null,
             },
             receiverUsers: [],
             receiverRoles: [],
@@ -71,15 +74,15 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
             this.loading = true
 
             this.http.post(this.url.bell("announcements"), {
-                notification: {
+                announcement: {
                     ...this.record,
-                    user_receiver_emails: this.receiverUsers.map(user => user.email),
-                    role_receiver_names: this.receiverRoles.map(role => role.name),
+                    // user_receiver_emails: this.receiverUsers.map(user => user.email),
+                    // role_receiver_names: this.receiverRoles.map(role => role.name),
                 }
             }).then(() => {
-                this.msg.success(translations.bell.notifications.messages_success_notification_created_successfully)
+                this.msg.success(I18n.t("core.users.messages_success_operation"))
             }).catch(error => {
-                this.msg.danger(error)
+                this.msg.danger(I18n.t("core.shared.messages_danger_internal_error"))
             }).finally(() => {
                 this.record = {}
                 this.receiverUsers = []

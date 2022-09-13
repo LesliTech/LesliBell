@@ -16,13 +16,15 @@ For more information read the license file including with this software.
 
 =end
 module CloudBell
-  class Announcement::User < ApplicationRecord
-      def self.index(current_user, query)
-          []
-      end
+    class Announcement::User < ApplicationRecord
+        belongs_to :announcement, class_name: "CloudBell::Announcement", foreign_key: "cloud_bell_announcements_id", optional: false
+        belongs_to :user, class_name: "::User", foreign_key: "users_id"
+        def self.index(current_user, query)
+            []
+        end
 
-      def show(current_user, query)
-          self
-      end
-  end
-end
+        def show(current_user, query)
+            self
+        end
+    end
+    end

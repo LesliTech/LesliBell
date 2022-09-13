@@ -3,6 +3,7 @@ class CreateCloudBellAnnouncementUsers < ActiveRecord::Migration[7.0]
         create_table :cloud_bell_announcement_users do |t|
             t.string    :status
             t.timestamps
+            t.datetime :deleted_at, index: true
         end
 
         add_reference :cloud_bell_announcement_users, :users, foreign_key: true

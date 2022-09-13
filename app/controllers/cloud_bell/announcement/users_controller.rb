@@ -20,6 +20,8 @@ require_dependency "cloud_bell/application_controller"
 module CloudBell
     class Announcement::UsersController < ApplicationController
         before_action :set_announcement_user, only: [:show, :update, :destroy]
+        before_action :set_announcement, only: [:show, :update, :destroy, :create]
+
 
         # GET /announcement/users
         def index
@@ -52,7 +54,13 @@ module CloudBell
 
         # POST /announcement/users
         def create
-            announcement_user = Announcement::User.new(announcement_user_params)
+            announcement_user = Announcement::User.new()
+            announcement_user.user = current_user
+            LC::Debug.msg(@announcement)
+            announcement_user.announcement = @announcement
+
+            # announcement_user.announcement = announcement_user_params[:announcement_id]
+
             if announcement_user.save
                 respond_with_successful(announcement_user)
             else
@@ -89,9 +97,13 @@ module CloudBell
             @announcement_user = current_user.account.announcement_users.find_by_id(params[:id])
         end
 
+        def set_announcement
+            @announcement = current_user.account.bell.announcements.find_by_id(params[:announcement_id])
+        end
+
         # Only allow a list of trusted parameters through.
         def announcement_user_params
-            params.fetch(:announcement_user).permit(:id, :name)
+            params.fetch(:announcement_user).permit(:id, :status)
         end
     end
 end

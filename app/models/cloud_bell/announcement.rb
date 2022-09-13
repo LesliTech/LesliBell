@@ -24,6 +24,7 @@ module CloudBell
         before_create :init_announcement
 
         has_many :activities,   foreign_key: "cloud_bell_announcements_id"
+        has_many :users,   foreign_key: "cloud_bell_announcements_id"
         
         def init_announcement
             self.status ||= true
@@ -37,10 +38,11 @@ module CloudBell
             danger:   "danger"
         }
         
-        def self.list(current_user, query)
-            filters = query[:filters]||{}
+        def self.list(current_user, query, params)
+            filters = params[:f]
             
             announcements = current_user.account.bell.announcements
+            # announcements = current_user.announcements
 
             announcements = announcements.where("start_at <= '#{LC::Date.now.end_of_day}' or start_at is null") if filters[:start_at]
             announcements = announcements.where("end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is null") if filters[:end_at]

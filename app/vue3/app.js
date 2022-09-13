@@ -29,6 +29,7 @@ import appNotificationsIndex from "./apps/notifications/index.vue"
 import appNotificationsNew from "./apps/notifications/new.vue"
 
 import appAnnouncementsIndex from "./apps/announcements/index.vue"
+import appAnnouncementsNew from "./apps/announcements/new.vue"
 
 
 // · Cloud app
@@ -44,5 +45,8 @@ app("CloudBell", [{
 }, {
     path: "/announcements",
     component: appAnnouncementsIndex
+}, {
+    path: "/announcements/new",
+    component: appAnnouncementsNew
 }])
 

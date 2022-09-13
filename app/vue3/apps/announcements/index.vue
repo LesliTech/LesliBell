@@ -71,7 +71,7 @@ onMounted(() => {
 <template>
     <section class="application-component">
         <lesli-header :title="translations.bell.notifications.view_title_notifications">
-            <button @click="router.push(url.bell('notifications/new').s)" class="button is-primary" size="is-primary">
+            <button @click="router.push(url.bell('announcements/new').s)" class="button is-primary" size="is-primary">
                 <span class="icon is-small">
                     <span class="material-icons">add</span>
                 </span>
