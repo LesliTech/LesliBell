@@ -17,7 +17,7 @@ For more information read the license file including with this software.
 */
 
 // · import vue tools
-import { onMounted } from "vue"
+import { onMounted, ref, watch } from "vue"
 
 // · import store
 import { useBellAnnouncement } from "CloudBell/stores/announcement"
@@ -31,7 +31,50 @@ const translations = {
         shared: I18n.t("core.shared")
     },
     bell: {
-        notifications: I18n.t("bell.notifications")
+        notifications: I18n.t("bell.notifications"),
+        announcements: I18n.t("bell.announcements")
+    }
+}
+
+const closeOptions = {
+    yes: { 
+        label: "yes", 
+        value: true
+    },
+    no: {
+        label: "no",
+        value: false
+    }
+    
+}
+
+const selectOptions = [
+    { label: "Info", value: "info"}, 
+    { label: "Alert", value: "danger"},
+    { label: "Primary", value: "primary"},
+    { label: "Link", value: "link"},
+    { label: "Success", value: "success"},
+    { label: "Warning", value: "warning"}
+]
+
+const selectedOption = ref("")
+
+/**
+ * @description This funciton is used to update the type of announcement shown
+ */
+function updateType(){
+    announcementStore.record.category = selectedOption.value.value
+}
+
+/**
+ * @description This function is used to verify that the start date is before the end date
+ */
+function updateDates(){
+    if (announcementStore.record.start_at != "" && announcementStore.record.end_at != "") {
+        if (announcementStore.record.start_at >= announcementStore.record.end_at){
+            announcementStore.record.start_at = ""
+            announcementStore.msg.danger("Select valid range for date")
+        }
     }
 }
 
@@ -47,7 +90,7 @@ onMounted(() => {
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">
-                    Name
+                    {{ translations.bell.announcements.column_name }}
                     <sup class="has-text-danger">*</sup>
                 </label>
             </div>
@@ -77,7 +120,6 @@ onMounted(() => {
                         type="text"
                         autocomplete="on"
                         name="subject"
-                        required
                         class="input"
                         v-model="announcementStore.record.url"
                     />
@@ -88,8 +130,7 @@ onMounted(() => {
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">
-                    Base path
-                    <sup class="has-text-danger">*</sup>
+                    {{ translations.bell.announcements.view_text_triggered_on }} 
                 </label>
             </div>
             <div class="column">
@@ -98,7 +139,6 @@ onMounted(() => {
                         type="text"
                         autocomplete="on"
                         name="subject"
-                        required
                         class="input"
                         v-model="announcementStore.record.base_path"
                     />
@@ -109,7 +149,7 @@ onMounted(() => {
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">
-                    Message
+                    {{translations.bell.announcements.column_message}}
                     <sup class="has-text-danger">*</sup>
                 </label>
             </div>
@@ -127,28 +167,56 @@ onMounted(() => {
             </div>
         </div>
 
+        <div class="columns is-marginless has-border-bottom">
+            <div class="column is-4">
+                <label class="label">{{translations.bell.announcements.column_start_at}}</label>
+            </div>
+            <div class="column">
+                <input class="input is-info" type="date" v-model="announcementStore.record.start_at" @change="updateDates">
+            </div>
+        </div>
+
+        <div class="columns is-marginless has-border-bottom">
+            <div class="column is-4">
+                <label class="label">{{translations.bell.announcements.column_end_at}}</label>
+            </div>
+            <div class="column">
+                <input class="input is-info" type="date" v-model="announcementStore.record.end_at" @change="updateDates">
+            </div>
+        </div>
+
 
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">
-                    Category
-                    <sup class="has-text-danger">*</sup>
+                    {{translations.bell.announcements.column_kind}}
                 </label>
             </div>
             <div class="column">
                 <div class="control is-clearfix">
-                    <input
-                        type="text"
-                        autocomplete="on"
-                        name="subject"
-                        required
-                        class="input"
-                        v-model="announcementStore.record.category"
-                    />
+                    <lesli-select
+                        @change="updateType"
+                        v-model = "selectedOption"
+                        :options="selectOptions">
+                    </lesli-select>
                 </div>
             </div>
         </div>
 
+        <div class="columns is-marginless has-border-bottom">
+            <div class="column is-4">
+                <label class="label">
+                    {{translations.bell.announcements.column_can_be_closed}}
+                    <sup class="has-text-danger">*</sup>
+                </label>
+            </div>
+            <div class="column">
+                <label :for="option.label" class="radio" v-for="option in closeOptions" :key="option">
+                    <input name="user_salutation" type="radio" :id="option.label" :value="option.value" v-model="announcementStore.record.can_be_closed" required/>
+                    {{option.label}}
+                </label>  
+            </div>
+        </div>
 
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
@@ -188,16 +256,18 @@ onMounted(() => {
             </div>
         </div>
 
-
-        <article :class="['message', `is-${announcementStore.record.category}`]">
-            <div class="message-header">
-                <p>{{announcementStore.record.name}}</p>
-                <button class="delete" aria-label="delete" v-if="announcementStore.record.can_be_closed"></button>
-            </div>
-            <div class="message-body">
-                {{announcementStore.record.message}}
-            </div>
-        </article>
+        <div class="block">
+            <h2>Announcement</h2>
+            <article :class="['message', `is-${announcementStore.record.category}`]">
+                <div class="message-header">
+                    <p>{{announcementStore.record.name}}</p>
+                    <button class="delete" aria-label="delete" v-if="announcementStore.record.can_be_closed"></button>
+                </div>
+                <div class="message-body">
+                    {{announcementStore.record.message}}
+                </div>
+            </article>
+        </div>
 
         <div class="px-3 ql-bg-blue">
             <button
