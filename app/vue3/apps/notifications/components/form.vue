@@ -43,7 +43,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <form @submit.prevent="notificationStore.create()" class="card py-4">
+    <form @submit.prevent="notificationStore.createNotification()" class="card py-4">
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">

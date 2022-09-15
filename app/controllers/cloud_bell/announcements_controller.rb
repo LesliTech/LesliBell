@@ -28,7 +28,7 @@ module CloudBell
             respond_to do |format|
                 format.html {}
                 format.json do                    
-                    respond_with_successful(Announcement.list(current_user, @query))
+                    respond_with_successful(Announcement.list(current_user, @query, params))
                 end
             end
         end
@@ -68,6 +68,7 @@ module CloudBell
             announcement.user = current_user
             
             if announcement.save
+                CloudBell::Announcement::Activity.log_activity_create(current_user, announcement)
                 respond_with_successful(announcement)
             else
                 respond_with_error(announcement.errors.full_messages.to_sentence)
@@ -77,7 +78,11 @@ module CloudBell
         # PATCH/PUT /announcements/1
         def update
             return respond_with_not_found unless @announcement
+            old_attributes = @announcement.attributes
+
             if @announcement.update(announcement_params)
+                new_attributes = @announcement.attributes
+                CloudBell::Announcement.log_activity_update(current_user, @announcement, old_attributes, new_attributes)
                 respond_with_successful(@announcement.show(current_user, @query))
             else
                 respond_with_error(@announcement.errors.full_messages.to_sentence)
@@ -89,6 +94,7 @@ module CloudBell
             return respond_with_not_found unless @announcement
 
             if @announcement.destroy
+                CloudBell::Announcement.log_activity_destroy(current_user, @announcement)
                 respond_with_successful
             else
                 respond_with_error(@announcement.errors.full_messages.to_sentence)

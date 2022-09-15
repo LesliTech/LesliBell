@@ -38,12 +38,15 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
             filteredUsers: [],
             filteredRoles: [],
             record: {
-                subject: null,
-                body: null,
-                url: null,
-                status: null,
-                notification_type: null,
+                name: null,
                 category: null,
+                url: null,
+                base_path: null,
+                message: null,
+                status: null,
+                start_at: null,
+                end_at: null,
+                can_be_closed: null,
             },
             receiverUsers: [],
             receiverRoles: [],
@@ -57,6 +60,10 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
             this.pagination.page = page
             this.fetch()
         },
+
+        /**
+         * @description This action is used to fetch all the announcements for the current user
+         */
         fetch() {
             this.http.get(
                 this.url.bell("announcements")
@@ -67,19 +74,22 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
             })
         },
 
+        /**
+         * @description This action is used to create a new announcement
+         */
         post() {
             this.loading = true
-
             this.http.post(this.url.bell("announcements"), {
-                notification: {
+                announcement: {
                     ...this.record,
+                    message: JSON.stringify(this.record.msg),
                     user_receiver_emails: this.receiverUsers.map(user => user.email),
                     role_receiver_names: this.receiverRoles.map(role => role.name),
                 }
             }).then(() => {
-                this.msg.success(translations.bell.notifications.messages_success_notification_created_successfully)
+                this.msg.success(I18n.t("core.users.messages_success_operation"))
             }).catch(error => {
-                this.msg.danger(error)
+                this.msg.danger(I18n.t("core.shared.messages_danger_internal_error"))
             }).finally(() => {
                 this.record = {}
                 this.receiverUsers = []
@@ -88,25 +98,29 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
             })
         },
 
+        /**
+        * @description This action is used to get the list of users
+        */
         getUsers() {
             this.loading = true
             this.http.get(this.url.admin('users/list')).then(result => {
                 this.users = result
             }).catch(error => {
-                this.msg.danger(error)
-                console.log(error)
+                this.msg.danger(I18n.t("core.shared.messages_danger_internal_error"))
             }).finally(() => {
                 this.loading = false
             })
         },
 
+        /**
+        * @description This action is used to get the list of roles
+        */
         getRoles() {
             this.loading = true
             this.http.get(this.url.admin('roles/list')).then(result => {
                 this.roles = result
             }).catch(error => {
-                this.msg.danger(error)
-                console.log(error)
+                this.msg.danger(I18n.t("core.shared.messages_danger_internal_error"))
             }).finally(() => {
                 this.loading = false
             })
