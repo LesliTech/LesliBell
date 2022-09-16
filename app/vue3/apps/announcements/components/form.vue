@@ -57,15 +57,6 @@ const selectOptions = [
     { label: "Warning", value: "warning"}
 ]
 
-const selectedOption = ref("")
-
-/**
- * @description This funciton is used to update the type of announcement shown
- */
-function updateType(){
-    announcementStore.record.category = selectedOption.value.value
-}
-
 /**
  * @description This function is used to verify that the start date is before the end date
  */
@@ -195,8 +186,7 @@ onMounted(() => {
             <div class="column">
                 <div class="control is-clearfix">
                     <lesli-select
-                        @change="updateType"
-                        v-model = "selectedOption"
+                        v-model = "announcementStore.record.category"
                         :options="selectOptions">
                     </lesli-select>
                 </div>
