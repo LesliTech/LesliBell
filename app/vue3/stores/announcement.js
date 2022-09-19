@@ -18,6 +18,7 @@ For more information read the license file including with this software.
 
 // ·
 import { defineStore } from "pinia"
+import { useRouter } from 'vue-router'
 
 const translations = {
     core: {
@@ -32,6 +33,7 @@ const translations = {
 export const useBellAnnouncement = defineStore("bell.Announcement", {
     state: () => {
         return {
+            router: useRouter(),
             loading: false,
             users: [],
             roles: [],
@@ -88,6 +90,7 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
                 }
             }).then(() => {
                 this.msg.success(I18n.t("core.users.messages_success_operation"))
+                this.router.push(this.url.bell("announcements").s)
             }).catch(error => {
                 this.msg.danger(I18n.t("core.shared.messages_danger_internal_error"))
             }).finally(() => {

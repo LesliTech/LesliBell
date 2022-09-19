@@ -19,6 +19,7 @@ module CloudBell
     class Announcement::User < ApplicationRecord
         belongs_to :announcement, class_name: "CloudBell::Announcement", foreign_key: "cloud_bell_announcements_id", optional: false
         belongs_to :user, class_name: "::User", foreign_key: "users_id"
+
         def self.index(current_user, query)
             []
         end
