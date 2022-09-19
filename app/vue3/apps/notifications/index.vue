@@ -75,14 +75,9 @@ onMounted(() => {
     <section class="application-component">
 
         <lesli-header :title="translations.bell.notifications.view_title_notifications">
-            <button @click="router.push(url.bell('notifications/new').s)" class="button is-primary is-outlined" size="is-primary">
-                <span class="icon is-small">
-                    <span class="material-icons">add</span>
-                </span>
-                <span >
-                    {{ translations.core.shared.view_btn_add }}
-                </span>
-            </button>
+            <lesli-button :to="url.bell('notifications/new')" icon="add">
+                {{ translations.core.shared.view_btn_add }}
+            </lesli-button>
         </lesli-header>
 
         <lesli-table
