@@ -54,7 +54,7 @@ module CloudBell
 
         # POST /announcement/users
         def create
-            announcement_user = Announcement::User.new(announcement_user_params)
+            announcement_user = Announcement::User.new()
             announcement_user.user = current_user
             announcement_user.status = 'closed'
             announcement_user.announcement = @announcement
