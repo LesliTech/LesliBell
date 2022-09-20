@@ -21,7 +21,7 @@ RSpec.describe "POST:/bell/announcements/:id/users.json", type: :request do
     let!(:new_announcement) do
 
         announcement_params =  {
-            base_path: "/crm/",
+            base_path: "/",
             can_be_closed: true,
             category: "success",
             end_at: "2021-07-23T19:13:33.431Z",
@@ -48,6 +48,23 @@ RSpec.describe "POST:/bell/announcements/:id/users.json", type: :request do
         })
         # shared examples
         expect_response_with_successful
+
+        expect(response_body).to be_a(Object)
+
+        expect(response_body).to have_key("id")
+        expect(response_body["id"]).to be_a(Integer)
+
+        expect(response_body).to have_key("status")
+        expect(response_body["status"]).to be_a(String)
+        expect(response_body["status"]).to eql("closed")
+
+        expect(response_body).to have_key("cloud_bell_announcements_id")
+        expect(response_body["cloud_bell_announcements_id"]).to be_a(Integer)
+        expect(response_body["cloud_bell_announcements_id"]).to eql(new_announcement.id)
+
+        expect(response_body).to have_key("users_id")
+        expect(response_body["users_id"]).to be_a(Integer)
+        expect(response_body["users_id"]).to eql(@current_user.id)
 
     end
 end
