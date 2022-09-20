@@ -35,22 +35,32 @@ module CloudBell
             info:     "info",
             success:  "success",
             warning:  "warning",
-            danger:   "danger"
+            danger:   "danger",
+            link: "link",
+            primary: "primary"
         }
         
         def self.list(current_user, query, params)
+
             filters = params[:f]
             
-            announcements = current_user.account.bell.announcements
+            # Check the announcements that the user has already closed
+            announcements = current_user.account.bell.announcements.left_joins(:users).where(users: { id: nil })
+            announcements = announcements.where(base_path: nil )
 
-            announcements = announcements.where("start_at <= '#{LC::Date.now.end_of_day}' or start_at is null") if filters[:start_at]
-            announcements = announcements.where("end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is null") if filters[:end_at]
-            announcements = announcements.where("status = ?", filters[:status]) if filters[:status].present?
-            announcements = announcements.where(base_path: filters[:base_path]) if filters[:base_path].present?
+            unless filters.blank?
+                announcements = announcements.where("start_at <= '#{LC::Date2.now.end_of_day}' or start_at is null") if filters[:start_at].present?
+                announcements = announcements.where("end_at >= '#{LC::Date2.now.beginning_of_day}' or end_at is null") if filters[:end_at].present?
+                announcements = announcements.where("status = ?", filters[:status]) if filters[:status].present?
+                announcements_general = announcements.where(base_path: nil )
+                announcements = announcements.where("base_path = ?", filters[:base_path]) if filters[:base_path].present?
+                announcements = announcements.or(announcements_general)
+            end
             
             announcements = announcements.select(
                 :id,
                 :name,
+                :base_path,
                 :category,
                 :status,
                 :message,
@@ -72,8 +82,8 @@ module CloudBell
             filters = query[:filters]||{}
             
             announcements = current_user.account.bell.announcements
-            announcements = announcements.where("start_at <= '#{LC::Date.now.end_of_day}' or start_at is null") if filters[:start_at]
-            announcements = announcements.where("end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is null") if filters[:end_at]
+            announcements = announcements.where("start_at <= '#{LC::Date2.now.end_of_day}' or start_at is null") if filters[:start_at]
+            announcements = announcements.where("end_at >= '#{LC::Date2.now.beginning_of_day}' or end_at is null") if filters[:end_at]
             
             announcements = announcements.select(
                 :id,

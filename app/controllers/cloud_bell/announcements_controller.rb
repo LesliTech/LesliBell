@@ -66,7 +66,7 @@ module CloudBell
         def create
             announcement = current_user.account.bell.announcements.new(announcement_params)
             announcement.user = current_user
-            
+
             if announcement.save
                 CloudBell::Announcement::Activity.log_activity_create(current_user, announcement)
                 respond_with_successful(announcement)
