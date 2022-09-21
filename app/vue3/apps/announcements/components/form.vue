@@ -248,15 +248,10 @@ onMounted(() => {
 
         <div class="block">
             <h2>Announcement</h2>
-            <article :class="['message', `is-${announcementStore.record.category}`]">
-                <div class="message-header">
-                    <p>{{announcementStore.record.name}}</p>
-                    <button class="delete" aria-label="delete" v-if="announcementStore.record.can_be_closed"></button>
-                </div>
-                <div class="message-body">
-                    {{announcementStore.record.message}}
-                </div>
-            </article>
+            <div :class="['notification', `is-${announcementStore.record.category}`]">
+                <button class="delete" aria-label="delete" v-if="announcementStore.record.can_be_closed"></button>
+                {{announcementStore.record.message}}
+            </div>
         </div>
 
         <div class="px-3 ql-bg-blue">
