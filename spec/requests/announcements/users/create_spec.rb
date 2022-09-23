@@ -25,7 +25,7 @@ RSpec.describe "POST:/bell/announcements/:id/users.json", type: :request do
             can_be_closed: true,
             category: "success",
             end_at: "2021-07-23T19:13:33.431Z",
-            message: "{\"delta\":{\"ops\":[{\"insert\":\"Testing announcements\\n\"}]},\"html\":\"<p>Testing announcements</p>\"}",
+            message: { html:"<p>Testing announcements</p>" },
             name: "General Information",
             start_at: "2021-07-22T19:13:31.450Z",
             status: true
@@ -67,4 +67,50 @@ RSpec.describe "POST:/bell/announcements/:id/users.json", type: :request do
         expect(response_body["users_id"]).to eql(@current_user.id)
 
     end
+
+
+    it "is expected to respond with error when define an invalid announcement id" do
+
+        invalid_id = new_announcement.id + 1
+
+        post("/bell/announcements/#{invalid_id}/users.json", params: {
+            announcement_user:{
+                status: 'closed'
+            }
+        })
+        # shared examples
+
+        expect_response_with_error
+
+    end
+
+    it "is expected to respond with succesful when status is not sent" do
+
+        post("/bell/announcements/#{new_announcement.id}/users.json", params: {
+            announcement_user:{
+                status: nil
+            }
+        })
+        # shared examples
+        expect_response_with_successful
+
+        expect(response_body).to be_a(Object)
+
+        expect(response_body).to have_key("id")
+        expect(response_body["id"]).to be_a(Integer)
+
+        expect(response_body).to have_key("status")
+        expect(response_body["status"]).to be_a(String)
+        expect(response_body["status"]).to eql("closed")
+
+        expect(response_body).to have_key("cloud_bell_announcements_id")
+        expect(response_body["cloud_bell_announcements_id"]).to be_a(Integer)
+        expect(response_body["cloud_bell_announcements_id"]).to eql(new_announcement.id)
+
+        expect(response_body).to have_key("users_id")
+        expect(response_body["users_id"]).to be_a(Integer)
+        expect(response_body["users_id"]).to eql(@current_user.id)
+    end
+
+
 end
