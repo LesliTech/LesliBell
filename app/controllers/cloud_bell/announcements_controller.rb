@@ -26,7 +26,7 @@ module CloudBell
         def privileges
             {
                 index: [],
-                new: ["create"]
+                new: [],
             }
         end
 
