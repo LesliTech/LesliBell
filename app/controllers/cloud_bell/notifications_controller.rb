@@ -1,6 +1,6 @@
 =begin
 
-Copyright (c) 2020, all rights reserved.
+Copyright (c) 2022, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to
 industrial property, intellectual property, copyright and relative international laws.
@@ -22,6 +22,13 @@ require_dependency "cloud_bell/application_controller"
 module CloudBell
     class NotificationsController < ApplicationController
         before_action :set_notification, only: [:show, :edit, :update, :destroy, :read]
+
+        def privileges
+            {
+                index: [],
+                new: ["UsersController#list", "RolesController#list"],
+            }
+        end
 
         # GET /notifications
         def index
@@ -87,7 +94,7 @@ module CloudBell
         def destroy
             @notification.destroy
             CloudBell::Notification.log_activity_destroy(current_user, @notification)
-            redirect_to notifications_url, notice: 'Notification was successfully destroyed.'
+            redirect_to notifications_url, notice: "Notification was successfully destroyed."
         end
 
         def options
