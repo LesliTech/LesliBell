@@ -22,6 +22,12 @@ module CloudBell
         before_action :set_announcement_user, only: [:show, :update, :destroy]
         before_action :set_announcement, only: [:show, :update, :destroy, :create]
 
+        def privileges
+            {
+                new: [],
+            }
+        end
+
         # GET /announcement/users
         def index
             respond_to do |format|
