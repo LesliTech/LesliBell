@@ -27,6 +27,7 @@ module CloudBell
             {
                 index: [],
                 new: [],
+                edit: [],
             }
         end
 
