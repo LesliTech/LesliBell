@@ -100,7 +100,7 @@ require 'lesli_request_helper'
     notification_type: ["message", "project-alert", "event-reminder", "overdue-task"].sample,
 }].each do |notification|
 
-    RSpec.describe 'GET:/bell/notifications', type: :request do
+    RSpec.describe 'GET:/bell/notifications/:id', type: :request do
         include_context 'request user authentication'
 
         it "is expected to respond with notification with #{notification.size} parameters" do
