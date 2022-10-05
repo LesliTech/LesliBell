@@ -1,6 +1,6 @@
 =begin
 
-Copyright (c) 2020, all rights reserved.
+Copyright (c) 2022, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to
 industrial property, intellectual property, copyright and relative international laws.
@@ -22,6 +22,13 @@ require_dependency "cloud_bell/application_controller"
 module CloudBell
     class NotificationsController < ApplicationController
         before_action :set_notification, only: [:show, :edit, :update, :destroy, :read]
+
+        def privileges
+            {
+                index: [],
+                new: ["UsersController#list", "RolesController#list"],
+            }
+        end
 
         # GET /notifications
         def index
@@ -64,13 +71,19 @@ module CloudBell
                 user_receiver_emails: notification_params[:user_receiver_emails],
             )
 
+            notification_created = CloudBell::Notification.find_by_id(notification[:id][0])
+            CloudBell::Notification::Activity.log_activity_create(current_user, notification_created)
             respond_with_successful(notification)
 
         end
 
         # PATCH/PUT /notifications/1
         def update
+            old_attributes = @notification.attributes
+
             if @notification.update(notification_params)
+                new_attributes = @notification.attributes
+                CloudBell::Notification.log_activity_update(current_user, @notification, old_attributes, new_attributes)
                 respond_with_successful(@notification)
             else
                 render :edit
@@ -80,7 +93,8 @@ module CloudBell
         # DELETE /notifications/1
         def destroy
             @notification.destroy
-            redirect_to notifications_url, notice: 'Notification was successfully destroyed.'
+            CloudBell::Notification.log_activity_destroy(current_user, @notification)
+            redirect_to notifications_url, notice: "Notification was successfully destroyed."
         end
 
         def options

@@ -28,6 +28,9 @@ import appDashboard from "LesliVue/cloud-objects/dashboards/apps/show.vue"
 import appNotificationsIndex from "./apps/notifications/index.vue"
 import appNotificationsNew from "./apps/notifications/new.vue"
 
+import appAnnouncementsIndex from "./apps/announcements/index.vue"
+import appAnnouncementsNew from "./apps/announcements/new.vue"
+
 
 // · Cloud app
 app("CloudBell", [{
@@ -39,5 +42,11 @@ app("CloudBell", [{
 }, {
     path: "/notifications/new",
     component: appNotificationsNew
+}, {
+    path: "/announcements",
+    component: appAnnouncementsIndex
+}, {
+    path: "/announcements/new",
+    component: appAnnouncementsNew
 }])
 

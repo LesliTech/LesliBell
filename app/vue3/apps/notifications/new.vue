@@ -22,11 +22,6 @@ import { onMounted } from "vue"
 // · import components and lazy loading implementation
 import ComponentNotificationForm from "CloudBell/apps/notifications/components/form.vue"
 
-// · 
-import { useBellNotification } from "CloudBell/stores/notification"
-
-// · 
-const store = useBellNotification()
 
 // ·
 const translations = {

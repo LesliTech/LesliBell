@@ -47,11 +47,27 @@ export const useBellNotification = defineStore("bell.Notification", {
             },
             receiverUsers: [],
             receiverRoles: [],
+            pagination: {},
+            records: []
         }
     },
     actions: {
 
-        create() {
+        paginate(page) {
+            this.pagination.page = page
+            this.fetch()
+        },
+        fetch() {
+            this.http.get(
+                this.url.bell("notifications")
+                .paginate(this.pagination.page)
+            ).then(result => {
+                this.pagination = result.pagination
+                this.records = result.records
+            })
+        },
+
+        createNotification() {
             this.loading = true
 
             this.http.post(this.url.bell("notifications"), {
