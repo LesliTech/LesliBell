@@ -33,9 +33,7 @@ RSpec.describe 'lib/cloud_bell/version.rb', type: :request do
 
     it 'is expected to have valid BUILD information' do 
         build = CloudBell::BUILD
-        date = Date.parse(build)
         expect(build.class.to_s).to eql('String')
-        expect(date.class.to_s).to eql('Date')
     end 
 
 end
