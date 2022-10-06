@@ -6,35 +6,11 @@
 
 <hr/>
 
-Version 1.1.0
-
-
-- Push notifications (native browser notification through ws)
-- Web notification (via bell icon using panel list)
-- Flash messages (one time messages)
-- Announcements
-- Emails
-
-
-### Quick reference & examples
-
-```ruby
-    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell")
-    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell", category: "info")
-    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell", category: "success")
-    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell", category: "warning")
-    Courier::Bell::Notification.new(current_user, "New notification created", url:"/bell", category: "danger")
-
-    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell")
-    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell", category: "info")
-    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell", category: "success")
-    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell", category: "warning")
-    Courier::Bell::Notification.new(current_user, "New notification created", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", url:"/bell", category: "danger")
-```
+Version 3.0
 
 #### License
 -------
-Copyright (c) 2020, all rights reserved.
+Copyright (c) 2022, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to 
 industrial property, intellectual property, copyright and relative international laws. 
