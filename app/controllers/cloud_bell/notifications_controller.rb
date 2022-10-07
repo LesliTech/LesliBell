@@ -27,6 +27,7 @@ module CloudBell
             {
                 index: [],
                 new: ["UsersController#list", "RolesController#list"],
+                show: [],
             }
         end
 
