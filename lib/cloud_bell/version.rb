@@ -1,4 +1,4 @@
 module CloudBell
-  VERSION = '1.1.8'
-    BUILD = "20210329.0926"
+  VERSION = '3.0.2'
+  BUILD = '22105.2043'
 end
