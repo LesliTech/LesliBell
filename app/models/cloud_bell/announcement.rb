@@ -97,14 +97,6 @@ module CloudBell
             .page(query[:pagination][:page])
             .per(query[:pagination][:perPage])
             .order(:created_at)
-
-            LC::Response.pagination(
-                announcements.current_page,
-                announcements.total_pages,
-                announcements.total_count,
-                announcements.length,
-                announcements
-            )
         end
 
         def show(current_user, query)
