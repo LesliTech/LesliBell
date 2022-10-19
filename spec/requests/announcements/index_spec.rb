@@ -48,7 +48,7 @@ RSpec.describe 'GET:/bell/announcements.json', type: :request do
         expect_response_with_successful
 
         # custom specs
-        expect(response_json["pagination"]["count_total"]).to eql(@current_user.account.bell.announcements.count)
+        expect(response_json["pagination"]["total"]).to eql(@current_user.account.bell.announcements.count)
 
         expect(@response_body_data).to be_a(Object)
         expect(response_body["records"][0]).to be_a(Object)
