@@ -92,6 +92,8 @@ module CloudBell
                 :status,
                 :message,
                 :can_be_closed,
+                :start_at,
+                :end_at,
                 LC::Date2.new.date_time.db_timestamps
             )
             .page(query[:pagination][:page])
