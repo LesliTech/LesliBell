@@ -78,27 +78,39 @@ module CloudBell
             end
         end
         
-        def self.index(current_user, query)
-            filters = query[:filters]||{}
+        def self.index(current_user, query, params)
             
+            filters = params[:f]
+            
+            unless query.dig(:order, :by).blank?
+                order_string = query.dig(:order, :by)
+            end
+            # Check the announcements that the user has already closed
             announcements = current_user.account.bell.announcements
-            announcements = announcements.where("start_at <= '#{LC::Date2.now.end_of_day}' or start_at is null") if filters[:start_at]
-            announcements = announcements.where("end_at >= '#{LC::Date2.now.beginning_of_day}' or end_at is null") if filters[:end_at]
+
+            unless filters.blank?
+                announcements = announcements.where("start_at <= '#{LC::Date2.now.end_of_day}' or start_at is null") if filters[:start_at].present?
+                announcements = announcements.where("end_at >= '#{LC::Date2.now.beginning_of_day}' or end_at is null") if filters[:end_at].present?
+            end
             
             announcements = announcements.select(
                 :id,
                 :name,
+                :base_path,
                 :category,
                 :status,
                 :message,
                 :can_be_closed,
+                :end_at,
                 :start_at,
                 :end_at,
-                LC::Date2.new.date_time.db_timestamps
+                "concat(user_details.first_name, ' ', user_details.last_name) as user_creator"
             )
+            .left_joins(user: [:detail])
             .page(query[:pagination][:page])
             .per(query[:pagination][:perPage])
-            .order(created_at: :desc)
+            .order(order_string.concat(" ").concat(query.dig(:order, :dir)))
+
         end
 
         def show(current_user, query)

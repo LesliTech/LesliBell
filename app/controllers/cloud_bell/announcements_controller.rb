@@ -37,7 +37,8 @@ module CloudBell
             respond_to do |format|
                 format.html {}
                 format.json do
-                    respond_with_successful(Announcement.list(current_user, @query, params))
+                    respond_with_pagination(Announcement.list(current_user, @query,params))
+                    # respond_with_successful(Announcement.list(current_user, @query, params))
                 end
             end
         end
@@ -47,7 +48,7 @@ module CloudBell
             respond_to do |format|
                 format.html {}
                 format.json do
-                    respond_with_pagination(Announcement.index(current_user, @query))
+                    respond_with_pagination(Announcement.index(current_user, @query, params))
                 end
             end
         end
