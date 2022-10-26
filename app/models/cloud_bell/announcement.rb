@@ -57,25 +57,17 @@ module CloudBell
                 announcements = announcements.or(announcements_general)
             end
             
-            announcements = announcements.select(
+            announcements
+            .select(
                 :id,
                 :name,
                 :base_path,
                 :category,
                 :status,
                 :message,
-                :can_be_closed,
-                :end_at,
-                :start_at,
-                :end_at,
-                "concat(user_details.first_name, ' ', user_details.last_name) as user_creator"
+                :can_be_closed
             )
-            .left_joins(user: [:detail])
-            .map do |announcement|
-                announcement.attributes.merge({
-                    message: announcement[:message].present? ? JSON.parse(announcement[:message]) : {}
-                })
-            end
+
         end
         
         def self.index(current_user, query, params)
