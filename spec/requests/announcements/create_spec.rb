@@ -23,16 +23,43 @@ RSpec.describe 'POST:/bell/announcements', type: :request do
     include_context "request user authentication"
 
     it "is expected to create a new announcement" do
+
+        announcement_params = {
+            name: "General Information",
+            message: "<div><strong>hola</strong></div>",
+            start_at: "2021-07-22T19:13:31.450Z",
+            end_at: "2021-07-23T19:13:33.431Z",
+            category: "success",
+            can_be_closed: true,
+            base_path: "/crm/",
+            status: true
+        }
+
+        post("/bell/announcements.json", params: {
+            announcement: announcement_params
+        })
+
+        # shared examples
+        expect_response_with_successful
+
+        # custom specs
+        expect(response_json["id"]).to be > 0
+
+        announcement = CloudBell::Announcement.find(response_json["id"])
+
+        expect(announcement_params[:name]).to eql(announcement.name)
+        expect(announcement_params[:message]).to eql(announcement.message)
+        expect(announcement_params[:category]).to eql(announcement.category)
+        expect(announcement_params[:can_be_closed]).to eql(announcement.can_be_closed)
+        expect(announcement_params[:base_path]).to eql(announcement.base_path)
+
+    end
+
+    it "is expected to create a new announcement with minimum data" do
         post("/bell/announcements.json", params: {
             announcement: {
-                base_path: "/crm/",
-                can_be_closed: true,
-                category: "success",
-                end_at: "2021-07-23T19:13:33.431Z",
-                message: "{\"delta\":{\"ops\":[{\"insert\":\"Testing announcements\\n\"}]},\"html\":\"<p>Testing announcements</p>\"}",
                 name: "General Information",
-                start_at: "2021-07-22T19:13:31.450Z",
-                status: true
+                message: "<div><strong>hola</strong></div>"
             }
         })
 
@@ -41,5 +68,7 @@ RSpec.describe 'POST:/bell/announcements', type: :request do
 
         # custom specs
         expect(response_json["id"]).to be > 0
+
     end
+
 end
