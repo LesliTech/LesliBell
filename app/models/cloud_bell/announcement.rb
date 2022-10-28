@@ -43,27 +43,29 @@ module CloudBell
         def self.list(current_user, query, params)
 
             filters = params[:f]
+
+            # NOTE: the query must be created in this specific order, if not ActiveRecord creates weird sql
+            # due the OR statement we are usign to get the announcements with a path
             
             # Check the announcements that the user has already closed
-            announcements = current_user.account.bell.announcements.left_joins(:users).where(users: { id: nil })
-            announcements = announcements.where(base_path: nil )
+            announcements = current_user.account.bell.announcements
 
-            unless filters.blank?
-                announcements = announcements.where("start_at <= '#{LC::Date2.now.end_of_day}' or start_at is null") if filters[:start_at].present?
-                announcements = announcements.where("end_at >= '#{LC::Date2.now.beginning_of_day}' or end_at is null") if filters[:end_at].present?
-                announcements = announcements.where("status = ?", filters[:status]) if filters[:status].present?
-                announcements_general = announcements.where(base_path: nil )
-                announcements = announcements.where("base_path = ?", filters[:base_path]) if filters[:base_path].present?
-                announcements = announcements.or(announcements_general)
-            end
-            
-            announcements
-            .select(
+            # joining to the announcement_users table, to see if the users already mark the announcement as read
+            announcements = announcements.left_joins(:users)
+
+            # get the announcements without a specific path (global announcements)
+            announcements = announcements.where(base_path: nil)
+
+            # get the announcements with a specific path (to show only in a specific page)
+            announcements = announcements.or(Announcement.where("base_path = ?", filters[:base_path])) if filters.dig(:base_path)
+
+            # get the announcements that are not marked as read by the user
+            announcements = announcements.where(users: { id: nil })
+
+            announcements.select(
                 :id,
                 :name,
-                :base_path,
                 :category,
-                :status,
                 :message,
                 :can_be_closed
             )
