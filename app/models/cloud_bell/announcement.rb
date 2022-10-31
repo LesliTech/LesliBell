@@ -85,7 +85,7 @@ module CloudBell
             # Check the announcements that the user has already closed
             announcements = current_user.account.bell.announcements
 
-            if filters.dig(:base_path)
+            if params.dig(:f, :base_path)
                 announcements = announcements
                 .where(base_path: nil) # get the announcements without a specific path (global announcements)
                 .where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
