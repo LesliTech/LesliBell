@@ -55,6 +55,9 @@ module CloudBell
 
             # get the announcements without a specific path (global announcements)
             announcements = announcements.where(base_path: nil)
+            .where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
+            .where("cloud_bell_announcements.end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is NULL")
+            .where("cloud_bell_announcements.status = TRUE")
 
             # get the announcements with a specific path (to show only in a specific page)
             announcements = announcements.or(Announcement.where("base_path = ?", filters[:base_path])) if filters.dig(:base_path)
@@ -67,7 +70,7 @@ module CloudBell
                 :name,
                 :category,
                 :message,
-                :can_be_closed
+                :can_be_closed,
             )
 
         end
@@ -82,9 +85,13 @@ module CloudBell
             # Check the announcements that the user has already closed
             announcements = current_user.account.bell.announcements
 
-            unless filters.blank?
-                announcements = announcements.where("start_at <= '#{LC::Date2.now.end_of_day}' or start_at is null") if filters[:start_at].present?
-                announcements = announcements.where("end_at >= '#{LC::Date2.now.beginning_of_day}' or end_at is null") if filters[:end_at].present?
+            if filters.dig(:base_path)
+                announcements = announcements
+                .where(base_path: nil) # get the announcements without a specific path (global announcements)
+                .where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
+                .where("cloud_bell_announcements.end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is NULL")
+                .where("cloud_bell_announcements.status = TRUE")
+                .or(Announcement.where("base_path = ?", filters[:base_path])) # get the announcements with a specific path (to show only in a specific page)
             end
             
             announcements = announcements.select(
