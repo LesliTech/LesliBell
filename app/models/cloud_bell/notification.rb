@@ -125,7 +125,12 @@ module CloudBell
 
                 # if channel is authorized check if channels is included in the senders
                 if authorized_channel == 'email'
-                    NotificationService.send_email(user, self) if ['email'].include?(self.channel)
+                    notifications = Notification.where.not(id: self.id)  #Get the notifications except the recently created
+                    last_notification = notifications.where(url: self.url, users_id: self.users_id, created_at: (Time.now.utc - 1.hour..Time.now.utc)).last  #Get the last notification with the same url and user id as the actual notification and created at about an hour ago
+                    # If the last notification was sent more than an hour ago, sent an email
+                    if last_notification.nil?
+                        NotificationService.send_email(user, self) if ['email'].include?(self.channel)
+                    end
                 end 
 
                 # if channel is authorized check if channels is included in the senders
