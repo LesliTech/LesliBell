@@ -17,10 +17,13 @@ For more information read the license file including with this software.
 */
 
 // · import vue tools
-import { onMounted } from "vue"
+import { onMounted, inject } from "vue"
 
 // · import store
-import { useBellNotification } from "CloudBell/stores/notification";
+import { useBellNotification } from "CloudBell/stores/notification"
+
+// · import vue router composable
+import { useRouter, useRoute } from "vue-router"
 
 // · implement store
 const notificationStore = useBellNotification()
@@ -35,15 +38,27 @@ const translations = {
     }
 }
 
+
+
+// · initialize/inject plugins
+const router = useRouter()
+const url = inject("url")
+
 // · initializing
 onMounted(() => {
     notificationStore.getUsers()
     notificationStore.getRoles()
 })
+
+const onCreate = () => {
+    notificationStore.createNotification()
+    router.push(url.bell('notifications').toString())
+}
+
 </script>
 
 <template>
-    <form @submit.prevent="notificationStore.createNotification()" class="card py-4">
+    <form @submit.prevent="onCreate" class="card py-4">
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">
