@@ -157,7 +157,7 @@ module CloudBell
                 # Define a user to access its account
                 user = User.find_by_id(notifications[0][:users_id])
             end
-
+        
             # "bulk insert" all the notifications
             notifications = user.account.bell.notifications.create(notifications)
 
