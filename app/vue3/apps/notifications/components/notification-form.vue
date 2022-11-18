@@ -42,7 +42,6 @@ const translations = {
 
 // · initialize/inject plugins
 const router = useRouter()
-const url = inject("url")
 
 // · initializing
 onMounted(() => {
@@ -52,7 +51,7 @@ onMounted(() => {
 
 const onCreate = () => {
     notificationStore.createNotification()
-    router.push(url.bell('notifications').toString())
+    router.push(notificationStore.url.bell('notifications').toString())
 }
 
 </script>

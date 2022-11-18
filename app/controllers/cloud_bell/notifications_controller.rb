@@ -71,8 +71,11 @@ module CloudBell
                 role_receiver_names: notification_params[:role_receiver_names],
                 user_receiver_emails: notification_params[:user_receiver_emails],
             )
-            
-            respond_with_successful
+
+            notification_created = CloudBell::Notification.find_by_id(notification[:id][0])
+            CloudBell::Notification::Activity.log_activity_create(current_user, notification_created)
+            respond_with_successful(notification)
+
         end
 
         # PATCH/PUT /notifications/1

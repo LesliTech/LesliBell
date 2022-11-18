@@ -33,9 +33,6 @@ const translations = {
     }
 }
 
-// · initializing
-onMounted(() => {})
-
 </script>
 <template>
     <section class="application-component">
