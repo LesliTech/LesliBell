@@ -38,8 +38,6 @@ const translations = {
     }
 }
 
-
-
 // · initialize/inject plugins
 const router = useRouter()
 
@@ -49,15 +47,20 @@ onMounted(() => {
     notificationStore.getRoles()
 })
 
+/**
+ * @description This function is used to create a new notification
+ */
 const onCreate = () => {
-    notificationStore.createNotification()
-    router.push(notificationStore.url.bell('notifications').toString())
+    notificationStore.createNotification().then(() => {
+        router.push(notificationStore.url.bell('notifications').toString())
+    })
 }
 
 </script>
 
 <template>
-    <form @submit.prevent="onCreate" class="card py-4">
+    <lesli-loading v-if="notificationStore.loading"></lesli-loading>
+    <form @submit.prevent="onCreate" class="card py-4" v-else>
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">
