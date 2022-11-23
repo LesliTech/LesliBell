@@ -47,20 +47,26 @@ module CloudBell
             # NOTE: the query must be created in this specific order, if not ActiveRecord creates weird sql
             # due the OR statement we are usign to get the announcements with a path
             
-            # Check the announcements that the user has already closed
+            # Get all the announcements for the current user
             announcements = current_user.account.bell.announcements
 
             # joining to the announcement_users table, to see if the users already mark the announcement as read
             announcements = announcements.left_joins(:users)
 
+            # announcements = announcements.where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
+            # .where("cloud_bell_announcements.end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is NULL")
+            # .where("cloud_bell_announcements.status = TRUE")
+
             # get the announcements without a specific path (global announcements)
             announcements = announcements.where(base_path: nil)
-            .where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
-            .where("cloud_bell_announcements.end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is NULL")
-            .where("cloud_bell_announcements.status = TRUE")
 
             # get the announcements with a specific path (to show only in a specific page)
             announcements = announcements.or(Announcement.where("base_path = ?", filters[:base_path])) if filters.dig(:base_path)
+
+            # get the announcements with a start date greater than or equal to current date and with expiration date less or equal than current date
+            announcements = announcements.where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
+            .where("cloud_bell_announcements.end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is NULL")
+            .where("cloud_bell_announcements.status = TRUE")
 
             # get the announcements that are not marked as read by the user
             announcements = announcements.where(users: { id: nil })
@@ -82,14 +88,12 @@ module CloudBell
             unless query.dig(:order, :by).blank?
                 order_string = query.dig(:order, :by)
             end
-            # Check the announcements that the user has already closed
+
             announcements = current_user.account.bell.announcements
 
             if params.dig(:f, :base_path)
                 announcements = announcements
                 .where(base_path: nil) # get the announcements without a specific path (global announcements)
-                .where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
-                .where("cloud_bell_announcements.end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is NULL")
                 .where("cloud_bell_announcements.status = TRUE")
                 .or(Announcement.where("base_path = ?", filters[:base_path])) # get the announcements with a specific path (to show only in a specific page)
             end

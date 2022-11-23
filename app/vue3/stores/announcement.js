@@ -52,12 +52,22 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
             },
             receiverUsers: [],
             receiverRoles: [],
-            pagination: {},
-            records: []
+            records: [],
+            pagination: {
+                page: 1
+            },
+            index: { 
+                pagination: {},
+                records: []
+            }
         }
     },
     actions: {
 
+        /**
+        * @description This action is used to add pagination to announcement index
+        * @param {Integer} page the actual page showing in the index
+        */
         paginate(page) {
             this.pagination.page = page
             this.fetch()
@@ -84,7 +94,6 @@ export const useBellAnnouncement = defineStore("bell.Announcement", {
             this.http.post(this.url.bell("announcements"), {
                 announcement: {
                     ...this.record,
-                    message: JSON.stringify(this.record.msg),
                     user_receiver_emails: this.receiverUsers.map(user => user.email),
                     role_receiver_names: this.receiverRoles.map(role => role.name),
                 }

@@ -22,6 +22,10 @@ import { onMounted, ref, watch } from "vue"
 // · import store
 import { useBellAnnouncement } from "CloudBell/stores/announcement"
 
+import editorRichText from "LesliVue/components/editors/richtext.vue"
+import RichtextViewer from "LesliVue/components/editors/richtext-viewer.vue"
+
+
 // · implement store
 const announcementStore = useBellAnnouncement()
 
@@ -69,6 +73,7 @@ function updateDates(){
     }
 }
 
+
 // · initializing
 onMounted(() => {
     announcementStore.getUsers()
@@ -102,25 +107,6 @@ onMounted(() => {
         <div class="columns is-marginless has-border-bottom">
             <div class="column is-4">
                 <label class="label">
-                    Url
-                </label>
-            </div>
-            <div class="column">
-                <div class="control is-clearfix">
-                    <input
-                        type="text"
-                        autocomplete="on"
-                        name="subject"
-                        class="input"
-                        v-model="announcementStore.record.url"
-                    />
-                </div>
-            </div>
-        </div>
-
-        <div class="columns is-marginless has-border-bottom">
-            <div class="column is-4">
-                <label class="label">
                     {{ translations.bell.announcements.view_text_triggered_on }} 
                 </label>
             </div>
@@ -146,14 +132,7 @@ onMounted(() => {
             </div>
             <div class="column">
                 <div class="control is-clearfix">
-                    <input
-                        type="text"
-                        autocomplete="on"
-                        name="subject"
-                        required
-                        class="input"
-                        v-model="announcementStore.record.message"
-                    />
+                    <editor-rich-text mode="small" v-model="announcementStore.record.message"></editor-rich-text>
                 </div>
             </div>
         </div>
@@ -243,14 +222,6 @@ onMounted(() => {
                         showField="name"
                     />
                 </div>
-            </div>
-        </div>
-
-        <div class="block">
-            <h2>Announcement</h2>
-            <div :class="['notification', `is-${announcementStore.record.category}`]">
-                <button class="delete" aria-label="delete" v-if="announcementStore.record.can_be_closed"></button>
-                {{announcementStore.record.message}}
             </div>
         </div>
 
