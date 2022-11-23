@@ -57,7 +57,7 @@ module CloudBell
             announcements = announcements.where(base_path: nil)
 
             # get the announcements with a specific path (to show only in a specific page)
-            announcements = announcements.or(Announcement.where("base_path = ?", filters[:base_path])) if filters.dig(:base_path)
+            announcements = announcements.or(Announcement.where("base_path = ?", filters[:base_path])) if params.dig(:f, :base_path)
 
             # get the announcements with a start date greater than or equal to current date and with expiration date less or equal than current date
             announcements = announcements.where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
@@ -73,6 +73,9 @@ module CloudBell
                 :category,
                 :message,
                 :can_be_closed,
+                :base_path,
+                :start_at,
+                :end_at
             )
 
         end
