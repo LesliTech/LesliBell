@@ -53,10 +53,6 @@ module CloudBell
             # joining to the announcement_users table, to see if the users already mark the announcement as read
             announcements = announcements.left_joins(:users)
 
-            # announcements = announcements.where("cloud_bell_announcements.start_at <= '#{LC::Date.now.end_of_day}' or start_at is NULL")
-            # .where("cloud_bell_announcements.end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is NULL")
-            # .where("cloud_bell_announcements.status = TRUE")
-
             # get the announcements without a specific path (global announcements)
             announcements = announcements.where(base_path: nil)
 
