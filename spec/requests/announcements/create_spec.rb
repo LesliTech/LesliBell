@@ -31,7 +31,7 @@ RSpec.describe 'POST:/bell/announcements', type: :request do
             end_at: "2021-07-23T19:13:33.431Z",
             category: "success",
             can_be_closed: true,
-            base_path: "/crm/",
+            base_path: "/",
             status: true
         }
 

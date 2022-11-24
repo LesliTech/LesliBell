@@ -21,16 +21,14 @@ For more information read the license file including with this software.
 import { ref, reactive, onMounted, watch, computed, inject } from "vue"
 import { useRouter, useRoute } from 'vue-router'
 
+// · import lesli stores
+import { useBellAnnouncement } from "CloudBell/stores/announcement"
 
 // · initialize/inject plugins
 const router = useRouter()
 const msg = inject("msg")
 const url = inject("url")
 const date = inject("date")
-
-
-// · import lesli stores
-import { useBellAnnouncement } from "CloudBell/stores/announcement"
 
 
 // · implement stores
@@ -43,23 +41,22 @@ const translations = {
         shared: I18n.t("core.shared")
     },
     bell: {
-        notifications: I18n.t("bell.announcements")
+        announcements: I18n.t("bell.announcements")
     }
 }
 
 const columns = [{
     field: "id",
-    label: "ID"
+    label: translations.bell.announcements.column_id
 }, {
     field: "name",
-    label: "Name"
+    label: translations.bell.announcements.column_name
 }, {
-    field: "status",
-    label: "Status",
-    align: "center"
+    field: "start_at",
+    label: translations.bell.announcements.column_start_at
 }, {
-    field: "created_at_date",
-    label: "Sent at"
+    field: "end_at",
+    label: translations.bell.announcements.column_end_at
 }]
 
 // · initializing
@@ -70,7 +67,7 @@ onMounted(() => {
 </script>
 <template>
     <section class="application-component">
-        <lesli-header :title="translations.bell.notifications.view_title_notifications">
+        <lesli-header :title="translations.bell.announcements.view_title_notifications">
             <lesli-button :to="url.bell('announcements/new')" icon="add">
                 {{ translations.core.shared.view_btn_add }}
             </lesli-button>
@@ -93,7 +90,7 @@ onMounted(() => {
             <template #url="{ value }">
                 <a :href="value" class="has-text-link hover">{{ value }}</a>
             </template>
-            <template #created_at="{ value }">
+            <template #start_at="{ value }">
                 <p>
                     <span class="icon-text">
                         <span class="icon">
@@ -106,15 +103,17 @@ onMounted(() => {
                         </span>
                     </span>
                 </p>
+            </template>
+            <template #end_at="{ value }">
                 <p>
                     <span class="icon-text">
                         <span class="icon">
                             <span class="has-text-grey material-icons">
-                                schedule
+                                calendar_month
                             </span>
                         </span>
                         <span>
-                            {{ date.time(value) }}
+                            {{ date.date(value) }}
                         </span>
                     </span>
                 </p>
