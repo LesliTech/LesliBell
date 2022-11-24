@@ -57,7 +57,7 @@ module CloudBell
 
         # POST /notifications
         def create
-
+            
             notification = CloudBell::NotificationService.generate(
                 current_user,
                 notification_params[:subject],
