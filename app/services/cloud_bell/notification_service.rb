@@ -20,8 +20,8 @@ For more information read the license file including with this software.
 module CloudBell
     class NotificationService
 
-        def self.send_email user, notification
-            NotificationMailer.with({ user: user, notification: notification }).notification.deliver_later
+        def self.send_email user, notification, number_notifications
+            NotificationMailer.with({ user: user, notification: notification, number_notifications: number_notifications }).notification.deliver_later
         end
 
         def self.send_webpush user, notification

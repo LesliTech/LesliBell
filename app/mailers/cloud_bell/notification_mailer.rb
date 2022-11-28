@@ -22,6 +22,11 @@ module CloudBell
         def notification
             user = params[:user]
             notification = params[:notification]
+            number_notifications = params[:number_notifications]
+
+            notification.body = "#{number_notifications} " + I18n.t("bell.notifications.mailer_new_notifications") if number_notifications >= 1
+
+            LC::Debug.msg(notification.body)
 
             self.build_data_from_params({}, {
                 notification: notification,
