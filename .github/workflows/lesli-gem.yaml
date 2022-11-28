@@ -90,7 +90,7 @@ jobs:
       - name: Commit compiled javascript app
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          repository: engines/${{ github.event.pull_request.base.ref }}
+          repository: engines/${{ github.event.repository.name }}
           commit_message: "assets(js): Compile Js to Production"
           branch: production
         env:
