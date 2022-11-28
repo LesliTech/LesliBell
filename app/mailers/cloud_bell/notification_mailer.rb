@@ -26,8 +26,6 @@ module CloudBell
 
             notification.body = "#{number_notifications} " + I18n.t("bell.notifications.mailer_new_notifications") if number_notifications >= 1
 
-            LC::Debug.msg(notification.body)
-
             self.build_data_from_params({}, {
                 notification: notification,
                 link_text: I18n.t("bell.notifications.mailer_btn_open_url"),
