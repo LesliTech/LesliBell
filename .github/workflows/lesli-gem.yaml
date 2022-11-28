@@ -29,7 +29,6 @@ jobs:
 
       # Send a message to slack announcing the workflow start
       - name: Notify slack github actions start 
-        if: 1 == 2
         uses: LesliTech/github-action-slack-job-status@v1
         with:
           channel: alerts
@@ -91,7 +90,7 @@ jobs:
       - name: Commit compiled javascript app
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          repository: ./engines/${{ github.event.pull_request.base.ref }}
+          repository: engines/${{ github.event.pull_request.base.ref }}
           commit_message: "assets(js): Compile Js to Production"
           branch: production
         env:
@@ -103,10 +102,29 @@ jobs:
         uses: ./tmp/.github/actions/github-action-rails-new-version
         id: bumpVersion
         env:
+          SOURCE: engines/${{ github.event.repository.name }}
           RELEASE_BRANCHES: production
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
-          WITH_V: true
+
+
+      # Build the gem and publish in github packages
+      - name: Build and publish gem
+        uses: ./tmp/.github/actions/github-action-publish-gem-to-github
+        with:
+          owner: leitfaden
+          token: ${{ secrets.PUBLISH_GEM_BY_ACTIONS }}
+          version: ${{ steps.bumpVersion.outputs.new_tag}}
+          working-directory: engines/${{ github.event.repository.name }}
+
+
+      # Synchronize the production & master branches so we keep the version files
+      - name: Sync master branch with production branch
+        uses: ./tmp/.github/actions/github-action-sync-branches
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          from_branch: production
+          to_branch: master
+          source: engines/${{ github.event.repository.name }}
 
 
       # The newly created tag is deleted if a step fails or the workflow is cancelled.
@@ -115,10 +133,12 @@ jobs:
         run: git push --delete origin ${{ steps.bumpVersion.outputs.new_tag}}
 
 
-      # Synchronize the production & master branches so we keep the version files
-      - name: Sync master branch with production branch
-        uses: ./tmp/.github/actions/git_branch_sync_branches
+      # Send a message to slack with the status of the workflow
+      - name: Notify by slack
+        if: always()
+        uses: LesliTech/github-action-slack-job-status@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          from_branch: production
-          to_branch: master
+          job-status: ${{ job.status }}
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: alerts
+
