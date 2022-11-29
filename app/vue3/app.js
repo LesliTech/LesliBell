@@ -50,3 +50,4 @@ app("CloudBell", [{
     component: appAnnouncementsNew
 }])
 
+console.log("gem works 1")
