@@ -47,16 +47,7 @@ RSpec.describe 'GET:/bell/notifications.json', type: :request do
 
         # shared examples
         expect_response_with_successful
-
-        # custom
-        expect(response_json).to have_key("pagination")
-        expect(response_json["pagination"]).to be_a(Hash)
-        expect(response_json['pagination']).to have_key('page')
-        expect(response_json["pagination"]['page']).to be_a(Numeric)
-        expect(response_json['pagination']).to have_key('pages')
-        expect(response_json["pagination"]['pages']).to be_a(Numeric)
-        expect(response_json['pagination']).to have_key('total')
-        expect(response_json["pagination"]['total']).to be_a(Numeric)
+       
     end
 
     it "is expect to have a valid records" do
