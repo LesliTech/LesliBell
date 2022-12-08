@@ -55,6 +55,7 @@ RSpec.describe 'GET:/bell/notifications.json', type: :request do
 
         # shared examples
         expect_response_with_successful
+        expect_response_with_pagination
 
         # custom
         expect(response_json).to have_key("records")
