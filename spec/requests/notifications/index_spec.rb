@@ -1,6 +1,6 @@
 =begin
 
-Copyright (c) 2021, all rights reserved.
+Copyright (c) 2022, all rights reserved.
 
 All the information provided by this platform is protected by international laws related  to
 industrial property, intellectual property, copyright and relative international laws.
@@ -23,6 +23,7 @@ require 'lesli_request_helper'
 
 #
 RSpec.describe 'GET:/bell/notifications.json', type: :request do
+    
     include_context 'request user authentication'
 
     it 'is expected to respond with all the notification for the current user' do
@@ -46,7 +47,7 @@ RSpec.describe 'GET:/bell/notifications.json', type: :request do
         get('/bell/notifications.json')
 
         # shared examples
-        expect_response_with_successful
+        expect_response_with_pagination
 
         # custom
         expect(response_json).to have_key("pagination")
@@ -91,5 +92,9 @@ RSpec.describe 'GET:/bell/notifications.json', type: :request do
         expect(response_json["records"].first['media']).to be_a(String)
         expect(response_json["records"].first).to have_key('payload')
         expect(response_json["records"].first['payload']).to be_a(Hash)
+        expect(response_json["records"].first).to have_key('users_id')
+        expect(response_json["records"].first['users_id']).to be_a(Integer)
+        expect(response_json["records"].first).to have_key('cloud_bell_accounts_id')
+        expect(response_json["records"].first['cloud_bell_accounts_id']).to be_a(Integer)
     end
 end
