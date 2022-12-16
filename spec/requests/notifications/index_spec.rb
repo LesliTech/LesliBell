@@ -63,8 +63,7 @@ RSpec.describe 'GET:/bell/notifications.json', type: :request do
     it "is expect to have a valid records" do
         get('/bell/notifications.json')
 
-        # shared examples
-        expect_response_with_successful
+        # shared examples        
         expect_response_with_pagination
 
         # custom
