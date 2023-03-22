@@ -166,7 +166,7 @@ module CloudBell
 
             # Create an activiy log for the user to whom the notification was sent
             notifications.each do |notification|
-                User::Activity.create({ description: "#{notification.channel} notification sent to this user from #{user_creator.name}", category: "notification", users_id: notification.user.id, owner_id: notification.user.id })
+                User::Activity.create({ description: "#{notification.channel} notification sent to this user from #{user_creator.name}", category: "action_create_notification", users_id: notification.user.id, owner_id: notification.user.id })
             end
 
             return { id: notifications.map(&:id) }
