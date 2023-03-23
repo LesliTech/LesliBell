@@ -91,6 +91,8 @@ module CloudBell
             # set push (web and mobile) notifications as default channel
             channel = 'push' unless channel
 
+            user_creator = user
+
             # base notification data
             notification_params = {
                 url: url,
@@ -107,7 +109,8 @@ module CloudBell
             # notifications to create
             notifications = []
 
-            # create notifications for an specific user (diferent of current_user)
+
+            # create notifications for an specific user (different of current_user)
             if user_receiver_id
 
                 user = ::User.find_by_id(user_receiver_id)
@@ -160,6 +163,11 @@ module CloudBell
 
             # "bulk insert" all the notifications
             notifications = user.account.bell.notifications.create(notifications)
+
+            # Create an activiy log for the user to whom the notification was sent
+            notifications.each do |notification|
+                User::Activity.create({ description: "#{notification.channel} notification sent to this user from #{user_creator.name}", category: "action_create_notification", users_id: notification.user.id, owner_id: notification.user.id })
+            end
 
             return { id: notifications.map(&:id) }
 
