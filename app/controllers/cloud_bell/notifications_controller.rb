@@ -64,6 +64,7 @@ module CloudBell
                 url: notification_params[:url],
                 body: notification_params[:body],
                 media: notification_params[:media],
+                channel: notification_params[:channel],
                 payload: notification_params[:payload],
                 category: notification_params[:category],
                 user_receiver_id: notification_params[:user_receiver_id],
@@ -74,6 +75,7 @@ module CloudBell
 
             notification_created = CloudBell::Notification.find_by_id(notification[:id][0])
             CloudBell::Notification::Activity.log_activity_create(current_user, notification_created)
+            
             respond_with_successful(notification)
 
         end
@@ -117,6 +119,7 @@ module CloudBell
                 :body,
                 :media,
                 :subject,
+                :channel,
                 :category,
                 :user_receiver_id,
                 :notification_type,
