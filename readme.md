@@ -1,5 +1,5 @@
 <p align="center">
-	<img width="90" alt="LesliBell logo" src="./app/assets/images/lesli_bell/admin-logo.svg" />
+	<img width="90" alt="LesliBell logo" src="./app/assets/images/lesli_bell/bell-logo.svg" />
     <h3 align="center">Notifications & Announcements System for the Lesli Framework.</h3>
 </p>
 
