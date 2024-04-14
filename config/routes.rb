@@ -1,56 +1,38 @@
 =begin
 
-Copyright (c) 2020, all rights reserved.
+Lesli
 
-All the information provided by this platform is protected by international laws related  to 
-industrial property, intellectual property, copyright and relative international laws. 
-All intellectual or industrial property rights of the code, texts, trade mark, design, 
-pictures and any other information belongs to the owner of this platform.
+Copyright (c) 2023, Lesli Technologies, S. A.
 
-Without the written permission of the owner, any replication, modification,
-transmission, publication is strictly forbidden.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-For more information read the license file including with this software.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+You should have received a copy of the GNU General Public License
+along with this program. If not, see http://www.gnu.org/licenses/.
+
+Lesli · Ruby on Rails SaaS Development Framework.
+
+Made with ♥ by LesliTech
+Building a better future, one line of code at a time.
+
+@contact  hello@lesli.tech
+@website  https://www.lesli.tech
+@license  GPLv3 http://www.gnu.org/licenses/gpl-3.0.en.html
+
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 // · 
-
 =end
 
-CloudBell::Engine.routes.draw do
-
+LesliBell::Engine.routes.draw do  
     root to: "dashboards#show"
-
-    resources :notifications, only: [:index, :new, :show, :create, :edit, :update] do
-        member do
-            scope :resources do
-                put :read
-            end
-        end
-
-        collection do
-            put :read
-            get :options
-            get :count
-            get :list
-        end
-
-        scope module: :notification do
-            resources :activities
-        end
-
-    end
-
-    resources :announcements, only: [:index, :new, :show, :create, :edit, :update, :destroy] do 
-        collection do
-            get :options
-            get :list
-        end
-
-        scope module: :announcement do
-            resources :activities
-            resources :users
-        end
-
-    end
+    resource :dashboard, only: [:show]
+    resources :notifications, only: [:index, :new]
+    resources :announcements, only: [:index]
 end
