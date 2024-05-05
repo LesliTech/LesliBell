@@ -90,10 +90,9 @@ const columns = [{
 // · initializing
 onMounted(() => {
     storeNotification.fetch()
-
-    console.log(dayjs("2024-04-14 16:27:55.636").fromNow())
-    console.log(date.date("2024-04-14 16:27:55.636"))
-    console.log(date.time("2024-04-14 16:27:55.636"))
+    // console.log(dayjs("2024-04-14 16:27:55.636").fromNow())
+    // console.log(date.date("2024-04-14 16:27:55.636"))
+    // console.log(date.time("2024-04-14 16:27:55.636"))
 })
 
 
@@ -105,9 +104,11 @@ onMounted(() => {
             <lesli-button icon="refresh">
                 {{ translations.shared.button_reload }}
             </lesli-button>
+            <!--
             <lesli-link button solid icon="add" :to="url.bell('notifications/new')">
                 {{ translations.shared.button_add_new }}
             </lesli-link>
+            -->
         </lesli-header>
 
         <lesli-table

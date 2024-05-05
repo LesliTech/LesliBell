@@ -2,10 +2,10 @@
 :pt:
   lesli_bell:
     notifications:
-      view_title: ":lesli_bell.notifications.view_title:"
       view_create_notification: ":lesli_bell.notifications.view_create_notification:"
       column_subject: ":lesli_bell.notifications.column_subject:"
       column_body: ":lesli_bell.notifications.column_body:"
+      view_title: ":lesli_bell.notifications.view_title:"
   lesli:
     shared:
       view_discussions: ":lesli.shared.view_discussions:"
