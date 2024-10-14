@@ -117,7 +117,7 @@ onMounted(() => {
             :pagination="storeNotification.index.pagination"
             @paginate="storeNotification.paginate">
             <template #id="{ value, record }">
-                <span :class="['tag', 'is-medium', 'is-' + record.category]">
+                <span :class="['tag', 'is-medium', 'has-text-' + record.category]">
                     {{ value }}
                 </span>
             </template>
