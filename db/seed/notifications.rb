@@ -40,7 +40,6 @@ Building a better future, one line of code at a time.
     LesliBell::NotificationService.new(current_user).create("New warning notification created", category: "warning")
     LesliBell::NotificationService.new(current_user).create("New danger notification created", category: "danger")
 end 
-
 # Courier::Bell::Notification.new(current_user, "New notification created")
 # Courier::Bell::Notification.new(current_user, "New info notification created", category: "info")
 # Courier::Bell::Notification.new(current_user, "New success notification created", category: "success")
