@@ -70,7 +70,7 @@ const translations = {
 
 const columns = [{
     field: "id",
-    label: "ID"
+    label: ""
 }, {
     field: "subject",
     label: "Notification"
@@ -99,7 +99,6 @@ onMounted(() => {
 </script>
 <template>
     <lesli-application-container>
-
         <lesli-header :title="translations.bell.notifications.view_title">
             <lesli-button icon="refresh">
                 {{ translations.shared.button_reload }}
@@ -116,9 +115,9 @@ onMounted(() => {
             :records="storeNotification.index.records"
             :pagination="storeNotification.index.pagination"
             @paginate="storeNotification.paginate">
-            <template #id="{ value, record }">
-                <span :class="['tag', 'is-medium', 'has-text-' + record.category]">
-                    {{ value }}
+            <template #id="{ value, record }" class="ldonis">
+                <span :class="['material-icons', 'has-text-' + record.category]">
+                    info
                 </span>
             </template>
             <template #subject="{ column, value, record }">

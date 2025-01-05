@@ -22,25 +22,6 @@ module LesliBell
             .order(:updated_at)
 
             return notifications
-
-            # LC::Response.pagination(
-            #     notifications.current_page,
-            #     notifications.total_pages,
-            #     notifications.total_count,
-            #     notifications.length,
-            #     notifications.map do |notification|
-            #         {
-            #             id: notification[:id],
-            #             url: notification[:url],
-            #             body: notification[:body],
-            #             subject: notification[:subject],
-            #             category: notification[:category],
-            #             created_at: LC::Date.distance_to_words(notification[:created_at]),
-            #             status: notification[:status],
-            #         }
-            #     end
-            # )
-
         end
 
         def create(
@@ -83,5 +64,11 @@ module LesliBell
             return { id: notifications.map(&:id) }
 
         end 
+
+        def read id
+            noti = current_user.account.bell.notifications.where(:id => id, :user => current_user)
+            noti.update(:status => :read)
+            self
+        end
     end
 end

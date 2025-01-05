@@ -1,0 +1,29 @@
+{
+    "notifications": [
+        { "message": "Welcome to our platform!", "category": "standard" },
+        { "message": "Welcome to our platform!", "category": "standard", "url": "https://example.com/welcome" },
+        { "message": "Welcome to our platform!", "category": "standard", "body": "We're excited to have you onboard." },
+        { "message": "Welcome to our platform!", "category": "standard", "body": "We're excited to have you onboard.", "url": "https://example.com/welcome" },
+    
+        { "message": "System maintenance scheduled", "category": "info" },
+        { "message": "System maintenance scheduled", "category": "info", "url": "https://example.com/maintenance-info" },
+        { "message": "System maintenance scheduled", "category": "info", "body": "The system will be down for maintenance on Sunday at 2 AM." },
+        { "message": "System maintenance scheduled", "category": "info", "body": "The system will be down for maintenance on Sunday at 2 AM.", "url": "https://example.com/maintenance-info" },
+        
+        { "message": "Your profile has been updated", "category": "success" },
+        { "message": "Your profile has been updated", "category": "success", "url": "https://example.com/profile" },
+        { "message": "Your profile has been updated", "category": "success", "body": "Your changes have been saved successfully." },
+        { "message": "Your profile has been updated", "category": "success", "body": "Your changes have been saved successfully.", "url": "https://example.com/profile" },
+        
+        { "message": "Password expiring soon", "category": "warning" },
+        { "message": "Password expiring soon", "category": "warning", "url": "https://example.com/update-password" },
+        { "message": "Password expiring soon", "category": "warning", "body": "Your password will expire in 3 days. Please update it to avoid being locked out." },
+        { "message": "Password expiring soon", "category": "warning", "body": "Your password will expire in 3 days. Please update it to avoid being locked out.", "url": "https://example.com/update-password" },
+        
+        
+        { "message": "Unusual login attempt detected", "category": "danger" },
+        { "message": "Unusual login attempt detected", "category": "danger", "url": "https://example.com/security-alert" },
+        { "message": "Unusual login attempt detected", "category": "danger", "body": "We noticed a login attempt from an unfamiliar location. Please review your account security." },
+        { "message": "Unusual login attempt detected", "category": "danger", "body": "We noticed a login attempt from an unfamiliar location. Please review your account security.", "url": "https://example.com/security-alert" }        
+    ]
+}

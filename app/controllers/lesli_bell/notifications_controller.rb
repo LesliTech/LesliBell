@@ -37,11 +37,7 @@ module LesliBell
 
         # PATCH/PUT /notifications/1
         def update
-        if @notification.update(notification_params)
-        redirect_to @notification, notice: "Notification was successfully updated.", status: :see_other
-        else
-        render :edit, status: :unprocessable_entity
-        end
+            respond_with_successful(NotificationService.new(current_user).read(params[:id]))
         end
 
         # DELETE /notifications/1
@@ -58,7 +54,9 @@ module LesliBell
 
         # Only allow a list of trusted parameters through.
         def notification_params
-        params.fetch(:notification, {})
+            params.require(:notification).permit(
+                :id
+            )
         end
     end
 end

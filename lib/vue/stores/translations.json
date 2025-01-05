@@ -32,9 +32,6 @@
     },
     "lesli_bell": {
       "notifications": {
-        "column_body": "Body",
-        "column_subject": "Subject",
-        "view_create_notification": "Create notification",
         "view_title": "Notifications"
       }
     }
@@ -72,9 +69,6 @@
     },
     "lesli_bell": {
       "notifications": {
-        "column_body": "Contenido",
-        "column_subject": "Asunto",
-        "view_create_notification": "Crear notificación",
         "view_title": "Notificaciones"
       }
     }
@@ -112,9 +106,6 @@
     },
     "lesli_bell": {
       "notifications": {
-        "column_body": ":lesli_bell.notifications.column_body:",
-        "column_subject": ":lesli_bell.notifications.column_subject:",
-        "view_create_notification": ":lesli_bell.notifications.view_create_notification:",
         "view_title": ":lesli_bell.notifications.view_title:"
       }
     }
@@ -152,9 +143,6 @@
     },
     "lesli_bell": {
       "notifications": {
-        "column_body": ":lesli_bell.notifications.column_body:",
-        "column_subject": ":lesli_bell.notifications.column_subject:",
-        "view_create_notification": ":lesli_bell.notifications.view_create_notification:",
         "view_title": ":lesli_bell.notifications.view_title:"
       }
     }
@@ -192,9 +180,6 @@
     },
     "lesli_bell": {
       "notifications": {
-        "column_body": ":lesli_bell.notifications.column_body:",
-        "column_subject": ":lesli_bell.notifications.column_subject:",
-        "view_create_notification": ":lesli_bell.notifications.view_create_notification:",
         "view_title": ":lesli_bell.notifications.view_title:"
       }
     }

@@ -2,9 +2,6 @@
 :es:
   lesli_bell:
     notifications:
-      view_create_notification: Crear notificación
-      column_subject: Asunto
-      column_body: Contenido
       view_title: Notificaciones
   lesli:
     shared:

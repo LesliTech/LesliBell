@@ -33,6 +33,6 @@ Building a better future, one line of code at a time.
 LesliBell::Engine.routes.draw do  
     root to: "dashboards#show"
     resource :dashboard, only: [:show]
-    resources :notifications, only: [:index, :new]
+    resources :notifications, only: [:index, :new, :update]
     resources :announcements, only: [:index]
 end
