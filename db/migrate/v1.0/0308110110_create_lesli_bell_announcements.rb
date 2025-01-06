@@ -34,9 +34,9 @@ class CreateLesliBellAnnouncements < ActiveRecord::Migration[6.0]
     def change
         create_table :lesli_bell_announcements do |t|
             t.string    :name
-            t.string    :url, index: true
+            t.string    :url
+            t.string    :path
             t.string    :category
-            t.string    :base_path
             t.text      :message
             t.boolean   :status
             t.datetime  :start_at

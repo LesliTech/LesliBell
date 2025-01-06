@@ -3,25 +3,25 @@ module LesliBell
         belongs_to :account, class_name: "LesliBell::Account"
         belongs_to :user, class_name: "::Lesli::User"
 
-        # enum category: {
-        #     info: "info",
-        #     danger: "danger",
-        #     warning: "warning",
-        #     success: "success"
-        # }
+        enum category: {
+            :info => 'info',
+            :danger => 'danger',
+            :warning => 'warning',
+            :success => 'success'
+        }
 
-        # enum channel: {
-        #     push: "push",                   # webpush & mobilepush
-        #     email: "email",                 # notification sent by email only
-        #     webpush: "webpush",             # notification for web interface only
-        #     mobilepush: "mobilepush",       # notification for mobile only
-        #     mobiledialog: "mobiledialog",   # open a dialog in the main app screen
-        # }
+        enum channel: {
+            :web    => 'web',       # notification for web interface only
+            :push   => 'push',      # webpush & mobilepush
+            :email  => 'email',     # notification sent by email only
+            :dialog => 'dialog',    # open a dialog in the main app screen
+            :mobile => 'mobile'     # notification for mobile only
+        }
 
-        # enum status: {
-        #     read: "read",
-        #     sent: "sent",
-        #     created: "created"
-        # }
+        enum status: {
+            :created => 'created',
+            :sent => 'sent',
+            :read => 'read'
+        }
     end
 end

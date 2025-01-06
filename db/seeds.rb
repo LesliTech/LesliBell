@@ -36,4 +36,5 @@ L2.msg("LesliBell", "Version: #{LesliBell::VERSION}", "Build: #{LesliBell::BUILD
 # · load specific environment seeds
 if Rails.env.development? || Lesli.config.demo 
     load LesliBell::Engine.root.join("db", "seed", "notifications.rb")
+    load LesliBell::Engine.root.join("db", "seed", "announcements.rb")
 end

@@ -31,6 +31,15 @@
       }
     },
     "lesli_bell": {
+      "announcements": {
+        "column_category": "Category",
+        "column_end_at": "End At",
+        "column_id": "ID",
+        "column_name": "Name",
+        "column_start_at": "Start At",
+        "column_url": "URL",
+        "view_title": "Announcements"
+      },
       "notifications": {
         "view_title": "Notifications"
       }
@@ -68,6 +77,15 @@
       }
     },
     "lesli_bell": {
+      "announcements": {
+        "column_category": ":lesli_bell.announcements.column_category:",
+        "column_end_at": ":lesli_bell.announcements.column_end_at:",
+        "column_id": ":lesli_bell.announcements.column_id:",
+        "column_name": ":lesli_bell.announcements.column_name:",
+        "column_start_at": ":lesli_bell.announcements.column_start_at:",
+        "column_url": ":lesli_bell.announcements.column_url:",
+        "view_title": "Anuncios"
+      },
       "notifications": {
         "view_title": "Notificaciones"
       }
@@ -105,6 +123,15 @@
       }
     },
     "lesli_bell": {
+      "announcements": {
+        "column_category": ":lesli_bell.announcements.column_category:",
+        "column_end_at": ":lesli_bell.announcements.column_end_at:",
+        "column_id": ":lesli_bell.announcements.column_id:",
+        "column_name": ":lesli_bell.announcements.column_name:",
+        "column_start_at": ":lesli_bell.announcements.column_start_at:",
+        "column_url": ":lesli_bell.announcements.column_url:",
+        "view_title": ":lesli_bell.announcements.view_title:"
+      },
       "notifications": {
         "view_title": ":lesli_bell.notifications.view_title:"
       }
@@ -142,6 +169,15 @@
       }
     },
     "lesli_bell": {
+      "announcements": {
+        "column_category": ":lesli_bell.announcements.column_category:",
+        "column_end_at": ":lesli_bell.announcements.column_end_at:",
+        "column_id": ":lesli_bell.announcements.column_id:",
+        "column_name": ":lesli_bell.announcements.column_name:",
+        "column_start_at": ":lesli_bell.announcements.column_start_at:",
+        "column_url": ":lesli_bell.announcements.column_url:",
+        "view_title": ":lesli_bell.announcements.view_title:"
+      },
       "notifications": {
         "view_title": ":lesli_bell.notifications.view_title:"
       }
@@ -179,6 +215,15 @@
       }
     },
     "lesli_bell": {
+      "announcements": {
+        "column_category": ":lesli_bell.announcements.column_category:",
+        "column_end_at": ":lesli_bell.announcements.column_end_at:",
+        "column_id": ":lesli_bell.announcements.column_id:",
+        "column_name": ":lesli_bell.announcements.column_name:",
+        "column_start_at": ":lesli_bell.announcements.column_start_at:",
+        "column_url": ":lesli_bell.announcements.column_url:",
+        "view_title": ":lesli_bell.announcements.view_title:"
+      },
       "notifications": {
         "view_title": ":lesli_bell.notifications.view_title:"
       }

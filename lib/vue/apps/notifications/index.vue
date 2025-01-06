@@ -90,9 +90,6 @@ const columns = [{
 // · initializing
 onMounted(() => {
     storeNotification.fetch()
-    // console.log(dayjs("2024-04-14 16:27:55.636").fromNow())
-    // console.log(date.date("2024-04-14 16:27:55.636"))
-    // console.log(date.time("2024-04-14 16:27:55.636"))
 })
 
 

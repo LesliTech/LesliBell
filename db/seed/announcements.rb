@@ -34,20 +34,14 @@ Building a better future, one line of code at a time.
 file = File.open(LesliBell::Engine.root.join("db", "seed", "seeds.json")).read
 seeds = JSON.parse(file)
 
-# · 
 current_user = Lesli::User.first
 
 # · 
-LesliBell::NotificationService.new(current_user).create_for_me({
-    subject: "Special notification created for me"
-})
-
-# · 
-seeds["notifications"].each do |notification|
-    LesliBell::NotificationService.new(current_user).create({
-        subject: notification["message"],
+seeds["announcements"].each do |notification|
+    LesliBell::AnnouncementService.new(current_user).create({
+        name: notification["name"],
         category: notification["category"],
-        body: notification["body"],
+        message: notification["message"],
         url: notification["url"]
     }, send_to_user_ids: ::Lesli::User.all.pluck(:id))
 end 

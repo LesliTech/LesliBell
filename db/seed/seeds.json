@@ -25,5 +25,12 @@
         { "message": "Unusual login attempt detected", "category": "danger", "url": "https://example.com/security-alert" },
         { "message": "Unusual login attempt detected", "category": "danger", "body": "We noticed a login attempt from an unfamiliar location. Please review your account security." },
         { "message": "Unusual login attempt detected", "category": "danger", "body": "We noticed a login attempt from an unfamiliar location. Please review your account security.", "url": "https://example.com/security-alert" }        
+    ],
+    "announcements": [
+        { "name": "standard", "message": "Exciting News: Welcome to our platform!", "category": "standard" },
+        { "name": "information", "message": "Upcoming Event: System Maintenance Scheduled", "category": "info", "url": "https://example.com/maintenance-info" },
+        { "name": "success", "message": "Success Update: Your Profile Has Been Updated!", "category": "success" },
+        { "name": "warning", "message": "Friendly Reminder: Password Expiring Soon", "category": "warning", "url": "https://example.com/update-password" },
+        { "name": "danger", "message": "Alert: Unusual Login Attempt Detected", "category": "danger" }
     ]
 }

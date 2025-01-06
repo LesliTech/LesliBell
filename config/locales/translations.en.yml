@@ -3,6 +3,14 @@
   lesli_bell:
     notifications:
       view_title: Notifications
+    announcements:
+      view_title: Announcements
+      column_name: Name
+      column_start_at: Start At
+      column_end_at: End At
+      column_category: Category
+      column_url: URL
+      column_id: ID
   lesli:
     shared:
       view_discussions: Discussions

@@ -3,6 +3,14 @@
   lesli_bell:
     notifications:
       view_title: Notificaciones
+    announcements:
+      view_title: Anuncios
+      column_name: ":lesli_bell.announcements.column_name:"
+      column_start_at: ":lesli_bell.announcements.column_start_at:"
+      column_end_at: ":lesli_bell.announcements.column_end_at:"
+      column_category: ":lesli_bell.announcements.column_category:"
+      column_url: ":lesli_bell.announcements.column_url:"
+      column_id: ":lesli_bell.announcements.column_id:"
   lesli:
     shared:
       view_discussions: Discusiones

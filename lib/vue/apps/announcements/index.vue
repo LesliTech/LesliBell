@@ -1,19 +1,33 @@
 <script setup>
 /*
-Copyright (c) 2022, all rights reserved.
+Lesli
 
-All the information provided by this platform is protected by international laws related  to
-industrial property, intellectual property, copyright and relative international laws.
-All intellectual or industrial property rights of the code, texts, trade mark, design,
-pictures and any other information belongs to the owner of this platform.
+Copyright (c) 2023, Lesli Technologies, S. A.
 
-Without the written permission of the owner, any replication, modification,
-transmission, publication is strictly forbidden.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-For more information read the license file including with this software.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-// ·
+You should have received a copy of the GNU General Public License
+along with this program. If not, see http://www.gnu.org/licenses/.
+
+Lesli · Ruby on Rails SaaS Development Framework.
+
+Made with ♥ by LesliTech
+Building a better future, one line of code at a time.
+
+@contact  hello@lesli.tech
+@website  https://www.lesli.tech
+@license  GPLv3 http://www.gnu.org/licenses/gpl-3.0.en.html
+
+// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
+// · 
 */
 
 
@@ -21,8 +35,10 @@ For more information read the license file including with this software.
 import { ref, reactive, onMounted, watch, computed, inject } from "vue"
 import { useRouter, useRoute } from 'vue-router'
 
+
 // · import lesli stores
-import { useBellAnnouncement } from "LesliBell/stores/announcement"
+import { useBellAnnouncement } from "LesliBell/vue/stores/announcement"
+
 
 // · initialize/inject plugins
 const router = useRouter()
@@ -37,26 +53,34 @@ const storeAnnouncement = useBellAnnouncement()
 
 // ·
 const translations = {
+    lesli: i18n.t("lesli.shared"),
+    announcements: i18n.t("lesli_bell.announcements"),
+
+
     core: {
         shared: I18n.t("core.shared")
     },
     bell: {
-        announcements: I18n.t("bell.announcements")
+        announcements: I18n.t("lesli_bell.announcements")
     }
 }
 
+// ·
 const columns = [{
     field: "id",
-    label: translations.bell.announcements.column_id
+    label: translations.announcements.column_id
 }, {
     field: "name",
-    label: translations.bell.announcements.column_name
+    label: translations.announcements.column_name
+}, {
+    field: "category",
+    label: translations.announcements.column_category
 }, {
     field: "start_at",
-    label: translations.bell.announcements.column_start_at
+    label: translations.announcements.column_start_at
 }, {
     field: "end_at",
-    label: translations.bell.announcements.column_end_at
+    label: translations.announcements.column_end_at
 }]
 
 // · initializing
@@ -66,8 +90,8 @@ onMounted(() => {
 
 </script>
 <template>
-    <section class="application-component">
-        <lesli-header :title="translations.bell.announcements.view_title_notifications">
+    <lesli-application-container>
+        <lesli-header :title="translations.announcements.view_title">
             <lesli-button :to="url.bell('announcements/new')" icon="add">
                 {{ translations.core.shared.view_btn_add }}
             </lesli-button>
@@ -75,20 +99,18 @@ onMounted(() => {
 
         <lesli-table
             :columns="columns"
-            :records="storeAnnouncement.records"
-            :pagination="storeAnnouncement.pagination"
+            :records="storeAnnouncement.announcements.records"
+            :pagination="storeAnnouncement.announcements.pagination"
             @paginate="storeAnnouncement.paginate">
             <template #id="{ value, record }">
                 <span :class="['tag', 'is-medium', 'is-' + record.category]">
                     {{ value }}
                 </span>
             </template>
-            <template #subject="{ column, value, record }">
-                <h4>{{ record.subject }}</h4>
-                <p>{{ record.body }}</p>
-            </template>
-            <template #url="{ value }">
-                <a :href="value" class="has-text-link hover">{{ value }}</a>
+            <template #category="{ value }">
+                <p :class="[`has-background-${value}-light`, 'px-2']">
+                    {{ value }}
+                </p>
             </template>
             <template #start_at="{ value }">
                 <p>
@@ -119,6 +141,5 @@ onMounted(() => {
                 </p>
             </template>
         </lesli-table>
-
-    </section>
+    </lesli-application-container>
 </template>

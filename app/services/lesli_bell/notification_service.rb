@@ -24,45 +24,41 @@ module LesliBell
             return notifications
         end
 
+        def create_for_me notification_params
+            self.create(notification_params, send_to_user_ids: [current_user.id])
+        end
+
         def create(
-            subject, 
-            url:nil, 
-            body:nil, 
-            media:nil,
-            payload:nil,
-            channel:nil,
-            category:nil, 
-            user_receiver_id:nil, 
-            notification_type:nil, 
-            role_receiver_names:nil, 
-            user_receiver_emails:nil
+            notification_params,
+            send_to_role_ids:nil, 
+            send_to_user_ids:nil, 
+            send_to_user_emails:nil
         )
 
-            # validate that the notifications has a valid category
-            category = 'info' if not ['info', 'danger', 'warning', 'success'].include?(category)
+            users = []
+            notifications = []
 
-            # set push (web and mobile) notifications as default channel
-            channel = 'push' unless channel
+            unless Notification.categories.key?(notification_params[:category])
+                notification_params[:category] = :info
+            end
 
-            # base notification data
-            notification_params = {
-                url: url,
-                body: body,
-                media: media,
-                payload: payload,
-                channel: channel,
-                subject: subject,
-                category: category,
-                notification_type: notification_type,
-                status: 'created',
-                user: current_user
-            }
-        
+            unless Notification.channels.key?(notification_params[:channel])
+                notification_params[:channel] = :web
+            end
+
+            send_to_user_ids.each do |user|
+                notifications.push({
+                    **notification_params,
+                    user_id: user,
+                })
+            end
+
             # "bulk insert" all the notifications
-            notifications = current_user.account.bell.notifications.create([notification_params])
+            current_user.account.bell.notifications.create!(notifications)
 
-            return { id: notifications.map(&:id) }
+            self.resource = { id: notifications.map{ |n| n[:user_id] } }
 
+            self
         end 
 
         def read id

@@ -2,9 +2,24 @@ module LesliBell
   class AnnouncementsController < ApplicationController
     before_action :set_announcement, only: %i[ show edit update destroy ]
 
+    # GET /announcements/list
+    def list
+        respond_to do |format|
+            format.html {  }
+            format.json {
+                respond_with_pagination(AnnouncementService.new(current_user, query).list)
+            }
+        end
+    end
+
     # GET /announcements
     def index
-      @announcements = Announcement.all
+        respond_to do |format|
+            format.html {  }
+            format.json {
+                respond_with_pagination(AnnouncementService.new(current_user, query).index)
+            }
+        end
     end
 
     # GET /announcements/1

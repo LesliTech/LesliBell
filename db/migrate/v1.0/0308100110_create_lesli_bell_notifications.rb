@@ -40,8 +40,6 @@ class CreateLesliBellNotifications < ActiveRecord::Migration[7.0]
             t.string    :status
             t.string    :category
             t.string    :channel
-            t.string    :notification_type
-            t.string    :media
             t.json      :payload
 
             t.datetime  :deleted_at, index: true

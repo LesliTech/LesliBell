@@ -34,5 +34,9 @@ LesliBell::Engine.routes.draw do
     root to: "dashboards#show"
     resource :dashboard, only: [:show]
     resources :notifications, only: [:index, :new, :update]
-    resources :announcements, only: [:index]
+    resources :announcements, only: [:index] do 
+        collection do
+            get "list" => :list
+        end
+    end 
 end
