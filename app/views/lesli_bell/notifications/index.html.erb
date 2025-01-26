@@ -30,4 +30,64 @@ Building a better future, one line of code at a time.
 // · 
 %>
 
-<router-view></router-view>
+<style>
+.notification.is-danger.is-light {
+border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l))
+}
+
+.notification.is-warning.is-light {
+border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l));
+}
+
+.notification.is-success.is-light {
+border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l));
+}
+button.delete {
+/*border-width: 2px;*/
+}
+</style>
+
+<%= render(LesliView::Layout::Container.new("lesli-bell-notifications-index")) do %>
+
+    <%= render(LesliView::Components::Header.new("Notifications")) do %>
+        <%= render(LesliView::Elements::Button.new("mark all as read", icon:"check", solid: true)) %>
+    <% end %>
+
+    <%= render(LesliView::Components::Toolbar.new) %>
+
+    <% if @notifications.size == 0 %>
+        <%= render(LesliView::Elements::Empty.new) %>
+    <% else %>
+        <section class="notifications">
+            <% @notifications[:records].each do |notification| %>
+                <div class="notification is-<%= notification[:category] %> is-light mb-2">
+                    <!-- Close button -->
+                    <button 
+                        aria-label="Dismiss notification"
+                        class="delete button is-<%= notification[:category] %> is-solid is-small">
+                        <span class="icon">
+                            <span class="material-icons">close</span>
+                        </span>
+                    </button>
+
+                    <!-- Notification subject -->
+                    <strong><%= notification[:subject] %></strong>
+
+                    <!-- Notification body (optional) -->
+                    <% if notification[:body].present? %>
+                        <p><%= notification[:body] %></p>
+                    <% end %>
+
+                    <!-- Notification URL (optional) -->
+                    <% if notification[:url].present? %>
+                        <p>
+                            <a href="<%= notification[:url] %>" target="_blank" rel="noopener noreferrer">
+                                <%= notification[:url] %>
+                            </a>
+                        </p>
+                    <% end %>
+                </div>
+            <% end %>
+        </section>
+    <% end %>
+<% end %>

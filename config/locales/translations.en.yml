@@ -1,8 +1,6 @@
 ---
 :en:
   lesli_bell:
-    notifications:
-      view_title: Notifications
     announcements:
       view_title: Announcements
       column_name: Name
@@ -11,6 +9,8 @@
       column_category: Category
       column_url: URL
       column_id: ID
+    notifications:
+      view_title: Notifications
   lesli:
     shared:
       view_discussions: Discussions

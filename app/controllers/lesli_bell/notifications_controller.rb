@@ -4,12 +4,7 @@ module LesliBell
 
         # GET /notifications
         def index
-            respond_to do |format|
-                format.html {  }
-                format.json {
-                    respond_with_pagination(NotificationService.new(current_user, query).index)
-                }
-            end
+            @notifications = respond_as_pagination(NotificationService.new(current_user, query).index)
         end
 
         # GET /notifications/1
