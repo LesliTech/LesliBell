@@ -42,8 +42,9 @@ border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), 
 .notification.is-success.is-light {
 border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l));
 }
-button.delete {
-/*border-width: 2px;*/
+
+.notification.is-info.is-light {
+border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l));
 }
 </style>
 
@@ -61,14 +62,17 @@ button.delete {
         <section class="notifications">
             <% @notifications[:records].each do |notification| %>
                 <div class="notification is-<%= notification[:category] %> is-light mb-2">
+
                     <!-- Close button -->
-                    <button 
-                        aria-label="Dismiss notification"
-                        class="delete button is-<%= notification[:category] %> is-solid is-small">
+                    <%= button_to(
+                        notification_path(notification[:id]), 
+                        method: :put, 
+                        class: "button is-small is-#{notification[:category]}",
+                        form: { class: "delete" }) do %>
                         <span class="icon">
                             <span class="material-icons">close</span>
                         </span>
-                    </button>
+                    <% end %>
 
                     <!-- Notification subject -->
                     <strong><%= notification[:subject] %></strong>

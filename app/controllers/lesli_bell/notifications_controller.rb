@@ -32,7 +32,9 @@ module LesliBell
 
         # PATCH/PUT /notifications/1
         def update
-            respond_with_successful(NotificationService.new(current_user).read(params[:id]))
+            NotificationService.new(current_user).read(params[:id])
+            @notifications = respond_as_pagination(NotificationService.new(current_user, query).index)
+            render :index
         end
 
         # DELETE /notifications/1
