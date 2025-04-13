@@ -3,14 +3,14 @@ module LesliBell
         belongs_to :account, class_name: "LesliBell::Account"
         belongs_to :user, class_name: "::Lesli::User"
 
-        enum category: {
+        enum :category, {
             :info => 'info',
             :danger => 'danger',
             :warning => 'warning',
             :success => 'success'
         }
 
-        enum channel: {
+        enum :channel, {
             :web    => 'web',       # notification for web interface only
             :push   => 'push',      # webpush & mobilepush
             :email  => 'email',     # notification sent by email only
@@ -18,7 +18,7 @@ module LesliBell
             :mobile => 'mobile'     # notification for mobile only
         }
 
-        enum status: {
+        enum :status, {
             :created => 'created',
             :sent => 'sent',
             :read => 'read'

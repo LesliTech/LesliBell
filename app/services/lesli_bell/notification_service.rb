@@ -1,6 +1,13 @@
 module LesliBell
     class NotificationService < Lesli::ApplicationLesliService
 
+        def count 
+            current_user.account.bell.notifications
+            .where(:user => current_user)
+            .where.not(:status => "read")
+            .count
+        end
+
         def index only_own_notifications=true
 
             notifications = []
