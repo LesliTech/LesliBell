@@ -4,7 +4,12 @@ module LesliBell
         def count 
             current_user.account.bell.notifications
             .where(:user => current_user)
-            .where.not(:status => "read")
+            .where(status: nil)
+            .or(
+                current_user.account.bell.notifications
+                .where(user: current_user)
+                .where.not(status: 'read')
+            )
             .count
         end
 
