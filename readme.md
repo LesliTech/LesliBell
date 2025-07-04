@@ -1,30 +1,42 @@
-<p align="center">
-	<img width="90" alt="LesliBell logo" src="./app/assets/images/lesli_bell/bell-logo.svg" />
+<div align="center" class="documentation-header">
+    <img width="100" alt="LesliBell logo" src="./app/assets/images/lesli_bell/bell-logo.svg" />
     <h3 align="center">Notifications & Announcements System for the Lesli Framework.</h3>
-</p>
+</div>
+
+
+<br />
+<hr/>
+
+<div align="center" class="documentation-statics">
+    <a target="blank" href="https://rubygems.org/gems/lesli">
+        <img height="22" alt="Gem Version" src="https://badge.fury.io/rb/lesli.svg"/>
+    </a>
+    <a class="mx-2" href="https://codecov.io/github/LesliTech/Lesli"> 
+        <img height="22" src="https://codecov.io/github/LesliTech/Lesli/graph/badge.svg?token=2O12NENK5Y"/> 
+    </a>
+    <a href="https://codecov.io/github/LesliTech/LesliBabel"> 
+        <img height="22" src="https://sonarcloud.io/api/project_badges/measure?project=LesliTech_LesliBabel&metric=sqale_rating"/> 
+    </a>
+</div>
 
 <hr/>
-    <p align="center">
-        <a target="blank" href="https://rubygems.org/gems/lesli_bell">
-            <img src="https://badge.fury.io/rb/lesli_bell.svg" alt="Gem Version" height="24">
-        </a>
-    </p>
-<hr/>
+<br />
+
 
 ### Quick start
 
 ```shell
-# Add LesliBell engine
+# Add LesliBell engine gem
 bundle add lesli_bell
 ```
 
 ```shell
-# Setup database
+# Setup & initialize the database
 rake lesli:db:setup
 ```
 
 ```ruby
-# Load LesliBell
+# Load LesliBell engine
 Rails.application.routes.draw do
     mount LesliBell::Engine => "/bell"
 end
@@ -32,8 +44,11 @@ end
 
 
 ### Documentation
+
+
+
+### Lesli Documentation
 * [website](https://www.lesli.dev/)
-* [database](./docs/database.md)
 * [documentation](https://www.lesli.dev/engines/bell/)
 
 
@@ -46,7 +61,7 @@ end
 
 ### License
 -------
-Copyright (c) 2023, Lesli Technologies, S. A.
+Copyright (c) 2025, Lesli Technologies, S. A.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -64,8 +79,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 <hr />
 <br />
 
-<p align="center">
+<div align="center" class="has-text-centered">
     <img width="200" alt="Lesli logo" src="https://cdn.lesli.tech/lesli/brand/app-logo.svg" />
-    <h4 align="center">Ruby on Rails SaaS Development Framework.</h4>
-</p>
-
+    <h4 align="center" class="mt-0">Ruby on Rails SaaS Development Framework.</h4>
+</div>
