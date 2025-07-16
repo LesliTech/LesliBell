@@ -2,7 +2,7 @@
 
 Lesli
 
-Copyright (c) 2023, Lesli Technologies, S. A.
+Copyright (c) 2025, Lesli Technologies, S. A.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,12 +31,7 @@ Building a better future, one line of code at a time.
 =end
 
 LesliBell::Engine.routes.draw do  
-    root to: "dashboards#show"
-    resource :dashboard, only: [:show]
+    Lesli::Routing.mount_dashboard_for(LesliBell)
     resources :notifications, only: [:index, :new, :update]
-    resources :announcements, only: [:index] do 
-        collection do
-            get "list" => :list
-        end
-    end 
+    resources :announcements, only: [:index]
 end

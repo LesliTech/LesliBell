@@ -1,4 +1,4 @@
-<%#
+=begin
 
 Lesli
 
@@ -28,6 +28,10 @@ Building a better future, one line of code at a time.
 
 // · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 // · 
-%>
+=end
 
-<%= render("/lesli/shared/dashboards/show") %>
+class CreateLesliBellDashboards < ActiveRecord::Migration[6.1]
+    def change
+        create_table_lesli_shared_dashboards_10(:lesli_bell)
+    end
+end
