@@ -4,7 +4,7 @@ module LesliBell
         belongs_to :user, class_name: "::Lesli::User"
         has_many :users #, class_name: "::Lesli::User"
 
-        enum category: {
+        enum :category, {
             :info => 'info',
             :danger => 'danger',
             :warning => 'warning',
