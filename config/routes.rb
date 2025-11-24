@@ -31,7 +31,7 @@ Building a better future, one line of code at a time.
 =end
 
 LesliBell::Engine.routes.draw do  
-    Lesli::Routing.mount_dashboard_for(LesliBell)
+    Lesli::Router.mount_dashboard_for(LesliBell)
     resources :notifications, only: [:index, :new, :update]
     resources :announcements, only: [:index]
 end
