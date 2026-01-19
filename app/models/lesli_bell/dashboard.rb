@@ -32,9 +32,6 @@ Building a better future, one line of code at a time.
 
 module LesliBell
     class Dashboard < Lesli::Shared::Dashboard
-        self.table_name = "lesli_bell_dashboards"
-        belongs_to :account
-
         COMPONENTS = %i[]
     end
 end
