@@ -4,7 +4,7 @@ module LesliBell
 
         # GET /notifications
         def index
-            @notifications = respond_as_pagination(NotificationService.new(current_user, query).index)
+            @notifications = respond_with_pagination(NotificationService.new(current_user, query).index)
         end
 
         # GET /notifications/1
@@ -33,7 +33,7 @@ module LesliBell
         # PATCH/PUT /notifications/1
         def update
             NotificationService.new(current_user).read(params[:id])
-            @notifications = respond_as_pagination(NotificationService.new(current_user, query).index)
+            @notifications = respond_with_pagination(NotificationService.new(current_user, query).index)
             render :index
         end
 
