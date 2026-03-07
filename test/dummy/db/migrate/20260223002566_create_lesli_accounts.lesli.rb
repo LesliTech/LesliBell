@@ -1,8 +1,9 @@
+# This migration comes from lesli (originally 110)
 =begin
 
 Lesli
 
-Copyright (c) 2026, Lesli Technologies, S. A.
+Copyright (c) 2025, Lesli Technologies, S. A.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,14 +31,27 @@ Building a better future, one line of code at a time.
 // · 
 =end
 
-source "https://rubygems.org"
+class CreateLesliAccounts < ActiveRecord::Migration[7.2]
+    def change
+        create_table :lesli_accounts do |t|
 
-# Specify your gem's dependencies in my_engine.gemspec.
-gemspec
+            # account status 
+            t.string :status, null: false
+            
+            # account name
+            t.string :name
 
-gem "puma"
+            # unique email to identify the account
+            t.string :email, null: false
 
-gem "sqlite3"
+            # main region of the company
+            t.string :region, default: "america"
 
-gem "lesli", path: "../../engines/Lesli"
-gem "lesli_testing", path: "../../gems/LesliTesting"
+            # Acts as paranoid
+            t.datetime :deleted_at, index: true
+            t.timestamps
+        end
+
+        add_index(:lesli_accounts, :email, unique: true)
+    end
+end

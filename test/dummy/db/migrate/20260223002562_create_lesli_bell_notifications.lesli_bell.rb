@@ -1,8 +1,9 @@
+# This migration comes from lesli_bell (originally 308100110)
 =begin
 
 Lesli
 
-Copyright (c) 2026, Lesli Technologies, S. A.
+Copyright (c) 2023, Lesli Technologies, S. A.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,14 +31,23 @@ Building a better future, one line of code at a time.
 // · 
 =end
 
-source "https://rubygems.org"
+class CreateLesliBellNotifications < ActiveRecord::Migration[7.0]
 
-# Specify your gem's dependencies in my_engine.gemspec.
-gemspec
+    def change
+        create_table :lesli_bell_notifications do |t|
+            t.string    :subject
+            t.text      :body
+            t.string    :url
+            t.string    :status
+            t.string    :category
+            t.string    :channel
+            t.json      :payload
 
-gem "puma"
+            t.datetime  :deleted_at, index: true
+            t.timestamps
+        end
 
-gem "sqlite3"
-
-gem "lesli", path: "../../engines/Lesli"
-gem "lesli_testing", path: "../../gems/LesliTesting"
+        add_reference(:lesli_bell_notifications, :user, foreign_key: { to_table: :lesli_users })
+        add_reference(:lesli_bell_notifications, :account, foreign_key: { to_table: :lesli_accounts })
+    end
+end

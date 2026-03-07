@@ -1,8 +1,9 @@
+# This migration comes from lesli_bell (originally 308000110)
 =begin
 
 Lesli
 
-Copyright (c) 2026, Lesli Technologies, S. A.
+Copyright (c) 2023, Lesli Technologies, S. A.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,14 +31,8 @@ Building a better future, one line of code at a time.
 // · 
 =end
 
-source "https://rubygems.org"
-
-# Specify your gem's dependencies in my_engine.gemspec.
-gemspec
-
-gem "puma"
-
-gem "sqlite3"
-
-gem "lesli", path: "../../engines/Lesli"
-gem "lesli_testing", path: "../../gems/LesliTesting"
+class CreateLesliBellAccounts < ActiveRecord::Migration[7.0]
+    def change
+        create_table_lesli_shared_account_10(:lesli_bell)
+    end
+end

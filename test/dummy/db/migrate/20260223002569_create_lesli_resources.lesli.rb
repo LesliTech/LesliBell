@@ -1,8 +1,9 @@
+# This migration comes from lesli (originally 410)
 =begin
 
 Lesli
 
-Copyright (c) 2026, Lesli Technologies, S. A.
+Copyright (c) 2025, Lesli Technologies, S. A.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,14 +31,18 @@ Building a better future, one line of code at a time.
 // · 
 =end
 
-source "https://rubygems.org"
+class CreateLesliResources < ActiveRecord::Migration[7.2]
+    def change
+        create_table :lesli_resources do |t|
+            t.string :identifier   # LesliDashboard::Dashboards | index
+            t.string :label        # Dashboard | View dashboard
+            t.string :engine       # LesliDashboard
+            t.string :action       # index, show, create (nil for parents)
+            t.string :route
+            t.datetime :deleted_at, index: true
+            t.timestamps
+        end
 
-# Specify your gem's dependencies in my_engine.gemspec.
-gemspec
-
-gem "puma"
-
-gem "sqlite3"
-
-gem "lesli", path: "../../engines/Lesli"
-gem "lesli_testing", path: "../../gems/LesliTesting"
+        add_reference(:lesli_resources, :parent, foreign_key: { to_table: :lesli_resources })
+    end
+end

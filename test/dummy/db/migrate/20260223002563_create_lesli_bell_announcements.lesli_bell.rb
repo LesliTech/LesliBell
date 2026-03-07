@@ -1,8 +1,9 @@
+# This migration comes from lesli_bell (originally 308110110)
 =begin
 
 Lesli
 
-Copyright (c) 2026, Lesli Technologies, S. A.
+Copyright (c) 2023, Lesli Technologies, S. A.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,14 +31,25 @@ Building a better future, one line of code at a time.
 // · 
 =end
 
-source "https://rubygems.org"
+class CreateLesliBellAnnouncements < ActiveRecord::Migration[6.0]
+    def change
+        create_table :lesli_bell_announcements do |t|
+            t.string    :name
+            t.string    :url
+            t.string    :path
+            t.string    :category
+            t.text      :message
+            t.boolean   :status
+            t.datetime  :start_at
+            t.datetime  :end_at
+            t.boolean   :can_be_closed, :default => true
 
-# Specify your gem's dependencies in my_engine.gemspec.
-gemspec
+            t.datetime  :deleted_at, index: true
+            t.timestamps
+        end
 
-gem "puma"
-
-gem "sqlite3"
-
-gem "lesli", path: "../../engines/Lesli"
-gem "lesli_testing", path: "../../gems/LesliTesting"
+        add_reference(:lesli_bell_announcements, :user, foreign_key: { to_table: :lesli_users })
+        add_reference(:lesli_bell_announcements, :role, foreign_key: { to_table: :lesli_roles })
+        add_reference(:lesli_bell_announcements, :account, foreign_key: { to_table: :lesli_accounts })
+    end
+end
