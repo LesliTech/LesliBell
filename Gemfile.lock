@@ -13,22 +13,6 @@ PATH
       simplecov-console (= 0.9.4)
 
 PATH
-  remote: ../Lesli
-  specs:
-    lesli (5.0.23)
-      L2 (~> 0.6)
-      acts_as_paranoid (~> 0.11.0)
-      devise (~> 5.0)
-      importmap-rails (~> 2.2)
-      kaminari (~> 1.2.2)
-      lesli_assets (~> 1.0.0)
-      lesli_date (~> 1.0.0)
-      lesli_system (~> 1.0.0)
-      lesli_view (~> 1.0.0)
-      rails (~> 8.1)
-      turbo-rails (~> 2.0)
-
-PATH
   remote: .
   specs:
     lesli_bell (1.0.1)
@@ -176,8 +160,20 @@ GEM
       addressable (~> 2.8)
       childprocess (~> 5.0)
       logger (~> 1.6)
+    lesli (5.0.23)
+      L2 (~> 0.6)
+      acts_as_paranoid (~> 0.11.0)
+      devise (~> 5.0)
+      importmap-rails (~> 2.2)
+      kaminari (~> 1.2.2)
+      lesli_assets (~> 1.0)
+      lesli_date (~> 0.1)
+      lesli_system (~> 1.0.0)
+      lesli_view (~> 1.0.0)
+      rails (~> 8.1)
+      turbo-rails (~> 2.0)
     lesli_assets (1.0.7)
-    lesli_date (1.0.0)
+    lesli_date (0.1.0)
     lesli_system (1.0.6)
     lesli_view (1.0.7)
       view_component (~> 4.1)
@@ -354,7 +350,6 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  lesli!
   lesli_bell!
   lesli_testing!
   puma

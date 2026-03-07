@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="LesliBell::VersionTest" filepath="test/lib/lesli_bell/version_test.rb" skipped="0" failures="0" errors="0" tests="2" assertions="2" time="0.0016189999878406525">
+    <testcase name="test_it_has_a_version_number" lineno="6" classname="LesliBell::VersionTest" assertions="1" time="0.0009119999594986439" file="test/lib/lesli_bell/version_test.rb">
+    </testcase>
+    <testcase name="test_it_has_a_build_number" lineno="9" classname="LesliBell::VersionTest" assertions="1" time="0.0007070000283420086" file="test/lib/lesli_bell/version_test.rb">
+    </testcase>
+  </testsuite>
+</testsuites>

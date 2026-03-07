@@ -25,5 +25,18 @@ module Dummy
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+
+    # Load Lesli migrations
+    initializer :load_external_engine_migrations do |app|
+        engine_b_spec = Gem::Specification.find_by_name("lesli")
+        engine_b_migration_path = File.join(engine_b_spec.gem_dir, "db", "migrate")
+
+        if Dir.exist?(engine_b_migration_path)
+            app.config.paths["db/migrate"] << engine_b_migration_path
+        end
+    rescue Gem::LoadError
+        puts "Lesli engine not found; skipping migration autoload."
+    end
   end
 end

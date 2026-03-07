@@ -39,5 +39,4 @@ gem "puma"
 
 gem "sqlite3"
 
-gem "lesli", path: "../../engines/Lesli"
 gem "lesli_testing", path: "../../gems/LesliTesting"
