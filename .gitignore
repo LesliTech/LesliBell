@@ -49,6 +49,7 @@
 .DS_Store
 .ruby-version
 brakeman.html
+coverage
 
 
 # Ignore Lesli gems
