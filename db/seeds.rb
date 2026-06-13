@@ -31,7 +31,7 @@ Building a better future, one line of code at a time.
 =end
 
 
-L2.msg("LesliBell", "Version: #{LesliBell::VERSION}", "Build: #{LesliBell::BUILD}")
+Termline.info("Loading seeds for: LesliBell #{LesliBell::VERSION} (#{LesliBell::BUILD})")
 
 # · load specific environment seeds
 if Rails.env.development? || Lesli.config.demo 
