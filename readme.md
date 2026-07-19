@@ -35,11 +35,15 @@
 
 ---
 
+<br />
+
 ## Introduction
 
 LesliBell is the official notifications and announcements engine for the [Lesli Framework](https://github.com/LesliTech/Lesli).
 
 It provides account-scoped communication tools that integrate with Lesli users, permissions, navigation, and shared application infrastructure.
+
+<br />
 
 ## Features
 
@@ -50,10 +54,14 @@ It provides account-scoped communication tools that integrate with Lesli users, 
 - Announcement visibility controls, including paths and date ranges
 - Pagination and integration with the standard Lesli interface
 
+<br />
+
 ## Try LesliBell
 
 - [Try the online demo](https://demo.lesli.dev/)
 - [Run the Docker demo](https://github.com/LesliTech/lesli-docker-demo)
+
+<br />
 
 ## Quick Start
 
@@ -97,6 +105,8 @@ Start Rails and visit [http://127.0.0.1:3000/bell](http://127.0.0.1:3000/bell):
 bin/rails server
 ```
 
+<br />
+
 ## Development
 
 Clone LesliBell into the host application's `engines` directory:
@@ -130,6 +140,8 @@ cd engines/LesliBell
 bin/rails test
 ```
 
+<br />
+
 ## Documentation
 
 - [Lesli website](https://www.lesli.dev/)
@@ -138,11 +150,15 @@ bin/rails test
 - [Issue tracker](https://github.com/LesliTech/LesliBell/issues)
 - [Source code](https://github.com/LesliTech/LesliBell)
 
+<br />
+
 ## Community
 
 - [X: @LesliTech](https://x.com/LesliTech)
 - [hello@lesli.tech](mailto:hello@lesli.tech)
 - [https://www.lesli.tech](https://www.lesli.tech)
+
+<br />
 
 ## License
 
@@ -164,6 +180,9 @@ along with this program. If not, see [https://www.gnu.org/licenses/](https://www
 The complete license text is available in the [license file](./license).
 
 ---
+
+<br />
+<br />
 
 <div align="center">
     <img width="80" alt="Lesli icon" src="https://cdn.lesli.tech/lesli/brand/app-icon.svg" />
