@@ -22,13 +22,13 @@ Announcements are account-scoped messages intended for broader in-application co
 Create account-scoped records through `AnnouncementService`:
 
 ```ruby
-LesliBell::AnnouncementService.new(current_user).create(
+LesliBell::AnnouncementService.new(current_user).create({
     name: "planned-maintenance",
     message: "The service will be unavailable at 02:00 UTC.",
     category: :warning,
     url: "/status",
     can_be_closed: true
-)
+})
 ```
 
 The service assigns the current user as creator and falls back to `info` when the category is unknown.

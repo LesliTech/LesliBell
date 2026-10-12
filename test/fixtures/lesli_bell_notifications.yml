@@ -1,0 +1,50 @@
+unread_one:
+  account: one
+  user: one
+  subject: "Unread notification"
+  body: "A notification for the first user"
+  category: "info"
+  channel: "web"
+  status: "created"
+  created_at: <%= 3.minutes.ago %>
+  updated_at: <%= 3.minutes.ago %>
+
+sent_one:
+  account: one
+  user: one
+  subject: "Sent notification"
+  category: "success"
+  channel: "web"
+  status: "sent"
+  created_at: <%= 2.minutes.ago %>
+  updated_at: <%= 2.minutes.ago %>
+
+legacy_one:
+  account: one
+  user: one
+  subject: "Legacy notification"
+  category: "warning"
+  channel: "web"
+  status:
+  created_at: <%= 1.minute.ago %>
+  updated_at: <%= 1.minute.ago %>
+
+read_one:
+  account: one
+  user: one
+  subject: "Read notification"
+  category: "info"
+  channel: "web"
+  status: "read"
+  created_at: <%= 4.minutes.ago %>
+  updated_at: <%= 4.minutes.ago %>
+
+other_account:
+  account: two
+  user: two
+  subject: "Another account notification"
+  category: "danger"
+  channel: "web"
+  status: "created"
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

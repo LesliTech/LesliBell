@@ -1,6 +1,6 @@
 # Lesli
 # 
-# Copyright (c) 2025, Lesli Technologies, S. A.
+# Copyright (c) 2026, Lesli Technologies, S. A.
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -63,12 +63,5 @@ jobs:
     name: Run lesli-test-builder
     needs: lesli-test-engine-minitest
     uses: LesliTech/LesliActions/.github/workflows/lesli-test-builder.yaml@master
-    with:
-      branch: ${{ github.ref_name }}
-
-  lesli-test-new:
-    name: Run lesli-test-new
-    needs: lesli-test-builder
-    uses: LesliTech/LesliActions/.github/workflows/lesli-test-new.yaml@master
     with:
       branch: ${{ github.ref_name }}

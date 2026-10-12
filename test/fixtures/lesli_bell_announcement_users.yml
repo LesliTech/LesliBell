@@ -1,0 +1,5 @@
+dismissed_by_user_one:
+  announcement: dismissed_global
+  user: one
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

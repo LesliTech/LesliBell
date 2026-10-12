@@ -179,6 +179,12 @@ cd engines/LesliBell
 bin/rails test
 ```
 
+Run the same suite with the engine coverage profile enabled:
+
+```shell
+COVERAGE=true bin/rails test
+```
+
 <br />
 
 ## Documentation

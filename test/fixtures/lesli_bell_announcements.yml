@@ -1,0 +1,44 @@
+visible_global:
+  account: one
+  user: one
+  name: "Visible announcement"
+  message: "Visible to the first account"
+  category: "info"
+  can_be_closed: true
+  start_at: <%= 2.days.ago %>
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+dismissed_global:
+  account: one
+  user: one
+  name: "Dismissed announcement"
+  message: "Already associated with the first user"
+  category: "success"
+  can_be_closed: true
+  start_at: <%= 1.day.ago %>
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+path_specific:
+  account: one
+  user: one
+  name: "Path announcement"
+  message: "Visible only on a specific path"
+  category: "warning"
+  path: "/reports"
+  can_be_closed: false
+  start_at: <%= Time.current %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+other_account:
+  account: two
+  user: two
+  name: "Other account announcement"
+  message: "Must remain isolated"
+  category: "danger"
+  can_be_closed: true
+  start_at: <%= Time.current %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
