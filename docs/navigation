@@ -1,1 +1,3 @@
-<%= navigation_for_folder("engines", "bell", "about", order:["installation", "translations", "database"]) %>
+<%= navigation_for_folder("engines", "bell", "about", order:["installation", "database", "translations", "frontend"]) %>
+<%= navigation_for_folder("engines", "bell", "notifications", order:["overview"]) %>
+<%= navigation_for_folder("engines", "bell", "announcements", order:["overview"]) %>

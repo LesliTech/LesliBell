@@ -51,7 +51,7 @@ It provides account-scoped communication tools that integrate with Lesli users, 
 - Notification categories for informational, success, warning, and danger messages
 - Delivery-channel metadata for web, push, email, dialog, and mobile notifications
 - Account-scoped announcements
-- Announcement visibility controls, including paths and date ranges
+- Announcement metadata for paths, date ranges, links, and dismissible presentation
 - Pagination and integration with the standard Lesli interface
 
 <br />
@@ -107,6 +107,45 @@ bin/rails server
 
 <br />
 
+## Usage
+
+### Create a notification for the current user
+
+LesliBell creates notifications through an account-scoped service. Pass a signed-in Lesli user to the service:
+
+```ruby
+LesliBell::NotificationService.new(current_user).create_for_me(
+    subject: "Your report is ready",
+    body: "Open the report to review the latest results.",
+    category: :success,
+    channel: :web,
+    url: "/reports/weekly"
+)
+```
+
+### Notify multiple users
+
+Use user IDs that belong to the current account:
+
+```ruby
+user_ids = current_user.account.users.pluck(:id)
+
+LesliBell::NotificationService.new(current_user).create(
+    {
+        subject: "Scheduled maintenance",
+        category: :warning,
+        channel: :web
+    },
+    send_to_user_ids: user_ids
+)
+```
+
+Unknown categories fall back to `info`; unknown channels fall back to `web`. The notification feed displays `created`, `sent`, and legacy records without a status. Updating `/bell/notifications/:id` marks that notification as read for the current user.
+
+See [Notifications](https://www.lesli.dev/engines/bell/notifications/overview/) and [Announcements](https://www.lesli.dev/engines/bell/announcements/overview/) for the data contracts, service behavior, and current route surface.
+
+<br />
+
 ## Development
 
 Clone LesliBell into the host application's `engines` directory:
@@ -145,7 +184,13 @@ bin/rails test
 ## Documentation
 
 - [Lesli website](https://www.lesli.dev/)
-- [Documentation](https://www.lesli.dev/engines/bell)
+- [LesliBell documentation](https://www.lesli.dev/engines/bell/)
+- [Installation](https://www.lesli.dev/engines/bell/about/installation/)
+- [Notifications](https://www.lesli.dev/engines/bell/notifications/overview/)
+- [Announcements](https://www.lesli.dev/engines/bell/announcements/overview/)
+- [Database](https://www.lesli.dev/engines/bell/about/database/)
+- [Translations](https://www.lesli.dev/engines/bell/about/translations/)
+- [Frontend](https://www.lesli.dev/engines/bell/about/frontend/)
 - [Release notes](https://github.com/LesliTech/LesliBell/releases)
 - [Issue tracker](https://github.com/LesliTech/LesliBell/issues)
 - [Source code](https://github.com/LesliTech/LesliBell)

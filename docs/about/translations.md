@@ -20,7 +20,7 @@ Use the complete path:
 <%= I18n.t("lesli_bell.notifications.title") %>
 ```
 
-The locale files are currently empty. A translation change must therefore include both the new keys and replacement of the corresponding hard-coded interface labels. Keep notification content supplied by callers separate from interface labels owned by the engine.
+The locale files are currently empty, and the existing navigation and notification views still contain hard-coded English labels. A translation change must therefore include both the new keys and replacement of the corresponding interface labels. Keep notification and announcement content supplied by callers separate from interface labels owned by the engine.
 
 When LesliBabel is installed, scan and import local values with:
 
@@ -30,3 +30,5 @@ bin/rails lesli_babel:import
 ```
 
 Add the same key to every supported locale and preserve interpolation tokens. The engine locale files remain the version-controlled source of truth.
+
+See [Frontend](/engines/bell/about/frontend) for the view and asset workflow that applies when replacing hard-coded labels.
