@@ -1,0 +1,8 @@
+/* Tailwind utilities used by LesliBell views. */
+@layer theme, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@reference "../../../../gems/LesliAssets/source/tailwind/settings/theme.css";
+
+@source "../../app/views/lesli_bell/notifications/index.html.erb";

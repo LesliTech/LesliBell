@@ -30,24 +30,6 @@ Building a better future, one line of code at a time.
 // · 
 %>
 
-<style>
-.notification.is-danger.is-light {
-border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l))
-}
-
-.notification.is-warning.is-light {
-border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l));
-}
-
-.notification.is-success.is-light {
-border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l));
-}
-
-.notification.is-info.is-light {
-border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), var(--bulma-notification-color-l));
-}
-</style>
-
 <%= render(LesliView::Layout::Container.new("lesli-bell-notifications-index")) do %>
 
     <%= render(LesliView::Components::Header.new("Notifications")) do %>
@@ -56,41 +38,75 @@ border: 2px solid hsl(var(--bulma-notification-h), var(--bulma-notification-s), 
 
     <%= render(LesliView::Components::Toolbar.new) %>
 
-    <% if @notifications.size == 0 %>
+    <% if @notifications[:records].empty? %>
         <%= render(LesliView::Elements::Empty.new) %>
     <% else %>
-        <section class="notifications">
+        <section class="space-y-2" aria-label="Notifications">
             <% @notifications[:records].each do |notification| %>
-                <div class="notification is-<%= notification[:category] %> is-light mb-2">
+                <%
+                    notification_classes, close_button_classes = case notification[:category].to_s
+                    when "danger"
+                        [
+                            "border-danger-300 bg-danger-50 text-danger-900",
+                            "text-danger-700 hover:bg-danger-100 focus-visible:ring-danger-500/40"
+                        ]
+                    when "warning"
+                        [
+                            "border-warning-300 bg-warning-50 text-warning-900",
+                            "text-warning-700 hover:bg-warning-100 focus-visible:ring-warning-500/40"
+                        ]
+                    when "success"
+                        [
+                            "border-success-300 bg-success-50 text-success-900",
+                            "text-success-700 hover:bg-success-100 focus-visible:ring-success-500/40"
+                        ]
+                    when "info"
+                        [
+                            "border-info-300 bg-info-50 text-info-900",
+                            "text-info-700 hover:bg-info-100 focus-visible:ring-info-500/40"
+                        ]
+                    else
+                        [
+                            "border-neutral-300 bg-neutral-50 text-neutral-900",
+                            "text-neutral-700 hover:bg-neutral-100 focus-visible:ring-neutral-500/40"
+                        ]
+                    end
+                %>
+
+                <article class="relative rounded-lg border-2 px-4 py-3 pr-14 shadow-sm <%= notification_classes %>">
 
                     <!-- Close button -->
                     <%= button_to(
-                        notification_path(notification[:id]), 
-                        method: :put, 
-                        class: "button is-small is-#{notification[:category]}",
-                        form: { class: "delete" }) do %>
-                        <span class="icon">
-                            <span class="material-symbols">close</span>
-                        </span>
+                        notification_path(notification[:id]),
+                        method: :put,
+                        class: "inline-flex size-8 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 #{close_button_classes}",
+                        form: { class: "absolute right-3 top-3" },
+                        aria: { label: "Mark notification as read" }) do %>
+                        <span class="material-symbols text-xl" aria-hidden="true">close</span>
                     <% end %>
 
                     <!-- Notification subject -->
-                    <strong><%= notification[:subject] %></strong>
+                    <strong class="block text-sm font-semibold"><%= notification[:subject] %></strong>
 
                     <!-- Notification body (optional) -->
                     <% if notification[:body].present? %>
-                        <p><%= notification[:body] %></p>
+                        <p class="mt-1 text-sm leading-6"><%= notification[:body] %></p>
                     <% end %>
 
                     <!-- Notification URL (optional) -->
                     <% if notification[:url].present? %>
-                        <p>
-                            <a href="<%= notification[:url] %>" target="_blank" rel="noopener noreferrer">
+                        <p class="mt-2 text-sm">
+                            <a
+                                class="break-all font-medium underline decoration-current/40 underline-offset-2 hover:decoration-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/40"
+                                href="<%= notification[:url] %>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 <%= notification[:url] %>
                             </a>
                         </p>
                     <% end %>
-                </div>
+                </article>
             <% end %>
         </section>
     <% end %>
