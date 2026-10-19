@@ -32,6 +32,8 @@ Building a better future, one line of code at a time.
 
 LesliBell::Engine.routes.draw do  
     Lesli::Router.mount_lesli_engine_routes(self)
-    resources :notifications, only: [:index, :new, :update]
+    resources :notifications, only: [:index, :new, :update] do
+        put :mark_all_as_read, on: :collection
+    end
     resources :announcements, only: [:index]
 end

@@ -78,5 +78,13 @@ module LesliBell
             noti.update(:status => :read)
             self
         end
+
+        def read_all
+            current_user.account.bell.notifications
+            .where(user: current_user, status: ["created", "sent", nil])
+            .update_all(status: "read", updated_at: Time.current)
+
+            self
+        end
     end
 end

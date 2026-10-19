@@ -70,6 +70,17 @@ module LesliBell
             assert_equal "created", other_notification.reload.status
         end
 
+        test "marks all unread notifications only for the current user" do
+            service = NotificationService.new(@user)
+
+            assert_same service, service.read_all
+
+            assert_equal "read", lesli_bell_notifications(:unread_one).reload.status
+            assert_equal "read", lesli_bell_notifications(:sent_one).reload.status
+            assert_equal "read", lesli_bell_notifications(:legacy_one).reload.status
+            assert_equal "created", lesli_bell_notifications(:other_account).reload.status
+        end
+
         test "can return all notifications in the current account" do
             records = NotificationService.new(@user, @query).index(false)
 

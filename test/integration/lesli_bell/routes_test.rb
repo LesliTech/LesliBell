@@ -27,6 +27,13 @@ module LesliBell
             )
         end
 
+        test "routes marking all notifications as read" do
+            assert_recognizes(
+                { controller: "lesli_bell/notifications", action: "mark_all_as_read" },
+                { method: :put, path: "/notifications/mark_all_as_read" }
+            )
+        end
+
         test "routes the announcement entry point" do
             assert_recognizes(
                 { controller: "lesli_bell/announcements", action: "index" },

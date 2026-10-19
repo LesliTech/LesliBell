@@ -2,7 +2,7 @@
 
 Lesli
 
-Copyright (c) 2023, Lesli Technologies, S. A.
+Copyright (c) 2026, Lesli Technologies, S. A.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,82 +32,175 @@ Building a better future, one line of code at a time.
 
 <%= render(LesliView::Layout::Container.new("lesli-bell-notifications-index")) do %>
 
-    <%= render(LesliView::Components::Header.new("Notifications")) do %>
-        <%= render(LesliView::Elements::Button.new("mark all as read", icon:"check", solid: true)) %>
+    <%= render(LesliView::Components::Header.new(
+        "Notifications",
+        "Review important updates and mark them as read when you are done."
+    )) do %>
+    <span class="inline-flex w-fit items-center gap-2 rounded-full bg-sky-50 px-3 py-1.5 text-sm font-medium text-sky-700 ring-1 ring-inset ring-sky-200">
+                    <span class="material-symbols text-lg leading-none" aria-hidden="true">notifications</span>
+                    <%= pluralize(@notifications.dig(:pagination, :total) || @notifications[:records].size, "unread notification") %>
+                </span>
+        <%= render(LesliView::Elements::Button.new(
+            "Mark all as read",
+            url: mark_all_as_read_notifications_path,
+            icon: "done_all",
+            method: :put,
+            disabled: @notifications[:records].empty?,
+            data: { turbo_submits_with: "Marking all as read..." }
+        )) %>
     <% end %>
 
-    <%= render(LesliView::Components::Toolbar.new) %>
-
     <% if @notifications[:records].empty? %>
-        <%= render(LesliView::Elements::Empty.new) %>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <%= render(LesliView::Elements::Empty.new(
+                text: "You're all caught up",
+                description: "New unread notifications will appear here."
+            )) %>
+        </div>
     <% else %>
-        <section class="space-y-2" aria-label="Notifications">
-            <% @notifications[:records].each do |notification| %>
-                <%
-                    notification_classes, close_button_classes = case notification[:category].to_s
-                    when "danger"
-                        [
-                            "border-danger-300 bg-danger-50 text-danger-900",
-                            "text-danger-700 hover:bg-danger-100 focus-visible:ring-danger-500/40"
-                        ]
-                    when "warning"
-                        [
-                            "border-warning-300 bg-warning-50 text-warning-900",
-                            "text-warning-700 hover:bg-warning-100 focus-visible:ring-warning-500/40"
-                        ]
-                    when "success"
-                        [
-                            "border-success-300 bg-success-50 text-success-900",
-                            "text-success-700 hover:bg-success-100 focus-visible:ring-success-500/40"
-                        ]
-                    when "info"
-                        [
-                            "border-info-300 bg-info-50 text-info-900",
-                            "text-info-700 hover:bg-info-100 focus-visible:ring-info-500/40"
-                        ]
-                    else
-                        [
-                            "border-neutral-300 bg-neutral-50 text-neutral-900",
-                            "text-neutral-700 hover:bg-neutral-100 focus-visible:ring-neutral-500/40"
-                        ]
-                    end
-                %>
+        <%
+            notification_groups = @notifications[:records].group_by do |notification|
+                notification_date = notification[:created_at]&.to_date
 
-                <article class="relative rounded-lg border-2 px-4 py-3 pr-14 shadow-sm <%= notification_classes %>">
+                case notification_date
+                when Date.current
+                    "Today"
+                when Date.current - 1.day
+                    "Yesterday"
+                when nil
+                    "Earlier"
+                else
+                    I18n.l(notification_date, format: :long)
+                end
+            end
+        %>
 
-                    <!-- Close button -->
-                    <%= button_to(
-                        notification_path(notification[:id]),
-                        method: :put,
-                        class: "inline-flex size-8 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 #{close_button_classes}",
-                        form: { class: "absolute right-3 top-3" },
-                        aria: { label: "Mark notification as read" }) do %>
-                        <span class="material-symbols text-xl" aria-hidden="true">close</span>
-                    <% end %>
+        <section aria-labelledby="unread-notifications-title">
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <% notification_groups.each_with_index do |(group_label, notifications), group_index| %>
+                    <section
+                        class="<%= "border-t border-slate-200" if group_index.positive? %>"
+                        aria-labelledby="notification-group-<%= group_index %>">
+                        <h3
+                            id="notification-group-<%= group_index %>"
+                            class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-5">
+                            <%= group_label %>
+                        </h3>
 
-                    <!-- Notification subject -->
-                    <strong class="block text-sm font-semibold"><%= notification[:subject] %></strong>
+                        <ol class="divide-y divide-slate-200" aria-label="<%= group_label %> notifications">
+                            <% notifications.each do |notification| %>
+                                <%
+                                    category_label, category_icon, accent_classes, icon_classes, badge_classes = case notification[:category].to_s
+                                    when "danger"
+                                        [
+                                            "Attention",
+                                            "error",
+                                            "bg-danger-500",
+                                            "bg-danger-50 text-danger-700",
+                                            "bg-danger-50 text-danger-700 ring-danger-200"
+                                        ]
+                                    when "warning"
+                                        [
+                                            "Warning",
+                                            "warning",
+                                            "bg-warning-500",
+                                            "bg-warning-50 text-warning-700",
+                                            "bg-warning-50 text-warning-700 ring-warning-200"
+                                        ]
+                                    when "success"
+                                        [
+                                            nil,
+                                            "check_circle",
+                                            "bg-success-500",
+                                            "bg-success-50 text-success-700",
+                                            nil
+                                        ]
+                                    when "info"
+                                        [
+                                            nil,
+                                            "info",
+                                            "bg-info-500",
+                                            "bg-info-50 text-info-700",
+                                            nil
+                                        ]
+                                    else
+                                        [
+                                            nil,
+                                            "notifications",
+                                            "bg-neutral-400",
+                                            "bg-neutral-50 text-neutral-700",
+                                            nil
+                                        ]
+                                    end
+                                %>
 
-                    <!-- Notification body (optional) -->
-                    <% if notification[:body].present? %>
-                        <p class="mt-1 text-sm leading-6"><%= notification[:body] %></p>
-                    <% end %>
+                                <li>
+                                    <article class="group relative bg-white px-4 py-3.5 pr-14 transition-colors hover:bg-slate-50 sm:px-5 sm:py-4 sm:pr-16">
+                                        <span class="absolute inset-y-0 left-0 w-1 <%= accent_classes %>" aria-hidden="true"></span>
 
-                    <!-- Notification URL (optional) -->
-                    <% if notification[:url].present? %>
-                        <p class="mt-2 text-sm">
-                            <a
-                                class="break-all font-medium underline decoration-current/40 underline-offset-2 hover:decoration-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current/40"
-                                href="<%= notification[:url] %>"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <%= notification[:url] %>
-                            </a>
-                        </p>
-                    <% end %>
-                </article>
-            <% end %>
+                                        <%= button_to(
+                                            notification_path(notification[:id]),
+                                            method: :put,
+                                            class: "inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-transparent bg-slate-100 text-slate-500 transition-colors hover:bg-sky-100 hover:text-sky-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30 focus-visible:ring-offset-2",
+                                            form: { class: "absolute right-4 top-3.5 inline-flex sm:right-5 sm:top-4" },
+                                            data: { turbo_submits_with: "…" },
+                                            title: "Mark as read",
+                                            aria: { label: "Mark #{notification[:subject]} as read" }
+                                        ) do %>
+                                            <span class="material-symbols text-lg leading-none" aria-hidden="true">done</span>
+                                        <% end %>
+
+                                        <div class="flex items-start gap-3">
+                                            <div class="flex size-9 shrink-0 items-center justify-center rounded-lg <%= icon_classes %>">
+                                                <span class="material-symbols text-xl leading-none" aria-hidden="true"><%= category_icon %></span>
+                                            </div>
+
+                                            <div class="min-w-0 flex-1">
+                                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                                    <h4 class="text-sm font-semibold leading-5 text-slate-800 sm:text-base">
+                                                        <% if notification[:url].present? %>
+                                                            <a
+                                                                class="inline-flex items-center gap-1 rounded-md transition-colors hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/30 focus-visible:ring-offset-2"
+                                                                href="<%= notification[:url] %>"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer">
+                                                                <%= notification[:subject] %>
+                                                                <span class="material-symbols text-base leading-none text-slate-400" aria-hidden="true">open_in_new</span>
+                                                            </a>
+                                                        <% else %>
+                                                            <%= notification[:subject] %>
+                                                        <% end %>
+                                                    </h4>
+
+                                                    <% if category_label.present? %>
+                                                        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset <%= badge_classes %>">
+                                                            <%= category_label %>
+                                                        </span>
+                                                    <% end %>
+                                                </div>
+
+                                                <% if notification[:body].present? %>
+                                                    <p class="mt-1 text-sm leading-5 text-slate-600 <%= "line-clamp-2" if notification[:url].present? %>">
+                                                        <%= notification[:body] %>
+                                                    </p>
+                                                <% end %>
+
+                                                <% if notification[:created_at].present? %>
+                                                    <time
+                                                        class="mt-1.5 block text-xs text-slate-400"
+                                                        datetime="<%= notification[:created_at].iso8601 %>">
+                                                        <%= time_ago_in_words(notification[:created_at]) %> ago
+                                                    </time>
+                                                <% end %>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </li>
+                            <% end %>
+                        </ol>
+                    </section>
+                <% end %>
+            </div>
         </section>
     <% end %>
 <% end %>

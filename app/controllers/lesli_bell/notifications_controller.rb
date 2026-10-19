@@ -37,6 +37,12 @@ module LesliBell
             render :index
         end
 
+        # PUT /notifications/mark_all_as_read
+        def mark_all_as_read
+            NotificationService.new(current_user).read_all
+            redirect_to notifications_path, status: :see_other
+        end
+
         # DELETE /notifications/1
         def destroy
         @notification.destroy
