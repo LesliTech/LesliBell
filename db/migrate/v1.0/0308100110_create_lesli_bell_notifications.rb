@@ -47,6 +47,11 @@ class CreateLesliBellNotifications < ActiveRecord::Migration[7.0]
         end
 
         add_reference(:lesli_bell_notifications, :user, foreign_key: { to_table: :lesli_users })
-        add_reference(:lesli_bell_notifications, :account, foreign_key: { to_table: :lesli_accounts })
+        add_reference(
+            :lesli_bell_notifications,
+            :account,
+            null: false,
+            foreign_key: { to_table: :lesli_bell_accounts }
+        )
     end
 end

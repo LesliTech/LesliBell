@@ -33,7 +33,7 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
     t.string "name"
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_lesli_bell_accounts_on_account_id"
+    t.index ["account_id"], name: "index_lesli_bell_accounts_on_account_id", unique: true
     t.index ["deleted_at"], name: "index_lesli_bell_accounts_on_deleted_at"
   end
 
@@ -49,7 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
   end
 
   create_table "lesli_bell_announcements", force: :cascade do |t|
-    t.integer "account_id"
+    t.integer "account_id", null: false
     t.boolean "can_be_closed", default: true
     t.string "category"
     t.datetime "created_at", null: false
@@ -71,7 +71,7 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
   end
 
   create_table "lesli_bell_notifications", force: :cascade do |t|
-    t.integer "account_id"
+    t.integer "account_id", null: false
     t.text "body"
     t.string "category"
     t.string "channel"
@@ -169,10 +169,10 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
   add_foreign_key "lesli_bell_accounts", "lesli_accounts", column: "account_id"
   add_foreign_key "lesli_bell_announcement_users", "lesli_bell_announcements", column: "announcement_id"
   add_foreign_key "lesli_bell_announcement_users", "lesli_users", column: "user_id"
-  add_foreign_key "lesli_bell_announcements", "lesli_accounts", column: "account_id"
+  add_foreign_key "lesli_bell_announcements", "lesli_bell_accounts", column: "account_id"
   add_foreign_key "lesli_bell_announcements", "lesli_roles", column: "role_id"
   add_foreign_key "lesli_bell_announcements", "lesli_users", column: "user_id"
-  add_foreign_key "lesli_bell_notifications", "lesli_accounts", column: "account_id"
+  add_foreign_key "lesli_bell_notifications", "lesli_bell_accounts", column: "account_id"
   add_foreign_key "lesli_bell_notifications", "lesli_users", column: "user_id"
   add_foreign_key "lesli_resources", "lesli_resources", column: "parent_id"
   add_foreign_key "lesli_roles", "lesli_accounts", column: "account_id"
