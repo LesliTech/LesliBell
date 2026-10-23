@@ -8,10 +8,10 @@
 <br />
 
 <div align="center">
-    <a target="_blank" href="https://github.com/LesliTech/LesliBell/actions/workflows/lesli-ci-tests.yaml">
+    <a target="_blank" href="https://github.com/LesliTech/LesliBell/actions/workflows/lesli-ci-engine.yaml">
         <img
             alt="LesliBell test status"
-            src="https://img.shields.io/github/actions/workflow/status/LesliTech/LesliBell/lesli-ci-tests.yaml?branch=master&style=for-the-badge&logo=github&label=tests">
+            src="https://img.shields.io/github/actions/workflow/status/LesliTech/LesliBell/lesli-ci-engine.yaml?branch=master&style=for-the-badge&logo=github&label=tests">
     </a>
     <a target="_blank" href="https://rubygems.org/gems/lesli_bell">
         <img alt="Gem Version" src="https://img.shields.io/gem/v/lesli_bell?style=for-the-badge&logo=ruby">
