@@ -7,9 +7,9 @@ LesliBell renders inside Lesli's authenticated application shell. The notificati
 The editable entrypoint and generated Rails asset are separate:
 
 ```text
-source/tailwind/application.tailwind.css
+source/tailwind/application.css
         ↓ build
-app/assets/stylesheets/lesli_bell/application.tailwind.css
+app/assets/stylesheets/lesli_bell/application.css
 ```
 
 Edit the file under `source/tailwind`; do not edit the compiled stylesheet by hand. Commit the generated asset whenever the source or a scanned template changes.
@@ -39,7 +39,7 @@ Use the watcher while editing templates or Tailwind sources:
 make watch.tailwind
 ```
 
-The builder discovers LesliBell's entrypoint and writes the compiled output to `app/assets/stylesheets/lesli_bell/application.tailwind.css`.
+The builder discovers LesliBell's entrypoint and writes the compiled output to `app/assets/stylesheets/lesli_bell/application.css`.
 
 ## View Conventions
 
