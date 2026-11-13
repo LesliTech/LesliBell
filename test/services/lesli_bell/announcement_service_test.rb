@@ -26,18 +26,35 @@ module LesliBell
             assert_equal "success", announcement.category
         end
 
-        test "falls back to info for an unsupported category" do
-            service = AnnouncementService.new(@user).create({
-                name: "Fallback",
-                message: "Unknown category",
-                category: :unknown
-            })
+        test "direct service calls preserve ownership and return their CRUD result" do
+            foreign = lesli_users(:two)
+            service = AnnouncementService.new(@user).create(
+                name: "Scoped", message: "Message", account_id: foreign.account.bell.id, user_id: foreign.id
+            )
+            assert service.successful?
+            record = service.result
+            assert_equal @account, record.account
+            assert_equal @user, record.user
+            service = AnnouncementService.new(@user).show(record.id)
+            service.update(name: "Changed", account_id: foreign.account.bell.id, user_id: foreign.id)
+            assert service.successful?
+            assert_equal @account, record.reload.account
+            assert_equal @user, record.user
+            service.destroy
+            assert service.result.deleted_at.present?
+            assert_raises(ActiveRecord::RecordNotFound) { AnnouncementService.new(@user).show(record.id) }
+        end
 
-            assert_equal "info", service.result.category
+        test "invalid category returns the submitted record and validation errors" do
+            service = AnnouncementService.new(@user).create(name: "Invalid", message: "Message", category: "unknown")
+            assert_not service.successful?
+            assert_equal "unknown", service.result.category
+            assert service.result.errors[:category].present?
+            assert_not service.result.persisted?
         end
 
         test "indexes announcements only from the current account" do
-            records = AnnouncementService.new(@user, @query).index
+            records = AnnouncementService.new(@user, @query).index.result
 
             assert_includes records, lesli_bell_announcements(:visible_global)
             assert_includes records, lesli_bell_announcements(:path_specific)
@@ -97,7 +114,7 @@ module LesliBell
             records = AnnouncementService.new(@user).list(path: "/reports")
             refute_includes records, inactive
             refute_includes records, deleted
-            assert_includes AnnouncementService.new(@user, @query).index, inactive
+            assert_includes AnnouncementService.new(@user, @query).index.result, inactive
         end
 
         test "banner query includes destinations and ignores administrative pagination" do
@@ -105,7 +122,7 @@ module LesliBell
             announcement.update!(url: "/help")
             query = { pagination: { page: 999, perPage: 1 } }
             service = AnnouncementService.new(@user, query)
-            assert_empty service.index
+            assert_empty service.index.result
             assert_equal "/help", service.list.find(announcement.id).url
             assert service.list.find(announcement.id).active?
         end

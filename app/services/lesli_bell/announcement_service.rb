@@ -1,5 +1,6 @@
 module LesliBell
     class AnnouncementService < Lesli::ApplicationLesliService
+        EDITABLE_ATTRIBUTES = %i[name message category active start_at end_at path url can_be_closed].freeze
 
         # Banner selection is independent of administrative pagination.
         # Compare both date boundaries against the same instant.
@@ -16,29 +17,35 @@ module LesliBell
         end
 
         def index
-            current_user.account.bell.announcements
-                .order(:created_at, :id)
-                .page(query[:pagination][:page])
-                .per(query[:pagination][:perPage])
+            pagination = query.fetch(:pagination, {})
+            response(announcements.order(:created_at, :id)
+                .page(pagination[:page]).per(pagination[:perPage]))
         end
 
-        def create(announcements_params)
+        def show(id)
+            response(announcements.find(id))
+        end
 
-            unless Announcement.categories.key?(announcements_params[:category])
-                announcements_params[:category] = Announcement.new.category
-            end
+        alias_method :find, :show
 
-            announcements_params[:user_id] = current_user.id
+        def create(attributes)
+            announcement = announcements.build(editable_attributes(attributes))
+            announcement.user = current_user
+            persist(announcement)
+        end
 
-            announcement = current_user.account.bell.announcements.create!(announcements_params)
+        def update(attributes)
+            resource.assign_attributes(editable_attributes(attributes))
+            persist(resource)
+        end
 
-            self.resource = announcement
-
-            self
-        end 
+        def destroy
+            resource.destroy!
+            response(resource)
+        end
 
         def dismiss(id)
-            announcement = current_user.account.bell.announcements.find(id)
+            announcement = announcements.find(id)
             unless announcement.can_be_closed?
                 announcement.errors.add(:base, I18n.t("lesli_bell.announcements.cannot_dismiss"))
                 raise ActiveRecord::RecordInvalid.new(announcement)
@@ -48,6 +55,22 @@ module LesliBell
             # preserving the original created_at even when requests overlap.
             self.resource = announcement.dismissals.create_or_find_by!(user: current_user)
             self
+        end
+
+        private
+
+        def announcements
+            current_user.account.bell.announcements
+        end
+
+        # Ownership comes from the authenticated context, including direct service calls.
+        def editable_attributes(attributes)
+            attributes.to_h.symbolize_keys.slice(*EDITABLE_ATTRIBUTES)
+        end
+
+        def persist(announcement)
+            error(announcement.errors.full_messages.to_sentence) unless announcement.save
+            response(announcement)
         end
     end
 end

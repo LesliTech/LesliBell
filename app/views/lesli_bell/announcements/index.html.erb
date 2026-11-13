@@ -1,33 +1,25 @@
-<%#
-
-Lesli
-
-Copyright (c) 2023, Lesli Technologies, S. A.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see http://www.gnu.org/licenses/.
-
-Lesli · Ruby on Rails SaaS Development Framework.
-
-Made with ♥ by LesliTech
-Building a better future, one line of code at a time.
-
-@contact  hello@lesli.tech
-@website  https://www.lesli.tech
-@license  GPLv3 http://www.gnu.org/licenses/gpl-3.0.en.html
-
-// · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
-// · 
-%>
-
-<router-view></router-view>
+<%= render LesliView::Layout::Container.new("announcements-index") do %>
+    <%= render LesliView::Components::Header.new(t("lesli_bell.announcements.title")) do %>
+        <%= render LesliView::Elements::Button.new(t("lesli_bell.announcements.new"), url: new_announcement_path, icon: "add") %>
+    <% end %>
+    <%= render LesliView::Elements::Table.new(
+        columns: %w[name category publication start_at end_at].map { |field| { field: field, label: t("lesli_bell.announcements.#{field}") } },
+        records: @announcements.map { |announcement| {
+            id: announcement.id, name: announcement.name,
+            category: t("lesli_bell.announcements.categories.#{announcement.category}"),
+            publication: t("lesli_bell.announcements.#{announcement.active? ? 'active' : 'inactive'}"),
+            start_at: announcement_datetime(announcement.start_at),
+            end_at: announcement_datetime(announcement.end_at)
+        } },
+        link: ->(announcement) { announcement_path(announcement.fetch(:id)) },
+        empty: t("lesli_bell.announcements.empty")
+    ) %>
+    <nav class="mt-6 flex gap-3" aria-label="<%= t('lesli_bell.announcements.pagination') %>">
+        <% if @announcements.prev_page %>
+            <%= render LesliView::Elements::Button.new(t("lesli_bell.announcements.previous"), url: announcements_path(page: @announcements.prev_page, perPage: @announcements.limit_value), solid: false) %>
+        <% end %>
+        <% if @announcements.next_page %>
+            <%= render LesliView::Elements::Button.new(t("lesli_bell.announcements.next"), url: announcements_path(page: @announcements.next_page, perPage: @announcements.limit_value), solid: false) %>
+        <% end %>
+    </nav>
+<% end %>

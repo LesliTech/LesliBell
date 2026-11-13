@@ -40,5 +40,16 @@ module LesliBell
                 "/announcements"
             )
         end
+
+        test "routes announcement administration and dismissal" do
+            { get: "show", patch: "update", delete: "destroy" }.each do |method, action|
+                assert_recognizes({ controller: "lesli_bell/announcements", action: action, id: "42" },
+                    { method: method, path: "/announcements/42" })
+            end
+            assert_recognizes({ controller: "lesli_bell/announcements", action: "create" },
+                { method: :post, path: "/announcements" })
+            assert_recognizes({ controller: "lesli_bell/announcements", action: "dismiss", id: "42" },
+                { method: :post, path: "/announcements/42/dismiss" })
+        end
     end
 end

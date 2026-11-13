@@ -14,10 +14,11 @@ app/assets/stylesheets/lesli_bell/application.css
 
 Edit the file under `source/tailwind`; do not edit the compiled stylesheet by hand. Commit the generated asset whenever the source or a scanned template changes.
 
-LesliBell's entrypoint disables automatic source discovery and scans the notification view explicitly:
+LesliBell's entrypoint disables automatic source discovery and scans notification and announcement views explicitly:
 
 ```css
 @source "../../app/views/lesli_bell/notifications/index.html.erb";
+@source "../../app/views/lesli_bell/announcements";
 ```
 
 Add an `@source` rule when another template or helper starts using Tailwind utilities. The entrypoint references LesliAssets' Tailwind theme so semantic utilities such as `bg-info-50`, `border-warning-300`, and `text-danger-900` compile against Lesli's design tokens.

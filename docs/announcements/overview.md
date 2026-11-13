@@ -31,7 +31,7 @@ LesliBell::AnnouncementService.new(current_user).create({
 })
 ```
 
-The service assigns the current user as author and falls back to `info` when the category is unknown. Direct model writes validate the supported categories. `active` and `can_be_closed` accept `true` or `false`, never `NULL`. Defaults are defined in the model: `category` uses the enum default, and the boolean flags use `attribute` defaults. The database only enforces non-null values. Fixtures and direct SQL inserts must provide these values explicitly. Changing a model default affects new records, not existing announcements.
+The service assigns the current account and user as owner and author. Omitting the category uses the model default; an unsupported category returns a validation error instead of silently replacing it. `active` and `can_be_closed` accept `true` or `false`, never `NULL`. Defaults are defined in the model: `category` uses the enum default, and the boolean flags use `attribute` defaults. The database only enforces non-null values. Fixtures and direct SQL inserts must provide these values explicitly. Changing a model default affects new records, not existing announcements.
 
 Announcements have no recipient or role segmentation in this version. The service no longer accepts `send_to_role_ids`, `send_to_user_ids`, or `send_to_user_emails`. The author is not the audience.
 
@@ -42,7 +42,7 @@ The original migration now uses `active` instead of `status`, removes `role_id`,
 `AnnouncementService#index` returns all announcements in the current LesliBell account, paginated for administrative use:
 
 ```ruby
-announcements = LesliBell::AnnouncementService.new(current_user, query).index
+announcements = LesliBell::AnnouncementService.new(current_user, query).index.result
 ```
 
 `AnnouncementService#list(path: nil)` returns visible banners without pagination or a required `query` argument:
@@ -65,13 +65,43 @@ Both date checks use the same instant. At the exact start an announcement is vis
 
 The administrative `index` remains paginated, lists inactive and out-of-window records as well, and uses the same stable creation order. Visibility is evaluated when the query runs; this does not schedule delivery or automatically remove a banner already displayed in an open browser tab.
 
-## Current Web Surface
+## Administration
 
-`GET /bell/announcements` is the only announcement-specific route currently exposed by `config/routes.rb`. The page is an application entry point; create, update, delete, list JSON, and dismissal routes are not part of the current public route contract.
+The management interface at `/bell/announcements` uses LesliView tables, forms, headers, and buttons. Rows link to the announcement detail. The list includes category, publication flag, and start/end dates; it remains paginated. An active flag does not imply current visibility: the date window, page, and individual dismissal also apply.
 
-Use the service layer from trusted application code when creating or querying announcements. Add explicit authorization and account checks before exposing new administrative routes.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/bell/announcements` | List announcements |
+| GET | `/bell/announcements/new` | Creation form |
+| POST | `/bell/announcements` | Create |
+| GET | `/bell/announcements/:id` | Detail |
+| GET | `/bell/announcements/:id/edit` | Edit form |
+| PATCH/PUT | `/bell/announcements/:id` | Update |
+| DELETE | `/bell/announcements/:id` | Soft-delete |
+| POST | `/bell/announcements/:id/dismiss` | Dismiss for the authenticated user |
 
-See [Database](/engines/bell/about/database) for relationships and stored fields and [Translations](/engines/bell/about/translations) for user-facing labels.
+Forms accept `name`, `message`, `category`, `active`, `start_at`, `end_at`, `path`, `url`, and `can_be_closed` inside `announcement`. Dates use the application's configured time zone. Neither controller parameters nor direct service calls can assign or change ownership. All member lookups are scoped to the current account; missing, deleted, and foreign records return 404.
+
+Core's existing authentication and authorization callbacks protect these actions when LesliShield is installed. Refresh resource/action configuration with `bin/rails lesli:db:prepare` and grant the required actions to the appropriate roles, including `dismiss` for users who may close banners.
+
+HTML and Turbo create/update/delete requests redirect with 303 on success. JSON creation returns 201; other successful operations return 200. Invalid creation or update returns 422 with `{ errors: ... }` for JSON, the form for HTML, or a replacement of `announcement-form` for Turbo. Submitted values are retained. Message content is rendered as escaped plain text.
+
+### Service Contract
+
+CRUD methods return the service: inspect `result`, `successful?`, and `errors`. `index` returns a paginated collection in `result`; `show(id)` (also available as `find`) loads the record used by `update` or `destroy`.
+
+```ruby
+service = LesliBell::AnnouncementService.new(current_user).show(announcement_id)
+service.update(name: "Maintenance", active: false)
+
+if service.successful?
+    announcement = service.result
+else
+    errors = service.result.errors
+end
+```
+
+`create` and `update` return invalid records and their errors rather than raising for validation failures. `destroy` soft-deletes the loaded record and preserves its dismissals. The banner query `list(path:)` continues to return a relation directly.
 
 ## Individual Dismissal
 
@@ -87,6 +117,6 @@ dismissal.created_at # When that reader first dismissed the announcement
 
 The operation finds the announcement within the current account and raises `ActiveRecord::RecordNotFound` for missing, deleted, or inaccessible IDs. An announcement with `can_be_closed: false` raises `ActiveRecord::RecordInvalid` without creating a dismissal. Repeated dismissals return the existing record without changing its timestamp. A unique database index on `[announcement_id, user_id]` prevents duplicates, including overlapping requests.
 
-Dismissals require both references and have no soft-delete column or restore operation. Announcement soft deletion retains their history. This phase exposes dismissal through the service only; the HTTP endpoint and banner action will be added with the interface.
+Dismissals require both references and have no soft-delete column or restore operation. Announcement soft deletion retains their history. The dismissal endpoint returns `{ id, dismissed_at }` for JSON and a Turbo removal targeting `announcement-ID`. Repeated requests return the original dismissal. HTML requests redirect to the management list. Non-closable announcements return 422; Turbo shows an error notification without removing the banner. The Core banner itself is integrated in the next phase.
 
 The old `AnnouncementService#read` method is removed: it incorrectly updated notifications. Call `dismiss(id)` for announcements. The original dismissal migration now removes `deleted_at`, requires both references, and adds the unique index; rebuild disposable development/test databases to adopt these changes.

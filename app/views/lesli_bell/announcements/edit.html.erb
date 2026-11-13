@@ -1,10 +1,6 @@
-<h1>Editing announcement</h1>
-
-<%= render "form", announcement: @announcement %>
-
-<br>
-
-<div>
-  <%= link_to "Show this announcement", @announcement %> |
-  <%= link_to "Back to announcements", announcements_path %>
-</div>
+<%= render LesliView::Layout::Container.new("announcements-edit") do %>
+    <%= render LesliView::Components::Header.new(t("lesli_bell.announcements.edit")) do %>
+        <%= render LesliView::Elements::Button.new(t("lesli_bell.announcements.back"), url: announcements_path, icon: "arrow_back", solid: false) %>
+    <% end %>
+    <%= render "form" %>
+<% end %>

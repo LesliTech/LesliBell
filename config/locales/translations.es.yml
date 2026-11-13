@@ -2,6 +2,43 @@
 es:
   lesli_bell:
     announcements:
+      "title": "Anuncios"
+      "new": "Crear anuncio"
+      "edit": "Editar anuncio"
+      "back": "Todos los anuncios"
+      "name": "Nombre"
+      "message": "Mensaje"
+      "category": "Categoría"
+      "publication": "Publicación"
+      "active": "Activo"
+      "inactive": "Inactivo"
+      "start_at": "Inicio"
+      "end_at": "Fin"
+      "path": "Página"
+      "path_hint": "Dejar vacío para todas las páginas o indicar una ruta exacta como /support."
+      "url": "Enlace"
+      "url_hint": "Ruta interna o URL HTTP/HTTPS opcional."
+      "can_be_closed": "Permitir cerrar el anuncio"
+      "save": "Guardar"
+      "delete": "Eliminar"
+      "confirm_delete": "¿Eliminar este anuncio?"
+      "created": "Anuncio creado."
+      "updated": "Anuncio actualizado."
+      "deleted": "Anuncio eliminado."
+      "empty": "No se encontraron anuncios"
+      "pagination": "Páginas de anuncios"
+      "previous": "Anterior"
+      "next": "Siguiente"
+      "no_limit": "Sin límite"
+      "all_pages": "Todas las páginas"
+      "yes": "Sí"
+      "no": "No"
+      "open_link": "Abrir enlace"
+      categories:
+        info: "Información"
+        success: "Éxito"
+        warning: "Advertencia"
+        danger: "Peligro"
       cannot_dismiss: "Este anuncio no se puede cerrar."
     dashboards: {}
     items/attachments: {}
@@ -9,3 +46,15 @@ es:
     items/tasks: {}
     notifications: {}
     shared: {}
+  activerecord:
+    attributes:
+      lesli_bell/announcement:
+        name: "Nombre"
+        message: "Mensaje"
+        category: "Categoría"
+        active: "Activo"
+        start_at: "Inicio"
+        end_at: "Fin"
+        path: "Página"
+        url: "Enlace"
+        can_be_closed: "Permitir cerrar el anuncio"

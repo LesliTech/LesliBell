@@ -47,7 +47,11 @@ Visit `http://127.0.0.1:3000/bell`. The current route surface is:
 | `GET` | `/bell/notifications` | Current user's unread notification feed |
 | `GET` | `/bell/notifications/new` | Reserved notification creation page |
 | `PUT/PATCH` | `/bell/notifications/:id` | Mark one notification as read |
-| `GET` | `/bell/announcements` | Announcement application entry point |
+| `GET/POST` | `/bell/announcements` | List or create announcements |
+| `GET` | `/bell/announcements/new` | Announcement creation form |
+| `GET/PATCH/PUT/DELETE` | `/bell/announcements/:id` | Show, update, or soft-delete an announcement |
+| `GET` | `/bell/announcements/:id/edit` | Announcement edit form |
+| `POST` | `/bell/announcements/:id/dismiss` | Dismiss for the current user |
 
 Lesli's shared engine routes also provide dashboard editing and reusable item endpoints. Treat the output of `bin/rails routes -g bell` as the authoritative route list for the installed versions.
 

@@ -20,7 +20,7 @@ Use the complete path:
 <%= I18n.t("lesli_bell.notifications.title") %>
 ```
 
-Announcement dismissal errors are translated; most other namespaces remain empty, and the existing navigation and notification views still contain hard-coded English labels. A translation change must therefore include both the new keys and replacement of the corresponding interface labels. Keep notification and announcement content supplied by callers separate from interface labels owned by the engine.
+Announcement administration and dismissal labels are translated in English and Spanish. The existing navigation and notification views still contain hard-coded English labels. A translation change must therefore include both the new keys and replacement of the corresponding interface labels. Keep notification and announcement content supplied by callers separate from interface labels owned by the engine.
 
 When LesliBabel is installed, scan and import local values with:
 

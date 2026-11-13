@@ -6,3 +6,5 @@
 @reference "../../../../gems/LesliAssets/source/tailwind/settings/theme.css";
 
 @source "../../app/views/lesli_bell/notifications/index.html.erb";
+
+@source "../../app/views/lesli_bell/announcements";

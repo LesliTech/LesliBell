@@ -28,7 +28,7 @@
     ],
     "announcements": [
         { "name": "instance-created", "message": "Your new Lesli instance is ready. Welcome!", "category": "success" },
-        { "name": "standard", "message": "Exciting News: Welcome to our platform!", "category": "standard" },
+        { "name": "standard", "message": "Exciting News: Welcome to our platform!", "category": "info" },
         { "name": "information", "message": "Upcoming Event: System Maintenance Scheduled", "category": "info", "url": "https://example.com/maintenance-info" },
         { "name": "success", "message": "Success Update: Your Profile Has Been Updated!", "category": "success" },
         { "name": "warning", "message": "Friendly Reminder: Password Expiring Soon", "category": "warning", "url": "https://example.com/update-password" },

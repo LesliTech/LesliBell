@@ -35,5 +35,7 @@ LesliBell::Engine.routes.draw do
     resources :notifications, only: [:index, :new, :update] do
         put :mark_all_as_read, on: :collection
     end
-    resources :announcements, only: [:index]
+    resources :announcements do
+        post :dismiss, on: :member
+    end
 end

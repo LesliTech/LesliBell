@@ -1,10 +1,26 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @announcement %>
-
-<div>
-  <%= link_to "Edit this announcement", edit_announcement_path(@announcement) %> |
-  <%= link_to "Back to announcements", announcements_path %>
-
-  <%= button_to "Destroy this announcement", @announcement, method: :delete %>
-</div>
+<%= render LesliView::Layout::Container.new("announcements-show") do %>
+    <%= render LesliView::Components::Header.new(@announcement.name) do %>
+        <%= render LesliView::Elements::Button.new(t("lesli_bell.announcements.back"), url: announcements_path, icon: "arrow_back", solid: false) %>
+        <%= render LesliView::Elements::Button.new(t("lesli_bell.announcements.edit"), url: edit_announcement_path(@announcement), icon: "edit") %>
+        <%= render LesliView::Elements::Button.new(t("lesli_bell.announcements.delete"), url: announcement_path(@announcement), method: :delete,
+            data: { turbo_confirm: t("lesli_bell.announcements.confirm_delete") }, icon: "delete", danger: true, solid: false) %>
+    <% end %>
+    <% if @announcement.errors.any? %>
+        <p role="alert"><%= @announcement.errors.full_messages.to_sentence %></p>
+    <% end %>
+    <p class="mb-6 whitespace-pre-wrap break-words"><%= @announcement.message %></p>
+    <dl class="grid gap-4 sm:grid-cols-2">
+        <% {
+            category: t("lesli_bell.announcements.categories.#{@announcement.category}"),
+            publication: t("lesli_bell.announcements.#{@announcement.active? ? 'active' : 'inactive'}"),
+            start_at: announcement_datetime(@announcement.start_at), end_at: announcement_datetime(@announcement.end_at),
+            path: @announcement.path || t("lesli_bell.announcements.all_pages"),
+            can_be_closed: t("lesli_bell.announcements.#{@announcement.can_be_closed? ? 'yes' : 'no'}")
+        }.each do |field, value| %>
+            <div><dt class="font-medium"><%= t("lesli_bell.announcements.#{field}") %></dt><dd><%= value %></dd></div>
+        <% end %>
+    </dl>
+    <% if @announcement.url.present? %>
+        <%= render LesliView::Elements::Button.new(t("lesli_bell.announcements.open_link"), url: @announcement.url, solid: false) %>
+    <% end %>
+<% end %>

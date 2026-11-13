@@ -1,0 +1,23 @@
+<div id="announcement-form">
+    <%= form_with model: @announcement, scope: :announcement, builder: LesliView::Forms::Builder,
+        url: @announcement.persisted? ? announcement_path(@announcement) : announcements_path,
+        data: { turbo_frame: "_top" } do |form| %>
+        <%= form.fieldset do %>
+            <% if @announcement.errors.any? %>
+                <div role="alert"><%= form.field_control_builder(message_text: @announcement.errors.full_messages.to_sentence, category: :danger) %></div>
+            <% end %>
+            <%= form.field_control(:name, label: t("lesli_bell.announcements.name"), required: true) %>
+            <%= form.field_control_textarea(:message, label: t("lesli_bell.announcements.message"), required: true, rows: 4) %>
+            <%= form.field_control_select(:category, announcement_categories, label: t("lesli_bell.announcements.category"), humanize: false) %>
+            <%= form.field_control_checkbox(:active, label: t("lesli_bell.announcements.active")) %>
+            <% [:start_at, :end_at].each do |field| %>
+                <%= form.field_control(field, label: t("lesli_bell.announcements.#{field}"), type: "datetime-local",
+                    value: @announcement.public_send(field)&.strftime("%Y-%m-%dT%H:%M:%S"), step: 1) %>
+            <% end %>
+            <%= form.field_control(:path, label: t("lesli_bell.announcements.path"), message: t("lesli_bell.announcements.path_hint")) %>
+            <%= form.field_control(:url, label: t("lesli_bell.announcements.url"), message: t("lesli_bell.announcements.url_hint")) %>
+            <%= form.field_control_checkbox(:can_be_closed, label: t("lesli_bell.announcements.can_be_closed")) %>
+            <%= form.field_control_submit(t("lesli_bell.announcements.save")) %>
+        <% end %>
+    <% end %>
+</div>
