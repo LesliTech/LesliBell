@@ -10,6 +10,8 @@ LesliBell uses collection code `03` and engine code `08`. Its records live in th
 | `03.08.10.01.10` | `lesli_bell_notifications` | Per-user notification content, lifecycle, and delivery metadata | `lesli_users`, `lesli_accounts` |
 | `03.08.11.01.10` | `lesli_bell_announcements` | Account announcement content and publication settings | `lesli_users` (author), `lesli_bell_accounts` |
 | `03.08.11.03.10` | `lesli_bell_announcement_users` | Per-user announcement dismissals | `lesli_users`, `lesli_bell_announcements` |
+| `03.08.11.04.10` | `lesli_bell_announcement_user_recipients` | Selected audience users | `lesli_users`, `lesli_bell_announcements` |
+| `03.08.11.04.10` | `lesli_bell_announcement_role_recipients` | Selected audience roles | `lesli_roles`, `lesli_bell_announcements` |
 
 The `03.08.11.02.10` migration is a legacy placeholder. Its table creation is commented out, so it does not create an announcement-activities table and is intentionally excluded from the active registry.
 
@@ -28,7 +30,7 @@ The `03.08.11.02.10` migration is a legacy placeholder. Its table creation is co
 
 ## Announcement Schema
 
-Announcements store `name`, `message`, an optional `url`, `category`, `active`, `path`, `start_at`, `end_at`, and `can_be_closed`. They reference the author and owning LesliBell account; recipient roles are not part of this contract.
+Announcements store `name`, `message`, an optional `url`, `category`, `active`, `path`, `start_at`, `end_at`, and `can_be_closed`. They reference the author and owning LesliBell account; audience is stored as `account` or `specific`, with a model default of `account`.
 
 `AnnouncementService#list(path: nil)` returns active announcements in the current account whose optional start is inclusive and optional end is exclusive. It includes global and exact-path announcements and excludes only the current user’s dismissals. The banner query returns complete records without pagination, ordered by `created_at` and `id`. Administrative pagination belongs to `index`.
 
@@ -49,8 +51,14 @@ See [Database Architecture](/engines/lesli/database/structure) and [Migration Ve
 
 Announcements require a local engine account, author, administrative name, and visible message. `category` defaults to `info`; `active` and `can_be_closed` default to `true`. These defaults live in the model, while the database enforces `NOT NULL` without SQL defaults. Fixtures and direct SQL inserts must supply them explicitly. Optional start/end timestamps must form an increasing interval when both are supplied. Empty paths and URLs normalize to null; paths represent an exact application path, and URLs accept internal paths or HTTP/HTTPS destinations.
 
-The original announcements migration replaces `status` with `active` and removes `role_id`. Rebuild disposable development/test databases to adopt this schema. There is no recipient segmentation in this version. Publication filtering is implemented by `AnnouncementService#list`; see [Announcements](/engines/bell/announcements/overview) for the currently implemented query behavior.
+The original announcements migration replaces `status` with `active` and removes `role_id`. Rebuild disposable development/test databases to adopt this schema. The original migration also requires `audience`; the new recipient migration adds separate user and role selections. Publication filtering is implemented by `AnnouncementService#list`; see [Announcements](/engines/bell/announcements/overview) for the currently implemented query behavior.
 
 ## Announcement Dismissals
 
 `lesli_bell_announcement_users` stores one dismissal per announcement and user. Both foreign keys are non-null, and a unique composite index enforces `[announcement_id, user_id]`. `created_at` records the original dismissal time. There is no `deleted_at` column or restoration workflow. The explicit `announcement.dismissals` association uses `LesliBell::Announcement::User`, which inherits directly from Active Record to avoid Core's soft-delete scope.
+
+## Announcement Audience
+
+`lesli_bell_announcement_user_recipients` references `lesli_bell_announcements` and `lesli_users`. `lesli_bell_announcement_role_recipients` references `lesli_bell_announcements` and `lesli_roles` (Core owns the role records; LesliShield owns membership). Both tables require their foreign keys, have timestamps, and enforce unique announcement/recipient pairs. They use ordinary deletion, not soft deletion, and are separate from `lesli_bell_announcement_users`, which continues to store individual dismissals.
+
+The audience mode is persistent so removing the last recipient cannot silently turn a targeted announcement into a general one. Recipient `destroy!` deactivates an empty specific audience. Service replacements insert new selections before deleting old ones in the same transaction. See [Audience](/engines/bell/announcements/overview#audience) for API semantics and optional LesliShield behavior.

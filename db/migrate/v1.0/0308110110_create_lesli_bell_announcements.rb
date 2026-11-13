@@ -37,6 +37,7 @@ class CreateLesliBellAnnouncements < ActiveRecord::Migration[6.0]
             t.string    :url
             t.string    :path
             t.string    :category, null: false
+            t.string    :audience, null: false
             t.text      :message, null: false
             t.boolean   :active, null: false
             t.datetime  :start_at

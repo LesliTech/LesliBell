@@ -9,6 +9,17 @@
             <%= form.field_control(:name, label: t("lesli_bell.announcements.name"), required: true) %>
             <%= form.field_control_textarea(:message, label: t("lesli_bell.announcements.message"), required: true, rows: 4) %>
             <%= form.field_control_select(:category, announcement_categories, label: t("lesli_bell.announcements.category"), humanize: false) %>
+            <%= form.field_control_select(:audience, announcement_audiences,
+                label: t("lesli_bell.announcements.audience"), humanize: false,
+                message: t("lesli_bell.announcements.audience_hint")) %>
+            <%= form.field_control_select(:user_ids, @audience_users,
+                label: t("lesli_bell.announcements.recipient_users"), humanize: false,
+                html_options: { multiple: true, size: 5 }) %>
+            <% if @audience_roles %>
+                <%= form.field_control_select(:role_ids, @audience_roles,
+                    label: t("lesli_bell.announcements.recipient_roles"), humanize: false,
+                    html_options: { multiple: true, size: 5 }) %>
+            <% end %>
             <%= form.field_control_checkbox(:active, label: t("lesli_bell.announcements.active")) %>
             <% [:start_at, :end_at].each do |field| %>
                 <%= form.field_control(field, label: t("lesli_bell.announcements.#{field}"), type: "datetime-local",

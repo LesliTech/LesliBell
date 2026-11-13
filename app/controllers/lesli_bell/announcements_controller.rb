@@ -2,6 +2,7 @@ module LesliBell
     class AnnouncementsController < ApplicationController
         before_action :load_service
         before_action :load_announcement, only: [:show, :edit, :update, :destroy]
+        before_action :load_audience_options, only: [:new, :edit, :create, :update]
         rescue_from ActiveRecord::RecordNotFound do
             if action_name == "dismiss" && request.format.turbo_stream?
                 dismissal_error(:not_found)
@@ -16,7 +17,7 @@ module LesliBell
         end
 
         def show
-            respond_with_lesli(json: @announcement)
+            respond_with_lesli(json: announcement_json)
         end
 
         def new
@@ -83,8 +84,17 @@ module LesliBell
             @announcement = @service.show(params[:id]).result
         end
 
+        def load_audience_options
+            @audience_users = current_user.account.users.order(:email).pluck(:email, :id)
+            @audience_roles = current_user.account.roles.order(:name).pluck(:name, :id) if defined?(LesliShield)
+        end
+
+        def announcement_json
+            @announcement.as_json.merge(user_ids: @announcement.user_ids, role_ids: @announcement.role_ids)
+        end
+
         def announcement_params
-            params.require(:announcement).permit(*AnnouncementService::EDITABLE_ATTRIBUTES).to_h
+            params.require(:announcement).permit(*AnnouncementService::EDITABLE_ATTRIBUTES, user_ids: [], role_ids: []).to_h
         end
 
         def save_response(template, message, status)
@@ -98,7 +108,7 @@ module LesliBell
             end
 
             success(t("lesli_bell.announcements.#{message}"))
-            respond_with_lesli(json: @announcement, status: status, redirect: announcement_path(@announcement))
+            respond_with_lesli(json: announcement_json, status: status, redirect: announcement_path(@announcement))
         end
     end
 end

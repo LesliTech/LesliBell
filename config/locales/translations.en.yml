@@ -2,6 +2,17 @@
 en:
   lesli_bell:
     announcements:
+      audience: "Audience"
+      audience_hint: "Choose specific users or roles below. Matching either is sufficient. Entire account clears the selection. Use Ctrl or Command to select multiple entries."
+      recipient_users: "Users"
+      recipient_roles: "Roles"
+      audience_required: "Select at least one user or role for a specific audience."
+      invalid_users: "Selected users must belong to this account."
+      invalid_roles: "Selected roles must belong to this account and require LesliShield."
+      audience_empty: "No recipients (inactive)"
+      audiences:
+        account: "Entire account"
+        specific: "Specific users or roles"
       dismiss_failed: "The announcement could not be dismissed."
       "title": "Announcements"
       "new": "Create announcement"
@@ -50,6 +61,7 @@ en:
   activerecord:
     attributes:
       lesli_bell/announcement:
+        audience: "Audience"
         name: "Name"
         message: "Message"
         category: "Category"

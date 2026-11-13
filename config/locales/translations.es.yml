@@ -2,6 +2,17 @@
 es:
   lesli_bell:
     announcements:
+      audience: "Audiencia"
+      audience_hint: "Selecciona usuarios o roles abajo. Basta con coincidir con cualquiera. Toda la cuenta elimina la selección. Usa Ctrl o Command para seleccionar varias opciones."
+      recipient_users: "Usuarios"
+      recipient_roles: "Roles"
+      audience_required: "Selecciona al menos un usuario o rol para una audiencia específica."
+      invalid_users: "Los usuarios seleccionados deben pertenecer a esta cuenta."
+      invalid_roles: "Los roles seleccionados deben pertenecer a esta cuenta y requieren LesliShield."
+      audience_empty: "Sin destinatarios (inactivo)"
+      audiences:
+        account: "Toda la cuenta"
+        specific: "Usuarios o roles específicos"
       dismiss_failed: "No se pudo cerrar el anuncio."
       "title": "Anuncios"
       "new": "Crear anuncio"
@@ -50,6 +61,7 @@ es:
   activerecord:
     attributes:
       lesli_bell/announcement:
+        audience: "Audiencia"
         name: "Nombre"
         message: "Mensaje"
         category: "Categoría"

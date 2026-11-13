@@ -11,6 +11,7 @@
     <p class="mb-6 whitespace-pre-wrap break-words"><%= @announcement.message %></p>
     <dl class="grid gap-4 sm:grid-cols-2">
         <% {
+            audience: announcement_audience_summary(@announcement),
             category: t("lesli_bell.announcements.categories.#{@announcement.category}"),
             publication: t("lesli_bell.announcements.#{@announcement.active? ? 'active' : 'inactive'}"),
             start_at: announcement_datetime(@announcement.start_at), end_at: announcement_datetime(@announcement.end_at),

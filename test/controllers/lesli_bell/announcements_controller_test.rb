@@ -21,6 +21,55 @@ module LesliBell
             @controller.define_singleton_method(:_layout) { |*| false }
         end
 
+        test "audience forms retain selections and show only account recipients" do
+            skip "LesliShield is optional" unless defined?(LesliShield)
+            role = @user.account.roles.create!(name: "Readers", permission_level: 1, active: true)
+            get :new
+            assert_select "select[name='announcement[audience]']"
+            assert_select "select[name='announcement[user_ids][]'][multiple]" do
+                assert_select "option[value=?]", @user.id.to_s
+                assert_select "option[value=?]", lesli_users(:two).id.to_s, count: 0
+            end
+            assert_select "select[name='announcement[role_ids][]'][multiple] option[value=?]", role.id.to_s
+            post :create, params: { announcement: {
+                name: "", message: "Retain", audience: "specific", user_ids: [@user.id], role_ids: [role.id]
+            } }, format: :turbo_stream
+            assert_response :unprocessable_content
+            assert_select "option[value='specific'][selected]"
+            assert_select "select[name='announcement[user_ids][]'] option[selected][value=?]", @user.id.to_s
+            assert_select "select[name='announcement[role_ids][]'] option[selected][value=?]", role.id.to_s
+            post :create, params: { announcement: {
+                name: "Directed", message: "News", audience: "specific", user_ids: [@user.id], role_ids: [role.id]
+            } }, format: :json
+            assert_response :created
+            record = Announcement.find(response.parsed_body.fetch("id"))
+            assert_equal [@user.id], record.user_ids
+            assert_equal [role.id], record.role_ids
+            get :show, params: { id: record.id }, format: :html
+            assert_response :success
+            assert_includes response.body, @user.email
+            assert_includes response.body, role.name
+        end
+
+        test "user selector is available and role selector follows Shield availability" do
+            get :new
+            assert_response :success
+            assert_select "select[name='announcement[user_ids][]'] option[value=?]", @user.id.to_s
+            assert_select "select[name='announcement[role_ids][]']", count: defined?(LesliShield) ? 1 : 0
+        end
+
+        test "specific empty audience returns a translated validation error" do
+            [:en, :es].each do |locale|
+                I18n.with_locale(locale) do
+                    post :create, params: { locale: locale, announcement: {
+                        name: "Empty", message: "News", audience: "specific", user_ids: [""], role_ids: [""]
+                    } }, format: :json
+                    assert_response :unprocessable_content
+                    assert_includes response.parsed_body.fetch("errors").fetch("base"), I18n.t("lesli_bell.announcements.audience_required")
+                end
+            end
+        end
+
         test "lists scoped records with pagination and renders LesliView forms" do
             get :index
             assert_response :success

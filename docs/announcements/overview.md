@@ -33,9 +33,9 @@ LesliBell::AnnouncementService.new(current_user).create({
 
 The service assigns the current account and user as owner and author. Omitting the category uses the model default; an unsupported category returns a validation error instead of silently replacing it. `active` and `can_be_closed` accept `true` or `false`, never `NULL`. Defaults are defined in the model: `category` uses the enum default, and the boolean flags use `attribute` defaults. The database only enforces non-null values. Fixtures and direct SQL inserts must provide these values explicitly. Changing a model default affects new records, not existing announcements.
 
-Announcements have no recipient or role segmentation in this version. The service no longer accepts `send_to_role_ids`, `send_to_user_ids`, or `send_to_user_emails`. The author is not the audience.
+The author is not the audience. Select recipients through `user_ids` and `role_ids`; the old `send_to_*` arguments are not supported. Email selection and email delivery are outside this feature.
 
-The original migration now uses `active` instead of `status`, removes `role_id`, and requires content, author, and publication flags. Existing disposable development/test databases must be rebuilt; rerunning an already-applied migration will not change their tables.
+The original migration now uses `active` instead of `status`, removes `role_id`, and requires content, author, publication flags, and `audience`. Audience defaults to `account` in the model, not the database. Existing disposable development/test databases must be rebuilt; rerunning an already-applied migration will not change their tables.
 
 ## Query Modes
 
@@ -65,9 +65,44 @@ Both date checks use the same instant. At the exact start an announcement is vis
 
 The administrative `index` remains paginated, lists inactive and out-of-window records as well, and uses the same stable creation order. Visibility is evaluated when the query runs; this does not schedule delivery or automatically remove a banner already displayed in an open browser tab.
 
+## Audience
+
+A new announcement without recipients uses `audience: "account"` and is visible to the entire account, subject to publication dates, path, and individual dismissal. Passing user or role IDs without an explicit audience automatically selects `specific`.
+
+```ruby
+service = LesliBell::AnnouncementService.new(current_user).create(
+    name: "Team maintenance",
+    message: "Please save your work before maintenance begins.",
+    user_ids: [user.id],
+    role_ids: [role.id]
+)
+announcement = service.result
+```
+
+For a specific audience, matching **either** a selected user or a selected role is sufficient. Role membership is evaluated on each banner query; members are not copied into user recipients. Joining or leaving a role changes visibility on the next page request. Subqueries prevent duplicate banners when several matches apply. All selected users and roles must belong to the announcement's Core account, reached through its local LesliBell account.
+
+Users and roles are stored separately in `user_recipients` and `role_recipients`; `recipient_users` and `recipient_roles` expose the selected records. These associations are independent of `dismissals`. General and user-directed announcements work without LesliShield. Selecting roles requires LesliShield; role matching is disabled when that engine is unavailable.
+
+```ruby
+service = LesliBell::AnnouncementService.new(current_user).show(announcement.id)
+service.update(user_ids: [another_user.id]) # Replace users; keep selected roles.
+
+service = LesliBell::AnnouncementService.new(current_user).show(announcement.id)
+service.update(user_ids: [], role_ids: []) # Remove recipients and deactivate.
+
+service = LesliBell::AnnouncementService.new(current_user).show(announcement.id)
+service.update(audience: "account", active: true) # Explicitly publish to everyone.
+```
+
+Omitting an ID parameter preserves that selection. Sending an empty array removes it; blank entries from HTML selectors are ignored and duplicate IDs are collapsed. Creation and replacement run in one transaction. Invalid recipients or a failed recipient write roll back the announcement and both selections. Service validation errors remain available through `service.result.errors`.
+
+A specific announcement that loses its final recipient remains `specific` and becomes inactive. Removing an individual recipient with `destroy!` applies the same rule. It never becomes public automatically. An explicit change to `audience: "account"` clears both selections and allows publication to everyone. Use the service for replacements and `destroy!` for individual recipient removals; bulk SQL/deletion bypasses model callbacks.
+
+The form offers **Entire account** and **Specific users or roles**, with LesliView multiple selectors restricted to the current account. Explicitly selecting `specific` requires at least one recipient, even when inactive. Submitted selections survive validation errors. The detail page summarizes users and roles; JSON detail/create/update responses include `audience`, `user_ids`, and `role_ids`.
+
 ## Core Banners
 
-Core's authenticated layout renders announcements above the main content, in normal document flow. They do not cover forms or disappear automatically. `Lesli::ApplicationLesliController` loads the records through `AnnouncementService#list(path: request.path)` before rendering; templates do not select records.
+Core's authenticated layout renders announcements above the main content, in normal document flow. They do not cover forms or disappear automatically. `Lesli::ApplicationLesliController` loads the records through `Lesli::Courier`, invoking `AnnouncementService#list(path: request.path)` before rendering; templates do not select records.
 
 Loading requires both LesliBell and an authenticated user. Full HTML page requests, including Turbo Drive navigation, select banners for the requested path. JSON, Turbo Stream, and Turbo Frame requests do not load global banners. Frame updates leave the surrounding page's banners unchanged; navigation to another page should target `_top`.
 
@@ -90,7 +125,7 @@ The management interface at `/bell/announcements` uses LesliView tables, forms, 
 | DELETE | `/bell/announcements/:id` | Soft-delete |
 | POST | `/bell/announcements/:id/dismiss` | Dismiss for the authenticated user |
 
-Forms accept `name`, `message`, `category`, `active`, `start_at`, `end_at`, `path`, `url`, and `can_be_closed` inside `announcement`. Dates use the application's configured time zone. Neither controller parameters nor direct service calls can assign or change ownership. All member lookups are scoped to the current account; missing, deleted, and foreign records return 404.
+Forms accept `audience`, `user_ids: []`, `role_ids: []`, `name`, `message`, `category`, `active`, `start_at`, `end_at`, `path`, `url`, and `can_be_closed` inside `announcement`. Dates use the application's configured time zone. Neither controller parameters nor direct service calls can assign or change ownership. All member lookups are scoped to the current account; missing, deleted, and foreign records return 404.
 
 Core's existing authentication and authorization callbacks protect these actions when LesliShield is installed. Refresh resource/action configuration with `bin/rails lesli:db:prepare` and grant the required actions to the appropriate roles, including `dismiss` for users who may close banners.
 

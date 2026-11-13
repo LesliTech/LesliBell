@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 308110310) do
+ActiveRecord::Schema[8.1].define(version: 308110410) do
   create_table "lesli_accounts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
@@ -37,6 +37,24 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
     t.index ["deleted_at"], name: "index_lesli_bell_accounts_on_deleted_at"
   end
 
+  create_table "lesli_bell_announcement_role_recipients", force: :cascade do |t|
+    t.integer "announcement_id", null: false
+    t.integer "role_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["announcement_id", "role_id"], name: "index_bell_audience_roles", unique: true
+    t.index ["role_id"], name: "index_lesli_bell_announcement_role_recipients_on_role_id"
+  end
+
+  create_table "lesli_bell_announcement_user_recipients", force: :cascade do |t|
+    t.integer "announcement_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["announcement_id", "user_id"], name: "index_bell_audience_users", unique: true
+    t.index ["user_id"], name: "index_lesli_bell_announcement_user_recipients_on_user_id"
+  end
+
   create_table "lesli_bell_announcement_users", force: :cascade do |t|
     t.integer "announcement_id", null: false
     t.datetime "created_at", null: false
@@ -47,6 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
   end
 
   create_table "lesli_bell_announcements", force: :cascade do |t|
+    t.string "audience", null: false
     t.integer "account_id", null: false
     t.boolean "active", null: false
     t.boolean "can_be_closed", null: false
@@ -163,6 +182,10 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
 
   add_foreign_key "lesli_accounts", "lesli_users", column: "user_id"
   add_foreign_key "lesli_bell_accounts", "lesli_accounts", column: "account_id"
+  add_foreign_key "lesli_bell_announcement_role_recipients", "lesli_bell_announcements", column: "announcement_id"
+  add_foreign_key "lesli_bell_announcement_role_recipients", "lesli_roles", column: "role_id"
+  add_foreign_key "lesli_bell_announcement_user_recipients", "lesli_bell_announcements", column: "announcement_id"
+  add_foreign_key "lesli_bell_announcement_user_recipients", "lesli_users", column: "user_id"
   add_foreign_key "lesli_bell_announcement_users", "lesli_bell_announcements", column: "announcement_id"
   add_foreign_key "lesli_bell_announcement_users", "lesli_users", column: "user_id"
   add_foreign_key "lesli_bell_announcements", "lesli_bell_accounts", column: "account_id"

@@ -7,6 +7,17 @@ module LesliBell
         belongs_to :user, class_name: "::Lesli::User"
         has_many :dismissals, class_name: "LesliBell::Announcement::User", inverse_of: :announcement
 
+        has_many :user_recipients, class_name: "LesliBell::Announcement::UserRecipient", inverse_of: :announcement
+        has_many :role_recipients, class_name: "LesliBell::Announcement::RoleRecipient", inverse_of: :announcement
+        has_many :recipient_users, through: :user_recipients, source: :user
+        has_many :recipient_roles, through: :role_recipients, source: :role
+
+        enum :audience, { account: "account", specific: "specific" }, prefix: true, default: :account, validate: true
+
+        # Submitted IDs remain available to the form when validation fails.
+        attr_writer :user_ids, :role_ids
+        attr_accessor :allow_empty_audience
+
         enum :category, {
             :info => 'info',
             :danger => 'danger',
@@ -28,8 +39,51 @@ module LesliBell
         # Match request.path exactly: no host, query string, fragment, or wildcard.
         validates :path, format: { with: %r{\A/(?!/)[^?#\\\s*]*\z} }, allow_nil: true
         validate :url_is_a_supported_destination
+        validate :audience_is_valid
+
+        def user_ids
+            @user_ids || user_recipients.pluck(:user_id)
+        end
+
+        def role_ids
+            @role_ids || role_recipients.pluck(:role_id)
+        end
+
+        def clear_audience_selection
+            @user_ids = @role_ids = nil
+            self.allow_empty_audience = false
+        end
+
+        # Keep a specific audience specific even after its final recipient is removed.
+        def deactivate_without_recipients!
+            return unless audience_specific?
+            return if user_recipients.exists? || role_recipients.exists?
+
+            # An empty specific audience is intentionally retained but cannot be published.
+            # Skip the recipient-presence validation when disabling it.
+            update_columns(active: false, updated_at: Time.current)
+        end
 
         private
+
+        def audience_is_valid
+            if audience_specific? && user_ids.empty? && role_ids.empty? && !allow_empty_audience
+                errors.add(:base, I18n.t("lesli_bell.announcements.audience_required"))
+            end
+
+            core_account = account&.account
+            return unless core_account
+
+            valid_users = core_account.users.where(id: user_ids).pluck(:id).map(&:to_s)
+            unless (user_ids.map(&:to_s) - valid_users).empty?
+                errors.add(:base, I18n.t("lesli_bell.announcements.invalid_users"))
+            end
+
+            valid_roles = defined?(LesliShield) ? core_account.roles.where(id: role_ids).pluck(:id).map(&:to_s) : []
+            unless (role_ids.map(&:to_s) - valid_roles).empty?
+                errors.add(:base, I18n.t("lesli_bell.announcements.invalid_roles"))
+            end
+        end
 
         def url_is_a_supported_destination
             return if url.nil?
