@@ -6,16 +6,16 @@ Announcements are account-scoped messages intended for broader in-application co
 
 | Attribute | Purpose |
 | --- | --- |
-| `name` | Internal or display name |
-| `message` | Announcement content |
-| `category` | `info`, `success`, `warning`, or `danger` |
-| `url` | Optional destination |
-| `path` | Optional page-specific presentation metadata |
-| `start_at`, `end_at` | Optional scheduling metadata |
+| `name` | Required administrative name; surrounding whitespace is removed |
+| `message` | Required visible plain-text message |
+| `category` | `info`, `success`, `warning`, or `danger`; defaults to `info` |
+| `url` | Optional root-relative path or absolute HTTP/HTTPS URL; blank values become `NULL` |
+| `path` | Optional exact `request.path`, such as `/support`; blank means all pages. No host, query string, fragment, or wildcard |
+| `start_at`, `end_at` | Optional timestamps; when both exist, the end must be strictly later than the start |
 | `can_be_closed` | Whether the presentation may offer dismissal; defaults to `true` |
-| `status` | Optional application-defined state |
-| `user_id` | User who created the announcement |
-| `role_id` | Optional Lesli role reference |
+| `active` | Required publication flag, defaults to `true` |
+| `user_id` | Required author, assigned by the service from the current user |
+| `account_id` | Required local `LesliBell::Account` reference |
 
 ## Create an Announcement
 
@@ -31,7 +31,11 @@ LesliBell::AnnouncementService.new(current_user).create({
 })
 ```
 
-The service assigns the current user as creator and falls back to `info` when the category is unknown.
+The service assigns the current user as author and falls back to `info` when the category is unknown. Direct model writes validate the supported categories. `active` and `can_be_closed` accept `true` or `false`, never `NULL`. Defaults are defined in the model: `category` uses the enum default, and the boolean flags use `attribute` defaults. The database only enforces non-null values. Fixtures and direct SQL inserts must provide these values explicitly. Changing a model default affects new records, not existing announcements.
+
+Announcements have no recipient or role segmentation in this version. The service no longer accepts `send_to_role_ids`, `send_to_user_ids`, or `send_to_user_emails`. The author is not the audience.
+
+The original migration now uses `active` instead of `status`, removes `role_id`, and requires content, author, and publication flags. Existing disposable development/test databases must be rebuilt; rerunning an already-applied migration will not change their tables.
 
 ## Query Modes
 
@@ -48,7 +52,7 @@ announcements = LesliBell::AnnouncementService.new(current_user, query).index
 - Excludes announcements with an existing announcement-user association.
 - Orders results by `start_at` and paginates them.
 
-Path-specific selection and `start_at`/`end_at` date filtering are present as schema concepts but are not active in the current query. These values must not be treated as authorization boundaries or guaranteed delivery scheduling.
+The data contract validates publication settings, but `active`, path-specific selection, and `start_at`/`end_at` filtering are not yet applied by the presentation query. These values must not be treated as authorization boundaries or guaranteed delivery scheduling.
 
 ## Current Web Surface
 

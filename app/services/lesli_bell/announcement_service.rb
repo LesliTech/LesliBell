@@ -53,17 +53,10 @@ module LesliBell
             .order(:updated_at)
         end
 
-        def create(
-            announcements_params,
-            send_to_role_ids:nil, 
-            send_to_user_ids:nil, 
-            send_to_user_emails:nil
-        )
-
-            users = []
+        def create(announcements_params)
 
             unless Announcement.categories.key?(announcements_params[:category])
-                announcements_params[:category] = :info
+                announcements_params[:category] = Announcement.new.category
             end
 
             announcements_params[:user_id] = current_user.id

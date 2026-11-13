@@ -43,5 +43,5 @@ seeds["announcements"].each do |notification|
         category: notification["category"],
         message: notification["message"],
         url: notification["url"]
-    }, send_to_user_ids: ::Lesli::User.all.pluck(:id))
+    })
 end 

@@ -33,22 +33,21 @@ Building a better future, one line of code at a time.
 class CreateLesliBellAnnouncements < ActiveRecord::Migration[6.0]
     def change
         create_table :lesli_bell_announcements do |t|
-            t.string    :name
+            t.string    :name, null: false
             t.string    :url
             t.string    :path
-            t.string    :category
-            t.text      :message
-            t.boolean   :status
+            t.string    :category, null: false
+            t.text      :message, null: false
+            t.boolean   :active, null: false
             t.datetime  :start_at
             t.datetime  :end_at
-            t.boolean   :can_be_closed, :default => true
+            t.boolean   :can_be_closed, null: false
 
             t.datetime  :deleted_at, index: true
             t.timestamps
         end
 
-        add_reference(:lesli_bell_announcements, :user, foreign_key: { to_table: :lesli_users })
-        add_reference(:lesli_bell_announcements, :role, foreign_key: { to_table: :lesli_roles })
+        add_reference(:lesli_bell_announcements, :user, null: false, foreign_key: { to_table: :lesli_users })
         add_reference(:lesli_bell_announcements, :account, null: false, foreign_key: { to_table: :lesli_bell_accounts })
     end
 end

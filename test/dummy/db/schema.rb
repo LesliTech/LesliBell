@@ -50,23 +50,21 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
 
   create_table "lesli_bell_announcements", force: :cascade do |t|
     t.integer "account_id", null: false
-    t.boolean "can_be_closed", default: true
-    t.string "category"
+    t.boolean "active", null: false
+    t.boolean "can_be_closed", null: false
+    t.string "category", null: false
     t.datetime "created_at", null: false
     t.datetime "deleted_at", precision: nil
     t.datetime "end_at", precision: nil
-    t.text "message"
-    t.string "name"
+    t.text "message", null: false
+    t.string "name", null: false
     t.string "path"
-    t.integer "role_id"
     t.datetime "start_at", precision: nil
-    t.boolean "status"
     t.datetime "updated_at", null: false
     t.string "url"
-    t.integer "user_id"
+    t.integer "user_id", null: false
     t.index ["account_id"], name: "index_lesli_bell_announcements_on_account_id"
     t.index ["deleted_at"], name: "index_lesli_bell_announcements_on_deleted_at"
-    t.index ["role_id"], name: "index_lesli_bell_announcements_on_role_id"
     t.index ["user_id"], name: "index_lesli_bell_announcements_on_user_id"
   end
 
@@ -170,7 +168,6 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
   add_foreign_key "lesli_bell_announcement_users", "lesli_bell_announcements", column: "announcement_id"
   add_foreign_key "lesli_bell_announcement_users", "lesli_users", column: "user_id"
   add_foreign_key "lesli_bell_announcements", "lesli_bell_accounts", column: "account_id"
-  add_foreign_key "lesli_bell_announcements", "lesli_roles", column: "role_id"
   add_foreign_key "lesli_bell_announcements", "lesli_users", column: "user_id"
   add_foreign_key "lesli_bell_notifications", "lesli_bell_accounts", column: "account_id"
   add_foreign_key "lesli_bell_notifications", "lesli_users", column: "user_id"
