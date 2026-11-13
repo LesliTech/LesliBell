@@ -30,7 +30,7 @@ The `03.08.11.02.10` migration is a legacy placeholder. Its table creation is co
 
 Announcements store `name`, `message`, an optional `url`, `category`, `active`, `path`, `start_at`, `end_at`, and `can_be_closed`. They reference the author and owning LesliBell account; recipient roles are not part of this contract.
 
-The current `AnnouncementService#list` returns global announcements where `path` is `NULL` and excludes rows dismissed by the current user through `lesli_bell_announcement_users`. Although path and date-range fields exist in the schema, path-specific and start/end filtering are not currently active in the service. Do not rely on those fields for access control or scheduled delivery.
+`AnnouncementService#list(path: nil)` returns active announcements in the current account whose optional start is inclusive and optional end is exclusive. It includes global and exact-path announcements and excludes only the current user’s dismissals. The banner query returns complete records without pagination, ordered by `created_at` and `id`. Administrative pagination belongs to `index`.
 
 ## Account Scoping
 
@@ -49,7 +49,7 @@ See [Database Architecture](/engines/lesli/database/structure) and [Migration Ve
 
 Announcements require a local engine account, author, administrative name, and visible message. `category` defaults to `info`; `active` and `can_be_closed` default to `true`. These defaults live in the model, while the database enforces `NOT NULL` without SQL defaults. Fixtures and direct SQL inserts must supply them explicitly. Optional start/end timestamps must form an increasing interval when both are supplied. Empty paths and URLs normalize to null; paths represent an exact application path, and URLs accept internal paths or HTTP/HTTPS destinations.
 
-The original announcements migration replaces `status` with `active` and removes `role_id`. Rebuild disposable development/test databases to adopt this schema. There is no recipient segmentation in this version. Publication filtering remains a later implementation phase; see [Announcements](/engines/bell/announcements/overview) for the currently implemented query behavior.
+The original announcements migration replaces `status` with `active` and removes `role_id`. Rebuild disposable development/test databases to adopt this schema. There is no recipient segmentation in this version. Publication filtering is implemented by `AnnouncementService#list`; see [Announcements](/engines/bell/announcements/overview) for the currently implemented query behavior.
 
 ## Announcement Dismissals
 

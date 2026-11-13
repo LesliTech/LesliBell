@@ -1,39 +1,25 @@
 module LesliBell
     class AnnouncementService < Lesli::ApplicationLesliService
 
-        def list
-            # A dismissal belongs to one reader, not to the entire account.
+        # Banner selection is independent of administrative pagination.
+        # Compare both date boundaries against the same instant.
+        def list(path: nil)
+            now = Time.current
             dismissed_ids = Announcement::User.where(user: current_user).select(:announcement_id)
-            announcements = current_user.account.bell.announcements
-                .where(path: nil)
-                .where.not(id: dismissed_ids)
 
-            announcements.select(
-                :id,
-                :name,
-                :category,
-                :message,
-                :can_be_closed,
-                :start_at,
-                :end_at,
-                :path
-            ).page(query[:pagination][:page])
-            .per(query[:pagination][:perPage])
-            .order(:start_at)
+            current_user.account.bell.announcements
+                .where(active: true, path: [nil, path.presence])
+                .where("start_at IS NULL OR start_at <= ?", now)
+                .where("end_at IS NULL OR end_at > ?", now)
+                .where.not(id: dismissed_ids)
+                .order(:created_at, :id)
         end
 
-        def index 
-
-            # work with all notifications
-            announcements = current_user.account.bell
-            .announcements
-            .order(:start_at)
-
-            # add pagination
-            announcements
-            .page(query[:pagination][:page])
-            .per(query[:pagination][:perPage])
-            .order(:updated_at)
+        def index
+            current_user.account.bell.announcements
+                .order(:created_at, :id)
+                .page(query[:pagination][:page])
+                .per(query[:pagination][:perPage])
         end
 
         def create(announcements_params)

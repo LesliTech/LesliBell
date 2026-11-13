@@ -45,14 +45,25 @@ The original migration now uses `active` instead of `status`, removes `role_id`,
 announcements = LesliBell::AnnouncementService.new(current_user, query).index
 ```
 
-`AnnouncementService#list` is the presentation-oriented query. It currently:
+`AnnouncementService#list(path: nil)` returns visible banners without pagination or a required `query` argument:
 
-- Limits records to the current account.
-- Returns only global announcements where `path` is `NULL`.
-- Excludes only announcements dismissed by the current user. A different user’s dismissal does not hide the banner.
-- Orders results by `start_at` and paginates them.
+```ruby
+announcements = LesliBell::AnnouncementService.new(current_user).list(path: request.path)
+```
 
-The data contract validates publication settings, but `active`, path-specific selection, and `start_at`/`end_at` filtering are not yet applied by the presentation query. These values must not be treated as authorization boundaries or guaranteed delivery scheduling.
+It:
+
+- Queries only the current account's active, non-deleted announcements.
+- Includes records with no start, or `start_at <= Time.current`.
+- Includes records with no end, or `end_at > Time.current`.
+- Includes global announcements (`path` is `NULL`) and exact matches for the supplied path.
+- Excludes only announcements dismissed by the current user.
+- Returns full records, including `url`, without administrative pagination.
+- Orders by `created_at` ascending, then `id` ascending for deterministic ties.
+
+Both date checks use the same instant. At the exact start an announcement is visible; at the exact end it is no longer visible. Rails handles timestamp conversion through the configured time zone. Omitting `path` returns only global announcements. Pass `request.path`, not a full URL or a query string; subpaths and trailing slashes do not match automatically.
+
+The administrative `index` remains paginated, lists inactive and out-of-window records as well, and uses the same stable creation order. Visibility is evaluated when the query runs; this does not schedule delivery or automatically remove a banner already displayed in an open browser tab.
 
 ## Current Web Surface
 

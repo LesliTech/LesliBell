@@ -45,12 +45,79 @@ module LesliBell
         end
 
         test "lists global announcements not dismissed by the current user" do
-            records = AnnouncementService.new(@user, @query).list
+            records = AnnouncementService.new(@user).list
 
             assert_includes records, lesli_bell_announcements(:visible_global)
             refute_includes records, lesli_bell_announcements(:dismissed_global)
             refute_includes records, lesli_bell_announcements(:path_specific)
             refute_includes records, lesli_bell_announcements(:other_account)
+        end
+
+        test "banner selection uses inclusive start and exclusive end boundaries" do
+            travel_to Time.zone.local(2026, 11, 13, 12, 0, 0) do
+                now = Time.current
+                cases = [
+                    [nil, nil, true],
+                    [now, nil, true],
+                    [now + 1.second, nil, false],
+                    [nil, now + 1.second, true],
+                    [nil, now, false],
+                    [nil, now - 1.second, false],
+                    [now - 1.hour, now + 1.hour, true]
+                ]
+                cases.each do |start_at, end_at, visible|
+                    announcement = AnnouncementService.new(@user).create(
+                        name: "Scheduled", message: "Maintenance", start_at: start_at, end_at: end_at
+                    ).result
+                    assert_equal visible, AnnouncementService.new(@user).list.exists?(announcement.id)
+                end
+            end
+        end
+
+        test "banner selection includes global and exact page matches within the account" do
+            page = lesli_bell_announcements(:path_specific)
+            page.update!(start_at: nil)
+            service = AnnouncementService.new(@user)
+            assert_includes service.list(path: "/reports"), page
+            assert_includes service.list(path: "/reports"), lesli_bell_announcements(:visible_global)
+            refute_includes service.list(path: "/reports"), lesli_bell_announcements(:other_account)
+            [nil, "", "/reports/1", "/reports/", "/other"].each do |path|
+                refute_includes service.list(path: path), page
+            end
+            page.update!(can_be_closed: true)
+            AnnouncementService.new(@user).dismiss(page.id)
+            refute_includes service.list(path: "/reports"), page
+        end
+
+        test "inactive and deleted announcements do not appear in banners" do
+            inactive = lesli_bell_announcements(:visible_global)
+            inactive.update!(active: false)
+            deleted = lesli_bell_announcements(:path_specific)
+            deleted.destroy!
+            records = AnnouncementService.new(@user).list(path: "/reports")
+            refute_includes records, inactive
+            refute_includes records, deleted
+            assert_includes AnnouncementService.new(@user, @query).index, inactive
+        end
+
+        test "banner query includes destinations and ignores administrative pagination" do
+            announcement = lesli_bell_announcements(:visible_global)
+            announcement.update!(url: "/help")
+            query = { pagination: { page: 999, perPage: 1 } }
+            service = AnnouncementService.new(@user, query)
+            assert_empty service.index
+            assert_equal "/help", service.list.find(announcement.id).url
+            assert service.list.find(announcement.id).active?
+        end
+
+        test "banner order uses creation time and ID for ties" do
+            first = AnnouncementService.new(@user).create(name: "First", message: "First").result
+            second = AnnouncementService.new(@user).create(name: "Second", message: "Second").result
+            third = AnnouncementService.new(@user).create(name: "Third", message: "Third").result
+            first.update!(created_at: 1.day.ago)
+            [second, third].each { |record| record.update!(created_at: first.created_at - 1.day) }
+            records = AnnouncementService.new(@user).list.where(id: [first.id, second.id, third.id])
+            assert_equal [second.id, third.id, first.id], records.pluck(:id)
         end
 
         test "dismissing hides the banner only for the authenticated user" do
