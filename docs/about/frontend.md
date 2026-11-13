@@ -44,6 +44,8 @@ The builder discovers LesliBell's entrypoint and writes the compiled output to `
 
 ## View Conventions
 
+Persistent announcement banners belong to Core's `lesli/partials/application-lesli-announcements` partial. Their utilities are compiled into the global LesliAssets stylesheet, including the complete category classes defined in `Lesli::AnnouncementsHelper`, so banners also work on pages belonging to other engines. Interface labels belong to Core's `lesli.announcements` translations; administration and dismissal errors belong to LesliBell. See [Announcements](/engines/bell/announcements/overview) for visibility and Turbo behavior.
+
 - Wrap authenticated pages with `LesliView::Layout::Container`.
 - Prefer LesliView components for headers, toolbars, buttons, and empty states.
 - Use complete semantic class names for notification categories.

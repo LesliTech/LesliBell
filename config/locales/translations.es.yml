@@ -2,6 +2,7 @@
 es:
   lesli_bell:
     announcements:
+      dismiss_failed: "No se pudo cerrar el anuncio."
       "title": "Anuncios"
       "new": "Crear anuncio"
       "edit": "Editar anuncio"

@@ -129,6 +129,17 @@ module LesliBell
             end
             post :dismiss, params: { id: @announcement.id }, format: :json
             assert_response :forbidden
+            post :dismiss, params: { id: @announcement.id }, format: :turbo_stream
+            assert_response :forbidden
+            assert_select "turbo-stream[target='application-lesli-notifications']"
+            assert_select "turbo-stream[action='remove']", count: 0
+        end
+
+        test "missing dismissal returns a Turbo error without removing the banner" do
+            post :dismiss, params: { id: 0 }, format: :turbo_stream
+            assert_response :not_found
+            assert_select "turbo-stream[target='application-lesli-notifications']"
+            assert_select "turbo-stream[action='remove']", count: 0
         end
     end
 end

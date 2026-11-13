@@ -2,6 +2,7 @@
 en:
   lesli_bell:
     announcements:
+      dismiss_failed: "The announcement could not be dismissed."
       "title": "Announcements"
       "new": "Create announcement"
       "edit": "Edit announcement"

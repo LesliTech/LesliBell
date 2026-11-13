@@ -65,6 +65,16 @@ Both date checks use the same instant. At the exact start an announcement is vis
 
 The administrative `index` remains paginated, lists inactive and out-of-window records as well, and uses the same stable creation order. Visibility is evaluated when the query runs; this does not schedule delivery or automatically remove a banner already displayed in an open browser tab.
 
+## Core Banners
+
+Core's authenticated layout renders announcements above the main content, in normal document flow. They do not cover forms or disappear automatically. `Lesli::ApplicationLesliController` loads the records through `AnnouncementService#list(path: request.path)` before rendering; templates do not select records.
+
+Loading requires both LesliBell and an authenticated user. Full HTML page requests, including Turbo Drive navigation, select banners for the requested path. JSON, Turbo Stream, and Turbo Frame requests do not load global banners. Frame updates leave the surrounding page's banners unchanged; navigation to another page should target `_top`.
+
+Messages are escaped plain text with preserved line breaks. Each category has a color, decorative icon, and accessible category label. Optional URLs appear as a separate **View details** action. Closable banners have a keyboard-accessible close button with an accessible label and message description; non-closable banners have no close control.
+
+Authenticated pages with LesliBell use `turbo-cache-control: no-cache` to avoid restoring dismissed or expired banners from Turbo history snapshots. This disables Turbo snapshot caching for those pages, while keeping Turbo Drive navigation. Visibility is refreshed by page requests, not a background timer. Core continues rendering normally when LesliBell is absent.
+
 ## Administration
 
 The management interface at `/bell/announcements` uses LesliView tables, forms, headers, and buttons. Rows link to the announcement detail. The list includes category, publication flag, and start/end dates; it remains paginated. An active flag does not imply current visibility: the date window, page, and individual dismissal also apply.
@@ -117,6 +127,6 @@ dismissal.created_at # When that reader first dismissed the announcement
 
 The operation finds the announcement within the current account and raises `ActiveRecord::RecordNotFound` for missing, deleted, or inaccessible IDs. An announcement with `can_be_closed: false` raises `ActiveRecord::RecordInvalid` without creating a dismissal. Repeated dismissals return the existing record without changing its timestamp. A unique database index on `[announcement_id, user_id]` prevents duplicates, including overlapping requests.
 
-Dismissals require both references and have no soft-delete column or restore operation. Announcement soft deletion retains their history. The dismissal endpoint returns `{ id, dismissed_at }` for JSON and a Turbo removal targeting `announcement-ID`. Repeated requests return the original dismissal. HTML requests redirect to the management list. Non-closable announcements return 422; Turbo shows an error notification without removing the banner. The Core banner itself is integrated in the next phase.
+Dismissals require both references and have no soft-delete column or restore operation. Announcement soft deletion retains their history. The dismissal endpoint returns `{ id, dismissed_at }` for JSON and a Turbo removal targeting `announcement-ID` only after persistence succeeds. Repeated requests return the original dismissal. HTML requests redirect to the management list. Non-closable announcements return 422. Turbo dismissal responses for validation failure (422), denied authorization (403), and missing records (404) show an error notification without removing the banner.
 
 The old `AnnouncementService#read` method is removed: it incorrectly updated notifications. Call `dismiss(id)` for announcements. The original dismissal migration now removes `deleted_at`, requires both references, and adds the unique index; rebuild disposable development/test databases to adopt these changes.

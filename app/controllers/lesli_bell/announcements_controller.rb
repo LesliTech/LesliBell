@@ -3,7 +3,11 @@ module LesliBell
         before_action :load_service
         before_action :load_announcement, only: [:show, :edit, :update, :destroy]
         rescue_from ActiveRecord::RecordNotFound do
-            respond_with_not_found
+            if action_name == "dismiss" && request.format.turbo_stream?
+                dismissal_error(:not_found)
+            else
+                respond_with_not_found
+            end
         end
 
         def index
@@ -55,6 +59,21 @@ module LesliBell
         end
 
         private
+
+        # A failed close must not replace the current page or remove its banner.
+        # Authorization still runs through Core's existing callback.
+        def respond_with_forbidden(details = {})
+            return super unless action_name == "dismiss" && request.format.turbo_stream?
+
+            dismissal_error(:forbidden)
+        end
+
+        def dismissal_error(status)
+            respond_with_lesli(
+                turbo: stream_notification_danger(t("lesli_bell.announcements.dismiss_failed")),
+                status: status
+            )
+        end
 
         def load_service
             @service = AnnouncementService.new(current_user, query)
