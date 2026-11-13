@@ -1,3 +1,10 @@
 ---
 es:
-  lesli_bell: {}
+  lesli_bell:
+    announcements: {}
+    dashboards: {}
+    items/attachments: {}
+    items/discussions: {}
+    items/tasks: {}
+    notifications: {}
+    shared: {}
