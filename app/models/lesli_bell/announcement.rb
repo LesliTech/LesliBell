@@ -5,7 +5,7 @@ module LesliBell
         belongs_to :account, class_name: "LesliBell::Account"
         # The user is the author, not a recipient of the announcement.
         belongs_to :user, class_name: "::Lesli::User"
-        has_many :users #, class_name: "::Lesli::User"
+        has_many :dismissals, class_name: "LesliBell::Announcement::User", inverse_of: :announcement
 
         enum :category, {
             :info => 'info',

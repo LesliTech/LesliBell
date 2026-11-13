@@ -49,7 +49,7 @@ announcements = LesliBell::AnnouncementService.new(current_user, query).index
 
 - Limits records to the current account.
 - Returns only global announcements where `path` is `NULL`.
-- Excludes announcements with an existing announcement-user association.
+- Excludes only announcements dismissed by the current user. A different user’s dismissal does not hide the banner.
 - Orders results by `start_at` and paginates them.
 
 The data contract validates publication settings, but `active`, path-specific selection, and `start_at`/`end_at` filtering are not yet applied by the presentation query. These values must not be treated as authorization boundaries or guaranteed delivery scheduling.
@@ -61,3 +61,21 @@ The data contract validates publication settings, but `active`, path-specific se
 Use the service layer from trusted application code when creating or querying announcements. Add explicit authorization and account checks before exposing new administrative routes.
 
 See [Database](/engines/bell/about/database) for relationships and stored fields and [Translations](/engines/bell/about/translations) for user-facing labels.
+
+## Individual Dismissal
+
+`user` on an announcement is its author. `dismissals` is a separate association of `LesliBell::Announcement::User` records stored in `lesli_bell_announcement_users`. These records identify readers who closed the banner, not its audience.
+
+```ruby
+service = LesliBell::AnnouncementService.new(current_user).dismiss(announcement.id)
+dismissal = service.result
+
+dismissal.user       # The authenticated reader
+dismissal.created_at # When that reader first dismissed the announcement
+```
+
+The operation finds the announcement within the current account and raises `ActiveRecord::RecordNotFound` for missing, deleted, or inaccessible IDs. An announcement with `can_be_closed: false` raises `ActiveRecord::RecordInvalid` without creating a dismissal. Repeated dismissals return the existing record without changing its timestamp. A unique database index on `[announcement_id, user_id]` prevents duplicates, including overlapping requests.
+
+Dismissals require both references and have no soft-delete column or restore operation. Announcement soft deletion retains their history. This phase exposes dismissal through the service only; the HTTP endpoint and banner action will be added with the interface.
+
+The old `AnnouncementService#read` method is removed: it incorrectly updated notifications. Call `dismiss(id)` for announcements. The original dismissal migration now removes `deleted_at`, requires both references, and adds the unique index; rebuild disposable development/test databases to adopt these changes.

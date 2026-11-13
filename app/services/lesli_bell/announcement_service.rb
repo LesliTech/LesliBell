@@ -1,29 +1,12 @@
 module LesliBell
     class AnnouncementService < Lesli::ApplicationLesliService
 
-        def list 
-
-            # NOTE: the query must be created in this specific order, if not ActiveRecord creates weird sql
-            # due the OR statement we are usign to get the announcements with a path
-            
-            # Get all the announcements for the current user
+        def list
+            # A dismissal belongs to one reader, not to the entire account.
+            dismissed_ids = Announcement::User.where(user: current_user).select(:announcement_id)
             announcements = current_user.account.bell.announcements
-
-            # joining to the announcement_users table, to see if the users already mark the announcement as read
-            announcements = announcements.left_joins(:users)
-
-            # get the announcements without a specific path (global announcements)
-            announcements = announcements.where(path: nil)
-
-            # get the announcements with a specific path (to show only in a specific page)
-            #announcements = announcements.or(Announcement.where("path = ?", filters[:base_path])) if params.dig(:f, :base_path)
-
-            # get the announcements with a start date greater than or equal to current date and with expiration date less or equal than current date
-            # announcements = announcements.where("start_at <= '#{Date.now.end_of_day}' or start_at is NULL")
-            # .where("cloud_bell_announcements.end_at >= '#{LC::Date.now.beginning_of_day}' or end_at is NULL")
-
-            # get the announcements that are not marked as read by the user
-            announcements = announcements.where(users: { id: nil })
+                .where(path: nil)
+                .where.not(id: dismissed_ids)
 
             announcements.select(
                 :id,
@@ -68,9 +51,16 @@ module LesliBell
             self
         end 
 
-        def read id
-            noti = current_user.account.bell.notifications.where(:id => id, :user => current_user)
-            noti.update(:status => :read)
+        def dismiss(id)
+            announcement = current_user.account.bell.announcements.find(id)
+            unless announcement.can_be_closed?
+                announcement.errors.add(:base, I18n.t("lesli_bell.announcements.cannot_dismiss"))
+                raise ActiveRecord::RecordInvalid.new(announcement)
+            end
+
+            # The unique index makes repeated requests return the same dismissal,
+            # preserving the original created_at even when requests overlap.
+            self.resource = announcement.dismissals.create_or_find_by!(user: current_user)
             self
         end
     end

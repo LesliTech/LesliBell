@@ -38,13 +38,11 @@ ActiveRecord::Schema[8.1].define(version: 308110310) do
   end
 
   create_table "lesli_bell_announcement_users", force: :cascade do |t|
-    t.integer "announcement_id"
+    t.integer "announcement_id", null: false
     t.datetime "created_at", null: false
-    t.datetime "deleted_at"
     t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.index ["announcement_id"], name: "lesli_bell_announcements_users"
-    t.index ["deleted_at"], name: "index_lesli_bell_announcement_users_on_deleted_at"
+    t.integer "user_id", null: false
+    t.index ["announcement_id", "user_id"], name: "index_bell_dismissals_on_announcement_and_user", unique: true
     t.index ["user_id"], name: "index_lesli_bell_announcement_users_on_user_id"
   end
 

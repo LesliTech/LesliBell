@@ -95,8 +95,8 @@ module LesliBell
             assert_equal %w[info danger warning success], Announcement.categories.keys
         end
 
-        test "has announcement user associations" do
-            reflection = Announcement.reflect_on_association(:users)
+        test "has explicit dismissal associations" do
+            reflection = Announcement.reflect_on_association(:dismissals)
 
             assert_equal :has_many, reflection.macro
             assert_equal Announcement::User, reflection.klass

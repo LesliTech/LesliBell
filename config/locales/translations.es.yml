@@ -1,7 +1,8 @@
 ---
 es:
   lesli_bell:
-    announcements: {}
+    announcements:
+      cannot_dismiss: "Este anuncio no se puede cerrar."
     dashboards: {}
     items/attachments: {}
     items/discussions: {}

@@ -1,7 +1,8 @@
 ---
 en:
   lesli_bell:
-    announcements: {}
+    announcements:
+      cannot_dismiss: "This announcement cannot be dismissed."
     dashboards: {}
     items/attachments: {}
     items/discussions: {}
