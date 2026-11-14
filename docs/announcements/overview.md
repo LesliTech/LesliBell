@@ -165,3 +165,18 @@ The operation finds the announcement within the current account and raises `Acti
 Dismissals require both references and have no soft-delete column or restore operation. Announcement soft deletion retains their history. The dismissal endpoint returns `{ id, dismissed_at }` for JSON and a Turbo removal targeting `announcement-ID` only after persistence succeeds. Repeated requests return the original dismissal. HTML requests redirect to the management list. Non-closable announcements return 422. Turbo dismissal responses for validation failure (422), denied authorization (403), and missing records (404) show an error notification without removing the banner.
 
 The old `AnnouncementService#read` method is removed: it incorrectly updated notifications. Call `dismiss(id)` for announcements. The original dismissal migration now removes `deleted_at`, requires both references, and adds the unique index; rebuild disposable development/test databases to adopt these changes.
+
+## Compatibility Changes
+
+This implementation changes the previous announcement API and schema:
+
+- `active` replaces `status`. `name` and `message` are required, and `user` identifies the author.
+- `audience` is required and defaults to `account` in the model. Use `user_ids` and `role_ids` for specific audiences; the previous single `role_id` and `send_to_*` arguments are removed. Email delivery is not implemented.
+- `dismissals` replaces the old `users` association. `dismiss(id)` replaces `read`; opening a page never creates a dismissal. Dismissal records no longer use soft deletion.
+- `list(path:)` returns a relation of visible banners. `index` returns the paginated administration collection through the service result. CRUD callers should check `successful?` and read `result`.
+- Malformed dates are validation errors, not empty scheduling limits. Optional blank dates remain valid. The end must be later than the start when both are provided.
+- HTML and Turbo form submissions redirect with 303. Page actions render HTML even when Turbo preserves its stream Accept header after a redirect. JSON responses remain JSON; validation and dismissal operations retain their Turbo Stream responses.
+
+Original migrations were edited because these tables are still considered disposable. Existing development/test databases need a rebuild, which deletes their data; simply running `db:migrate` does not rerun the edited migrations. If a consumer must preserve existing records, write and test an explicit data migration before upgrading: rename publication state, populate required fields and audience, remove duplicate dismissal pairs, and enforce the new constraints. No automatic migration of legacy records is provided.
+
+See [Testing](/engines/bell/announcements/testing) for regression coverage and database verification.

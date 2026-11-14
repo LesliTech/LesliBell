@@ -65,4 +65,6 @@ bin/rails lesli:db:seed
 
 The seeders require at least one Lesli account and user. They are intended for disposable development or demo environments.
 
+Announcement samples use `AnnouncementService#create` with the first user's account and a general audience. Repeated runs skip names already present in that account, including soft-deleted announcements, preserving edits, publication state, and dismissals. Validation failures raise an error instead of silently producing incomplete demo data. This repeatability guarantee applies to announcement samples, not the separate notification seeder.
+
 See [Notifications](/engines/bell/notifications/overview), [Announcements](/engines/bell/announcements/overview), [Database](/engines/bell/about/database), [Translations](/engines/bell/about/translations), and [Frontend](/engines/bell/about/frontend) for integration details.

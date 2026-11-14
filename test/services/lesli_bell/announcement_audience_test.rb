@@ -159,8 +159,12 @@ module LesliBell
         test "recipient constraints reject duplicates and cross account model writes" do
             skip "LesliShield is optional" unless defined?(LesliShield)
             announcement = create_announcement(user_ids: [@user.id], role_ids: [@role.id])
-            assert_raises(ActiveRecord::RecordNotUnique) { announcement.user_recipients.create!(user: @user) }
-            assert_raises(ActiveRecord::RecordNotUnique) { announcement.role_recipients.create!(role: @role) }
+            assert_raises(ActiveRecord::RecordNotUnique) do
+                Announcement.transaction(requires_new: true) { announcement.user_recipients.create!(user: @user) }
+            end
+            assert_raises(ActiveRecord::RecordNotUnique) do
+                Announcement.transaction(requires_new: true) { announcement.role_recipients.create!(role: @role) }
+            end
             @other.update!(account: @foreign_account)
             assert_not announcement.user_recipients.build(user: @other).valid?
         end

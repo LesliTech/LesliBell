@@ -194,6 +194,7 @@ COVERAGE=true bin/rails test
 - [Installation](https://www.lesli.dev/engines/bell/about/installation/)
 - [Notifications](https://www.lesli.dev/engines/bell/notifications/overview/)
 - [Announcements](https://www.lesli.dev/engines/bell/announcements/overview/)
+- [Announcement testing](https://www.lesli.dev/engines/bell/announcements/testing/)
 - [Database](https://www.lesli.dev/engines/bell/about/database/)
 - [Translations](https://www.lesli.dev/engines/bell/about/translations/)
 - [Frontend](https://www.lesli.dev/engines/bell/about/frontend/)

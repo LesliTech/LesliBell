@@ -1,5 +1,6 @@
 module LesliBell
     class AnnouncementsController < ApplicationController
+        prepend_before_action :use_html_for_page_navigation, only: [:index, :show, :new, :edit]
         before_action :load_service
         before_action :load_announcement, only: [:show, :edit, :update, :destroy]
         before_action :load_audience_options, only: [:new, :edit, :create, :update]
@@ -60,6 +61,12 @@ module LesliBell
         end
 
         private
+
+        # Turbo preserves its Accept header when following a form's redirect.
+        # These actions render complete pages, including Core's HTML banner loader.
+        def use_html_for_page_navigation
+            request.format = :html if request.get? && request.format.turbo_stream?
+        end
 
         # A failed close must not replace the current page or remove its banner.
         # Authorization still runs through Core's existing callback.

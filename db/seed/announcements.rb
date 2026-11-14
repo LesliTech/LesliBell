@@ -31,17 +31,13 @@ Building a better future, one line of code at a time.
 =end
 
 
-file = File.open(LesliBell::Engine.root.join("db", "seed", "seeds.json")).read
-seeds = JSON.parse(file)
+seeds = JSON.parse(File.read(LesliBell::Engine.root.join("db", "seed", "seeds.json")))
+author = Lesli::User.first!
 
-current_user = Lesli::User.first
+seeds.fetch("announcements").each do |attributes|
+    # Repeated seeds preserve edits, dismissals, and publication choices.
+    next if author.account.bell.announcements.with_deleted.exists?(name: attributes.fetch("name"))
 
-# · 
-seeds["announcements"].each do |notification|
-    LesliBell::AnnouncementService.new(current_user).create({
-        name: notification["name"],
-        category: notification["category"],
-        message: notification["message"],
-        url: notification["url"]
-    })
-end 
+    service = LesliBell::AnnouncementService.new(author).create(attributes.merge("audience" => "account"))
+    raise ActiveRecord::RecordInvalid.new(service.result) unless service.successful?
+end

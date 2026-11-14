@@ -21,6 +21,34 @@ module LesliBell
             @controller.define_singleton_method(:_layout) { |*| false }
         end
 
+        test "Turbo form redirects lead to HTML pages" do
+            post :create, params: { announcement: { name: "Turbo redirect", message: "Welcome" } }, format: :turbo_stream
+            assert_response :see_other
+            record = Announcement.find_by!(name: "Turbo redirect")
+            assert_redirected_to announcement_path(record)
+
+            @request.headers["Accept"] = "text/vnd.turbo-stream.html, text/html, application/xhtml+xml"
+            get :show, params: { id: record.id }
+            assert_response :success
+            assert_equal "text/html", response.media_type
+            assert_includes response.body, "Welcome"
+            assert_equal true, @controller.instance_variable_get(:@lesli_announcements_enabled)
+
+            delete :destroy, params: { id: record.id }, format: :turbo_stream
+            assert_response :see_other
+            assert_redirected_to announcements_path
+            get :index, format: :turbo_stream
+            assert_response :success
+            assert_equal "text/html", response.media_type
+
+            get :new, format: :turbo_stream
+            assert_response :success
+            assert_equal "text/html", response.media_type
+            get :edit, params: { id: @announcement.id }, format: :turbo_stream
+            assert_response :success
+            assert_equal "text/html", response.media_type
+        end
+
         test "audience forms retain selections and show only account recipients" do
             skip "LesliShield is optional" unless defined?(LesliShield)
             role = @user.account.roles.create!(name: "Readers", permission_level: 1, active: true)

@@ -44,6 +44,15 @@ module LesliBell
             assert @announcement.errors[:category].present?
         end
 
+        test "rejects malformed dates instead of treating them as unrestricted" do
+            [:start_at, :end_at].each do |attribute|
+                @announcement.assign_attributes(start_at: nil, end_at: nil)
+                @announcement.public_send("#{attribute}=", "not a date")
+                assert_not @announcement.valid?
+                assert @announcement.errors.added?(attribute, :invalid)
+            end
+        end
+
         test "dates are optional but an end must follow the start" do
             now = Time.current
             [[nil, nil], [now, nil], [nil, now], [now, now + 1.minute]].each do |start_at, end_at|

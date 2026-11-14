@@ -40,6 +40,7 @@ module LesliBell
         validates :path, format: { with: %r{\A/(?!/)[^?#\\\s*]*\z} }, allow_nil: true
         validate :url_is_a_supported_destination
         validate :audience_is_valid
+        validate :publication_dates_are_valid
 
         def user_ids
             @user_ids || user_recipients.pluck(:user_id)
@@ -65,6 +66,15 @@ module LesliBell
         end
 
         private
+
+        # Rails casts malformed datetime input to nil; distinguish it from an empty field.
+        def publication_dates_are_valid
+            [:start_at, :end_at].each do |attribute|
+                if public_send("#{attribute}_before_type_cast").present? && public_send(attribute).nil?
+                    errors.add(attribute, :invalid)
+                end
+            end
+        end
 
         def audience_is_valid
             if audience_specific? && user_ids.empty? && role_ids.empty? && !allow_empty_audience

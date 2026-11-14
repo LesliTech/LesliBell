@@ -68,6 +68,34 @@ module LesliBell
             assert_select "#announcement-#{@page.id}"
         end
 
+        test "opening pages never creates dismissals" do
+            assert_no_difference("Announcement::User.count") do
+                2.times { get :show }
+                @request.env["PATH_INFO"] = "/other"
+                get :other
+            end
+        end
+
+        test "empty pages retain their content without an announcement region" do
+            lesli_users(:one).account.bell.announcements.update_all(active: false)
+            get :show
+            assert_response :success
+            assert_select "#application-lesli-announcements", count: 0
+            assert_select "main#page-content", text: "Page"
+        end
+
+        test "banner labels are translated in English and Spanish" do
+            @global.update!(url: "/help")
+            [:en, :es].each do |locale|
+                I18n.with_locale(locale) do
+                    get :show
+                    assert_select "section[aria-label=?]", I18n.t("lesli.announcements.title")
+                    assert_select "#announcement-#{@global.id} button[aria-label=?]", I18n.t("lesli.announcements.dismiss")
+                    assert_select "#announcement-#{@global.id} a", text: I18n.t("lesli.announcements.open_link")
+                end
+            end
+        end
+
         test "fragment and JSON requests do not load page banners" do
             @request.headers["Turbo-Frame"] = "ticket-details"
             get :show
