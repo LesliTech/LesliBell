@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lesli_bell (1.1.2)
+    lesli_bell (1.1.3)
       lesli (~> 5.1.0)
 
 GEM
