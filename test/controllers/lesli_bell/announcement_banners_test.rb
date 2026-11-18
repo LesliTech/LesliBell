@@ -40,13 +40,13 @@ module LesliBell
             @global.update!(message: "<script>alert(1)</script>\nSecond line", url: "/help")
             get :show
             assert_response :success
-            assert_equal @global.message, Nokogiri::HTML(response.body).at_css("#announcement-#{@global.id} .whitespace-pre-wrap").text
+            assert_equal @global.message, Nokogiri::HTML(response.body).at_css("#announcement-#{@global.id} .lesli-announcements-message").text
             assert_select "script", count: 0
             assert_select "#announcement-#{@global.id} a[href='/help'][data-turbo-frame='_top']", text: I18n.t("lesli.announcements.open_link")
             assert_select "#announcement-#{@global.id} form[method='post'] button[aria-label]"
             assert_select "#announcement-#{@page.id} button", count: 0
             assert_select "#application-lesli-announcements + main#page-content"
-            assert_select "[data-turbo-permanent], .animate-lesli-notification", count: 0
+            assert_select "[data-turbo-permanent], .lesli-notifications-message", count: 0
             assert_equal true, @controller.instance_variable_get(:@lesli_announcements_enabled)
             assert_select "meta[name='turbo-cache-control'][content='no-cache']"
         end
@@ -109,7 +109,7 @@ module LesliBell
             Announcement.categories.keys.each do |category|
                 @global.update!(category: category)
                 get :show
-                assert_select "#announcement-#{@global.id}.bg-#{category}-50"
+                assert_select "#announcement-#{@global.id}.is-#{category}"
                 assert_select "#announcement-#{@global.id} .material-symbols[aria-hidden='true']", minimum: 1
             end
         end

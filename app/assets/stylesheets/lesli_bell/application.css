@@ -110,8 +110,8 @@
     border-top-width: calc(1px * var(--tw-divide-y-reverse));
     border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
   }
-  :where(.divide-slate-200 > :not(:last-child)) {
-    border-color: var(--color-slate-200, oklch(92.9% 0.013 255.508));
+  :where(.divide-neutral-200 > :not(:last-child)) {
+    border-color: var(--lesli-color-neutral-200);
   }
   .overflow-hidden {
     overflow: hidden;
@@ -132,8 +132,8 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
-  .border-slate-200 {
-    border-color: var(--color-slate-200, oklch(92.9% 0.013 255.508));
+  .border-neutral-200 {
+    border-color: var(--lesli-color-neutral-200);
   }
   .border-transparent {
     border-color: transparent;
@@ -153,14 +153,14 @@
   .bg-neutral-50 {
     background-color: var(--lesli-color-neutral-50);
   }
+  .bg-neutral-100 {
+    background-color: var(--lesli-color-neutral-100);
+  }
   .bg-neutral-400 {
     background-color: var(--lesli-color-neutral-400);
   }
-  .bg-sky-50 {
-    background-color: var(--color-sky-50, oklch(97.7% 0.013 236.62));
-  }
-  .bg-slate-100 {
-    background-color: var(--color-slate-100, oklch(96.8% 0.007 247.896));
+  .bg-primary-soft {
+    background-color: var(--lesli-color-primary-soft);
   }
   .bg-success-50 {
     background-color: var(--lesli-color-success-50);
@@ -246,23 +246,23 @@
   .text-info-700 {
     color: var(--lesli-color-info-700);
   }
+  .text-neutral-400 {
+    color: var(--lesli-color-neutral-400);
+  }
+  .text-neutral-500 {
+    color: var(--lesli-color-neutral-500);
+  }
+  .text-neutral-600 {
+    color: var(--lesli-color-neutral-600);
+  }
   .text-neutral-700 {
     color: var(--lesli-color-neutral-700);
   }
-  .text-sky-700 {
-    color: var(--color-sky-700, oklch(50% 0.134 242.749));
+  .text-neutral-800 {
+    color: var(--lesli-color-neutral-800);
   }
-  .text-slate-400 {
-    color: var(--color-slate-400, oklch(70.4% 0.04 256.788));
-  }
-  .text-slate-500 {
-    color: var(--color-slate-500, oklch(55.4% 0.046 257.417));
-  }
-  .text-slate-600 {
-    color: var(--color-slate-600, oklch(44.6% 0.043 257.281));
-  }
-  .text-slate-800 {
-    color: var(--color-slate-800, oklch(27.9% 0.041 260.031));
+  .text-primary-strong {
+    color: var(--lesli-color-primary-strong);
   }
   .text-success-700 {
     color: var(--lesli-color-success-700);
@@ -281,8 +281,8 @@
   .ring-danger-200 {
     --tw-ring-color: var(--lesli-color-danger-200);
   }
-  .ring-sky-200 {
-    --tw-ring-color: var(--color-sky-200, oklch(90.1% 0.058 230.902));
+  .ring-primary-muted {
+    --tw-ring-color: var(--lesli-color-primary-muted);
   }
   .ring-warning-200 {
     --tw-ring-color: var(--lesli-color-warning-200);
@@ -296,27 +296,24 @@
     --tw-ring-inset: inset;
   }
   @media (hover: hover) {
-    .hover\:bg-sky-100:hover {
-      background-color: var(--color-sky-100, oklch(95.1% 0.026 236.824));
+    .hover\:bg-neutral-50:hover {
+      background-color: var(--lesli-color-neutral-50);
     }
-    .hover\:bg-slate-50:hover {
-      background-color: var(--color-slate-50, oklch(98.4% 0.003 247.858));
+    .hover\:bg-primary-soft:hover {
+      background-color: var(--lesli-color-primary-soft);
     }
-    .hover\:text-sky-700:hover {
-      color: var(--color-sky-700, oklch(50% 0.134 242.749));
-    }
-    .hover\:text-sky-800:hover {
-      color: var(--color-sky-800, oklch(44.3% 0.11 240.79));
+    .hover\:text-primary-strong:hover {
+      color: var(--lesli-color-primary-strong);
     }
   }
   .focus-visible\:ring-2:focus-visible {
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
-  .focus-visible\:ring-sky-500\/30:focus-visible {
-    --tw-ring-color: color-mix(in srgb, oklch(68.5% 0.169 237.323) 30%, transparent);
+  .focus-visible\:ring-primary\/30:focus-visible {
+    --tw-ring-color: var(--lesli-color-primary);
     @supports (color: color-mix(in lab, red, red)) {
-      --tw-ring-color: color-mix(in oklab, var(--color-sky-500, oklch(68.5% 0.169 237.323)) 30%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--lesli-color-primary) 30%, transparent);
     }
   }
   .focus-visible\:ring-offset-2:focus-visible {
