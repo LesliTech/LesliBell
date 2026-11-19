@@ -1,0 +1,15 @@
+---
+es:
+  activerecord:
+    attributes:
+      lesli_bell/announcement:
+        audience: "Audiencia"
+        name: "Nombre"
+        message: "Mensaje"
+        category: "Categoría"
+        active: "Activo"
+        start_at: "Inicio"
+        end_at: "Fin"
+        path: "Página"
+        url: "Enlace"
+        can_be_closed: "Permitir cerrar el anuncio"

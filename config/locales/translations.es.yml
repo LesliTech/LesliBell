@@ -10,9 +10,8 @@ es:
       invalid_users: "Los usuarios seleccionados deben pertenecer a esta cuenta."
       invalid_roles: "Los roles seleccionados deben pertenecer a esta cuenta y requieren LesliShield."
       audience_empty: "Sin destinatarios (inactivo)"
-      audiences:
-        account: "Toda la cuenta"
-        specific: "Usuarios o roles específicos"
+      audiences_account: "Toda la cuenta"
+      audiences_specific: "Usuarios o roles específicos"
       dismiss_failed: "No se pudo cerrar el anuncio."
       "title": "Anuncios"
       "new": "Crear anuncio"
@@ -46,11 +45,10 @@ es:
       "yes": "Sí"
       "no": "No"
       "open_link": "Abrir enlace"
-      categories:
-        info: "Información"
-        success: "Éxito"
-        warning: "Advertencia"
-        danger: "Peligro"
+      categories_info: "Información"
+      categories_success: "Éxito"
+      categories_warning: "Advertencia"
+      categories_danger: "Peligro"
       cannot_dismiss: "Este anuncio no se puede cerrar."
     dashboards: {}
     items/attachments: {}
@@ -58,16 +56,3 @@ es:
     items/tasks: {}
     notifications: {}
     shared: {}
-  activerecord:
-    attributes:
-      lesli_bell/announcement:
-        audience: "Audiencia"
-        name: "Nombre"
-        message: "Mensaje"
-        category: "Categoría"
-        active: "Activo"
-        start_at: "Inicio"
-        end_at: "Fin"
-        path: "Página"
-        url: "Enlace"
-        can_be_closed: "Permitir cerrar el anuncio"

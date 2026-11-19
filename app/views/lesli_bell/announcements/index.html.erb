@@ -6,7 +6,7 @@
         columns: %w[name category publication start_at end_at].map { |field| { field: field, label: t("lesli_bell.announcements.#{field}") } },
         records: @announcements.map { |announcement| {
             id: announcement.id, name: announcement.name,
-            category: t("lesli_bell.announcements.categories.#{announcement.category}"),
+            category: t("lesli_bell.announcements.categories_#{announcement.category}"),
             publication: t("lesli_bell.announcements.#{announcement.active? ? 'active' : 'inactive'}"),
             start_at: announcement_datetime(announcement.start_at),
             end_at: announcement_datetime(announcement.end_at)

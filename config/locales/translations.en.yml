@@ -10,9 +10,8 @@ en:
       invalid_users: "Selected users must belong to this account."
       invalid_roles: "Selected roles must belong to this account and require LesliShield."
       audience_empty: "No recipients (inactive)"
-      audiences:
-        account: "Entire account"
-        specific: "Specific users or roles"
+      audiences_account: "Entire account"
+      audiences_specific: "Specific users or roles"
       dismiss_failed: "The announcement could not be dismissed."
       "title": "Announcements"
       "new": "Create announcement"
@@ -46,11 +45,10 @@ en:
       "yes": "Yes"
       "no": "No"
       "open_link": "Open link"
-      categories:
-        info: "Information"
-        success: "Success"
-        warning: "Warning"
-        danger: "Danger"
+      categories_info: "Information"
+      categories_success: "Success"
+      categories_warning: "Warning"
+      categories_danger: "Danger"
       cannot_dismiss: "This announcement cannot be dismissed."
     dashboards: {}
     items/attachments: {}
@@ -58,16 +56,3 @@ en:
     items/tasks: {}
     notifications: {}
     shared: {}
-  activerecord:
-    attributes:
-      lesli_bell/announcement:
-        audience: "Audience"
-        name: "Name"
-        message: "Message"
-        category: "Category"
-        active: "Active"
-        start_at: "Starts at"
-        end_at: "Ends at"
-        path: "Page"
-        url: "Link"
-        can_be_closed: "Allow users to dismiss"

@@ -12,7 +12,7 @@
     <dl class="grid gap-4 sm:grid-cols-2">
         <% {
             audience: announcement_audience_summary(@announcement),
-            category: t("lesli_bell.announcements.categories.#{@announcement.category}"),
+            category: t("lesli_bell.announcements.categories_#{@announcement.category}"),
             publication: t("lesli_bell.announcements.#{@announcement.active? ? 'active' : 'inactive'}"),
             start_at: announcement_datetime(@announcement.start_at), end_at: announcement_datetime(@announcement.end_at),
             path: @announcement.path || t("lesli_bell.announcements.all_pages"),
